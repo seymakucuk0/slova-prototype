@@ -1,0 +1,2359 @@
+<meta charset="utf-8">
+<title>A0 Ders Motoru</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+
+<style>
+/* ============================================================
+   1. TOKENLER — sayfa çerçevesi (tema duyarlı)
+   Hiçbir renk yalnızca media / [data-theme] içinde tanımlı değil:
+   tam palet önce bare :root üzerinde duruyor.
+   ============================================================ */
+:root{
+  --ground:#EFEBF5;
+  --ground-2:#E5DFEE;
+  --panel:#FFFFFF;
+  --panel-2:#F8F6FC;
+  --ink:#241D33;
+  --ink-2:#4A4162;
+  --muted:#7A7192;
+  --line:#DCD4EA;
+  --line-2:#EAE4F3;
+  --accent:#6D28D9;
+  --accent-soft:#EDE9FE;
+  --ok:#10B981;
+  --warn:#F59E0B;
+  --shadow:0 1px 2px rgba(36,29,51,.05), 0 12px 34px -14px rgba(36,29,51,.22);
+  --shadow-lg:0 40px 80px -32px rgba(36,29,51,.45);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#100D1A;
+    --ground-2:#171326;
+    --panel:#1B1728;
+    --panel-2:#221C33;
+    --ink:#EEEAF7;
+    --ink-2:#BDB4D2;
+    --muted:#8F86A6;
+    --line:#2E2743;
+    --line-2:#251F37;
+    --accent:#A78BFA;
+    --accent-soft:#2A2140;
+    --ok:#34D399;
+    --warn:#FBBF24;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 34px -14px rgba(0,0,0,.7);
+    --shadow-lg:0 40px 90px -30px rgba(0,0,0,.85);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#100D1A;
+  --ground-2:#171326;
+  --panel:#1B1728;
+  --panel-2:#221C33;
+  --ink:#EEEAF7;
+  --ink-2:#BDB4D2;
+  --muted:#8F86A6;
+  --line:#2E2743;
+  --line-2:#251F37;
+  --accent:#A78BFA;
+  --accent-soft:#2A2140;
+  --ok:#34D399;
+  --warn:#FBBF24;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 34px -14px rgba(0,0,0,.7);
+  --shadow-lg:0 40px 90px -30px rgba(0,0,0,.85);
+}
+
+/* ------------------------------------------------------------
+   Uygulama tokenleri — telefonun İÇİ her zaman Slova'nın açık
+   teması. Sayfa temasından etkilenmiyor, bilerek sabit.
+   ------------------------------------------------------------ */
+:root{
+  --a-bg:#FBF9FD;
+  --a-surface:#FFFFFF;
+  --a-soft:#F5F3FF;
+  --a-line:#E7DDF8;
+  --a-ink:#2A2240;
+  --a-ink-2:#5B5470;
+  --a-ink-3:#8A82A0;
+  --a-purple:#7C3AED;
+  --a-purple-deep:#6D28D9;
+  --a-purple-mid:#8B5CF6;
+  --a-pastel:#DDD6FE;
+  --a-green:#10B981;
+  --a-red:#EF4444;
+  --a-amber:#F59E0B;
+  --a-blue:#2563EB;
+  --a-streak:#FF7A1A;
+  --a-track:#EDEAF2;
+  --a-key:#F2EEFA;
+  --a-ok-bg:#F0FDF6;
+  --a-ok-ink:#065F46;
+  --a-no-bg:#FEF2F2;
+  --a-no-ink:#991B1B;
+
+  --slot-subj:#2563EB;
+  --slot-be:#DB2777;
+  --slot-comp:#059669;
+  --slot-poss:#7C3AED;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+  font-size:15px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:"Bricolage Grotesque","Instrument Sans",sans-serif;margin:0;text-wrap:balance;letter-spacing:-.02em}
+p{margin:0}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-align:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:8px}
+.glass :focus-visible{outline-color:var(--a-purple)}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ============================================================
+   2. SAYFA ÇERÇEVESİ
+   ============================================================ */
+.wrap{max-width:1220px;margin:0 auto;padding:0 24px 88px}
+.masthead{padding:52px 0 30px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.masthead h1{font-size:clamp(32px,5.2vw,56px);font-weight:800;line-height:1;margin:12px 0 0}
+.lede{max-width:64ch;margin-top:14px;color:var(--ink-2);font-size:16.5px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border:1px solid var(--line);border-radius:999px;background:var(--panel);font-size:12.5px;color:var(--ink-2)}
+.chip b{font-weight:600;color:var(--ink)}
+.chip .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none}
+
+.bench{display:grid;grid-template-columns:minmax(0,404px) minmax(0,1fr);gap:48px;padding-top:36px;align-items:start}
+@media (max-width:1000px){.bench{grid-template-columns:1fr;gap:32px}}
+.stage{position:sticky;top:24px}
+@media (max-width:1000px){.stage{position:static}}
+
+/* ============================================================
+   3. TELEFON
+   ============================================================ */
+.phone{
+  width:100%;max-width:392px;margin:0 auto;
+  background:#0B0812;border-radius:52px;padding:11px;
+  box-shadow:var(--shadow-lg), 0 0 0 1px rgba(255,255,255,.06) inset;
+}
+.glass{
+  position:relative;border-radius:42px;overflow:hidden;
+  background:var(--a-bg);height:790px;display:flex;flex-direction:column;
+  color:var(--a-ink);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Instrument Sans",sans-serif;
+}
+.notch{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:104px;height:27px;background:#0B0812;border-radius:16px;z-index:60}
+.statusbar{
+  position:relative;z-index:50;height:46px;flex:none;
+  display:flex;align-items:flex-end;justify-content:space-between;
+  padding:0 26px 5px;font-size:13px;font-weight:600;color:var(--a-ink);
+}
+.statusbar .sig{display:flex;gap:4px;align-items:flex-end;opacity:.85}
+.statusbar .bar{width:3px;border-radius:1px;background:currentColor}
+#stage{flex:1;min-height:0;display:flex;flex-direction:column}
+.scr{flex:1;min-height:0;display:flex;flex-direction:column}
+.scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
+.scroll.mid{display:flex;flex-direction:column}
+.mid-in{margin:auto 0;width:100%;padding:6px 0 18px}
+.scroll::-webkit-scrollbar{display:none}
+
+.stagebar{display:flex;gap:8px;align-items:center;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.navbtn{padding:7px 15px;border:1px solid var(--line);border-radius:999px;background:var(--panel);font-size:13px;font-weight:500;color:var(--ink-2);transition:background .14s,border-color .14s,color .14s}
+.navbtn:hover{border-color:var(--accent);color:var(--ink)}
+.navbtn[disabled]{opacity:.4;cursor:default}
+.navbtn[disabled]:hover{border-color:var(--line);color:var(--ink-2)}
+.counter{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--muted);min-width:70px;text-align:center}
+
+/* ============================================================
+   4. UYGULAMA PRİMİTİFLERİ
+   ============================================================ */
+.topbar{flex:none;display:flex;align-items:center;gap:11px;padding:6px 16px 12px}
+.iconbtn{width:36px;height:36px;flex:none;border-radius:50%;background:var(--a-soft);display:grid;place-items:center;color:var(--a-ink)}
+.iconbtn svg{width:14px;height:14px}
+.stepdots{flex:1;display:flex;gap:3px}
+.stepdots i{flex:1;height:6px;border-radius:99px;background:#E7E2F0;transition:background .25s}
+.stepdots i.done{background:var(--a-green)}
+.stepdots i.miss{background:#FCA5A5}
+.stepdots i.now{background:var(--a-purple)}
+.hud{display:flex;align-items:center;gap:8px;flex:none}
+.hud .xp{font-family:ui-monospace,monospace;font-size:12px;font-weight:700;color:var(--a-amber)}
+.hud .combo{font-family:ui-monospace,monospace;font-size:12px;font-weight:700;color:var(--a-streak)}
+.tcount{font-family:ui-monospace,monospace;font-size:12px;font-weight:600;color:var(--a-ink-3);min-width:34px;text-align:right}
+
+.prompt{font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--a-ink-3);text-align:center;margin:2px 20px 0}
+.qbig{font-size:15.5px;font-weight:600;color:var(--a-ink-2);text-align:center;margin:8px 24px 0;line-height:1.45}
+.microNote{margin:12px 24px 0;text-align:center;font-size:11.5px;line-height:1.45;color:var(--a-ink-3)}
+
+.appbtn{
+  display:block;width:100%;padding:15px;border-radius:16px;
+  background:var(--a-purple);color:#fff;font-size:16px;font-weight:600;
+  text-align:center;box-shadow:0 8px 20px -8px rgba(124,58,237,.75);
+  transition:transform .12s,background .15s;
+}
+.appbtn:active{transform:scale(.975)}
+.appbtn[disabled]{background:#E7E2F0;color:#A9A2B8;box-shadow:none;cursor:default}
+.appbtn.ok{background:var(--a-green);box-shadow:0 8px 20px -8px rgba(16,185,129,.7)}
+.appbtn.ghost{background:var(--a-soft);color:var(--a-purple-deep);box-shadow:none}
+.footerbar{flex:none;padding:12px 20px 22px;background:var(--a-surface);border-top:1px solid var(--a-line)}
+.footerbar.plain{background:transparent;border-top:0}
+.fb{margin:0 0 11px;padding:12px 15px;border-radius:14px;font-size:13.5px;line-height:1.5;font-weight:500}
+.fb.ok{background:var(--a-ok-bg);color:var(--a-ok-ink)}
+.fb.no{background:var(--a-no-bg);color:var(--a-no-ink)}
+.fb b{font-weight:700}
+.escape{display:block;width:100%;margin:14px 0 0;text-align:center;font-size:13.5px;font-weight:600;color:var(--a-purple-deep);text-decoration:underline;text-underline-offset:3px}
+
+/* ============================================================
+   5. EKRAN: HARİTA
+   ============================================================ */
+.pathhead{flex:none;display:flex;align-items:center;justify-content:space-between;padding:2px 20px 12px}
+.pathhead .lvl{font-size:19px;font-weight:700;letter-spacing:-.3px}
+.pathhead .lvl span{display:block;font-size:11.5px;font-weight:500;color:var(--a-ink-3);letter-spacing:0}
+.stats{display:flex;gap:8px}
+.stat{display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:12px;background:var(--a-soft);font-size:13px;font-weight:700}
+.stat.fire{color:var(--a-streak)}
+.stat.xp{color:#B45309}
+
+.nodelist{display:grid;gap:10px;padding:0 20px 26px}
+.nodecard{
+  position:relative;width:100%;text-align:left;border-radius:18px;
+  background:var(--a-surface);border:1px solid var(--a-line);
+  padding:13px 15px 14px;
+  box-shadow:0 10px 24px -20px rgba(42,34,64,.55);
+  transition:transform .13s,border-color .13s;
+}
+.nodecard:active{transform:scale(.987)}
+.nodecard.now{border-color:var(--a-purple);box-shadow:0 12px 26px -18px rgba(124,58,237,.7)}
+.nodecard.locked{opacity:.55}
+.nodecard.soon{opacity:.8;border-style:dashed}
+.nodecard.ready{opacity:1}
+.ncTop{display:flex;align-items:center;gap:10px}
+.ncNo{
+  width:30px;height:30px;flex:none;border-radius:10px;display:grid;place-items:center;
+  font-size:13px;font-weight:800;background:var(--a-soft);color:var(--a-purple-deep);
+}
+.nodecard.now .ncNo{background:var(--a-purple);color:#fff}
+.nodecard.done .ncNo{background:var(--a-green);color:#fff}
+.ncTop h3{font-size:16.5px;font-weight:700;letter-spacing:-.25px;flex:1;min-width:0}
+.ncLock{width:15px;height:15px;color:var(--a-ink-3);flex:none}
+.ncWords{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
+.wchip{padding:3px 9px;border-radius:99px;background:var(--a-soft);font-size:12px;font-weight:600;color:var(--a-purple-deep)}
+.ncGram{display:flex;align-items:center;gap:6px;margin-top:9px;font-size:12.5px;color:var(--a-ink-2)}
+.ncGram .gi{width:16px;height:16px;border-radius:5px;background:var(--slot-be);flex:none;position:relative}
+.ncGram .gi::after{content:"";position:absolute;inset:5px;border-radius:2px;background:rgba(255,255,255,.7)}
+.ncParts{display:flex;align-items:center;gap:8px;margin-top:11px}
+.segs{display:flex;gap:4px;flex:1}
+.segs i{flex:1;height:5px;border-radius:99px;background:#E9E4F3}
+.segs i.f{background:var(--a-green)}
+.segs i.p{background:var(--a-purple)}
+.ncParts .lbl{font-size:11px;font-weight:700;color:var(--a-ink-3);white-space:nowrap;letter-spacing:.02em}
+.ncSoon{margin-top:9px;font-size:11.5px;font-weight:600;color:var(--a-amber)}
+
+/* ============================================================
+   6. EKRAN: NODE DETAY
+   ============================================================ */
+.nodetitle{padding:2px 20px 0}
+.nodetitle h2{font-size:27px;font-weight:750;letter-spacing:-.7px;line-height:1.12}
+.topicpill{display:inline-block;margin-top:8px;padding:4px 11px;border-radius:99px;background:var(--a-soft);color:var(--a-purple-deep);font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.outcome{margin:14px 20px 0;padding:13px 15px;border-radius:16px;background:var(--a-soft);border:1px solid var(--a-line)}
+.outcome .cap{font-size:10.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--a-purple-deep)}
+.outcome p{font-size:14.5px;line-height:1.5;margin-top:4px;color:var(--a-ink)}
+.detailsec{margin:18px 20px 0}
+.detailsec .cap{font-size:10.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--a-ink-3);margin-bottom:8px}
+.gramcard{padding:13px 15px;border-radius:16px;background:var(--a-surface);border:1px solid var(--a-line)}
+.gramcard .gp{font-size:15px;font-weight:700}
+.gramcard .ge{font-size:13.5px;color:var(--a-ink-2);margin-top:3px;font-family:ui-monospace,monospace}
+.wordrows{display:grid;gap:7px}
+.wordrow{display:flex;align-items:baseline;gap:9px;padding:10px 13px;border-radius:14px;background:var(--a-surface);border:1px solid var(--a-line)}
+.wordrow b{font-size:15.5px;font-weight:700}
+.wordrow .ip{font-family:ui-monospace,monospace;font-size:11.5px;color:var(--a-ink-3)}
+.wordrow .tr{margin-left:auto;font-size:13.5px;color:var(--a-ink-2);font-weight:600}
+
+.parts{display:grid;gap:9px;padding:10px 20px 0}
+.prow{
+  display:grid;grid-template-columns:34px 1fr auto;gap:12px;align-items:center;
+  width:100%;padding:12px 14px;border-radius:16px;
+  background:var(--a-surface);border:1px solid var(--a-line);
+  transition:transform .13s,border-color .13s;
+}
+.prow:active{transform:scale(.985)}
+.prow.done{background:var(--a-ok-bg);border-color:#CBEEDC}
+.prow .idx{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-size:13px;font-weight:800;color:#fff}
+.prow .name{display:block;font-size:15.5px;font-weight:650;letter-spacing:-.2px;line-height:1.25}
+.prow .sub{display:block;font-size:12.5px;color:var(--a-ink-3);margin-top:2px;line-height:1.35}
+.prow .right{display:grid;justify-items:end;gap:3px}
+.prow .cnt{font-size:11.5px;font-weight:700;color:var(--a-ink-3)}
+.prow .tick{width:22px;height:22px;border-radius:50%;background:var(--a-green);display:grid;place-items:center}
+.prow .tick svg{width:11px;height:11px;color:#fff}
+.notepill{margin:16px 20px 24px;padding:11px 14px;border-radius:14px;background:#FFFBEB;border:1px solid #FDE68A;font-size:12.5px;line-height:1.5;color:#78350F}
+.notepill b{font-weight:700}
+
+/* ============================================================
+   7. ALIŞTIRMALAR
+   ============================================================ */
+.wordcard{
+  margin:14px 20px 0;padding:22px 18px 20px;border-radius:22px;background:var(--a-surface);
+  border:1px solid var(--a-line);text-align:center;box-shadow:0 12px 30px -24px rgba(42,34,64,.7);
+}
+.wordcard .w{font-size:40px;font-weight:750;letter-spacing:-1.2px;line-height:1.05}
+.wordcard .ipa{font-size:13.5px;color:var(--a-ink-3);margin-top:3px;font-family:ui-monospace,monospace}
+.wordcard .gloss{font-size:17px;font-weight:700;color:var(--slot-subj);margin-top:10px}
+.speak{margin-top:13px;display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:99px;background:var(--a-soft);color:var(--a-purple-deep);font-size:13.5px;font-weight:700}
+.speak svg{width:15px;height:15px}
+.speak.playing{background:var(--a-pastel)}
+.exline{margin:14px 20px 0;display:grid;gap:4px;padding:15px 16px;border-radius:16px;background:var(--a-soft);border:1px solid var(--a-line)}
+.exline .cap{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--a-purple-deep)}
+.exline .en{font-size:20px;font-weight:700;margin-top:3px}
+.exline .tr{font-size:13.5px;color:var(--a-ink-2)}
+
+.opts{display:grid;gap:9px;margin:16px 20px 0}
+.opts.row{grid-template-columns:repeat(auto-fit,minmax(84px,1fr));gap:8px}
+.opt{
+  width:100%;padding:14px 15px;border-radius:15px;
+  border:1.5px solid var(--a-line);background:var(--a-surface);
+  font-size:15.5px;font-weight:600;transition:transform .12s,border-color .14s,background .14s;
+}
+.opts.row .opt{text-align:center;padding:13px 8px}
+.opt:active{transform:scale(.985)}
+.opt.right{border-color:var(--a-green);background:var(--a-ok-bg)}
+.opt.wrong{border-color:var(--a-red);background:var(--a-no-bg);animation:shake .34s}
+.opt.dim{opacity:.5}
+.opt[disabled]{cursor:default}
+@keyframes shake{0%,100%{transform:translateX(0)}22%{transform:translateX(-6px)}55%{transform:translateX(5px)}80%{transform:translateX(-3px)}}
+
+.bigspeak{
+  margin:20px auto 0;width:104px;height:104px;border-radius:34px;display:grid;place-items:center;
+  background:var(--a-purple);color:#fff;box-shadow:0 16px 34px -18px rgba(124,58,237,.9);
+  transition:transform .12s;
+}
+.bigspeak:active{transform:scale(.95)}
+.bigspeak svg{width:38px;height:38px}
+.bigspeak.sm{width:74px;height:74px;border-radius:26px;margin-top:12px}
+.bigspeak.sm svg{width:28px;height:28px}
+.bigspeak.playing{animation:pulse .6s}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.hintipa{text-align:center;font-family:ui-monospace,monospace;font-size:14px;color:var(--a-ink-3);margin-top:10px;min-height:20px}
+
+.matchgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 20px 0}
+.mcell{
+  padding:15px 10px;border-radius:15px;border:1.5px solid var(--a-line);background:var(--a-surface);
+  font-size:15px;font-weight:650;text-align:center;transition:transform .12s,border-color .14s,background .14s,opacity .3s;
+}
+.mcell.sel{border-color:var(--a-purple);background:#F7F3FF}
+.mcell.hit{border-color:var(--a-green);background:var(--a-ok-bg);color:#047857}
+.mcell.err{border-color:var(--a-red);background:var(--a-no-bg);animation:shake .34s}
+.mcell.gone{opacity:.18;pointer-events:none}
+.mcell.tr{color:var(--a-ink-2);font-weight:600;font-size:14px}
+
+.answerline{
+  margin:16px 20px 0;min-height:64px;border-radius:16px;border:1.5px dashed var(--a-pastel);
+  background:var(--a-surface);padding:11px;display:flex;flex-wrap:wrap;gap:7px;align-content:flex-start;
+}
+.answerline.right{border-style:solid;border-color:var(--a-green);background:var(--a-ok-bg)}
+.answerline.wrong{border-style:solid;border-color:var(--a-red);background:var(--a-no-bg);animation:shake .34s}
+.bank{margin:14px 20px 0;display:flex;flex-wrap:wrap;gap:7px;justify-content:center}
+.tok{
+  padding:9px 14px;border-radius:12px;border:1.5px solid var(--a-line);background:var(--a-surface);
+  font-size:16px;font-weight:650;box-shadow:0 2px 0 var(--a-line);transition:transform .12s,opacity .15s;
+}
+.tok:active{transform:translateY(1px);box-shadow:none}
+.tok.used{opacity:.25;pointer-events:none}
+.tok.inline{box-shadow:none;background:var(--a-soft);border-color:transparent}
+
+.sentcard{
+  margin:16px 20px 0;padding:20px 18px;border-radius:20px;background:var(--a-surface);
+  border:1px solid var(--a-line);text-align:center;box-shadow:0 12px 30px -26px rgba(42,34,64,.7);
+}
+.sentcard .s{font-size:23px;font-weight:700;line-height:1.45;letter-spacing:-.4px}
+.sentcard .gap{
+  display:inline-block;min-width:74px;border-bottom:3px solid var(--a-pastel);
+  color:var(--a-purple);vertical-align:baseline;
+}
+.sentcard .gap.filled{border-bottom-color:var(--a-purple)}
+.sentcard .tr{font-size:14px;color:var(--a-ink-3);margin-top:10px;font-weight:500}
+
+.dialog{margin:16px 20px 0;display:grid;gap:10px}
+.bub{max-width:86%;padding:12px 15px;border-radius:18px;font-size:16px;font-weight:600;line-height:1.4}
+.bub.l{background:var(--a-soft);border-bottom-left-radius:6px;justify-self:start}
+.bub.r{background:var(--a-purple);color:#fff;border-bottom-right-radius:6px;justify-self:end}
+.bub.pending{background:var(--a-surface);border:1.5px dashed var(--a-pastel);color:var(--a-ink-3);justify-self:end;border-bottom-right-radius:6px}
+.bub .who{display:block;font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;opacity:.6;margin-bottom:3px}
+.bub .gap{display:inline-block;min-width:60px;border-bottom:3px solid var(--a-pastel)}
+.bub.r .gap{border-bottom-color:rgba(255,255,255,.55)}
+.bub .gap.filled{border-bottom-color:var(--a-purple)}
+.bub.r .gap.filled{border-bottom-color:rgba(255,255,255,.95)}
+.dtr{margin:9px 20px 0;text-align:center;font-size:12.5px;color:var(--a-ink-3)}
+
+/* ============================================================
+   8. UYGULAMA İÇİ KLAVYE (letter_keys / listen_write)
+   Sadece cevapta geçen harfler renkli ve basılabilir.
+   ============================================================ */
+.slotbox{
+  margin:16px 20px 0;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:flex-end;
+}
+.lb{
+  width:34px;height:44px;border-radius:11px;background:var(--a-surface);
+  border:1.5px solid var(--a-line);display:grid;place-items:center;
+  font-size:21px;font-weight:750;color:var(--a-ink);
+  transition:border-color .14s,background .14s,transform .12s;
+}
+.lb.on{border-color:var(--a-purple);background:#F7F3FF}
+.lb.bad{border-color:var(--a-red);background:var(--a-no-bg);animation:shake .3s}
+.lb.done{border-color:var(--a-green);background:var(--a-ok-bg)}
+.lb.cursor{border-color:var(--a-pastel);box-shadow:0 0 0 3px rgba(221,214,254,.55)}
+.lbspace{width:16px;height:44px}
+.kbTr{margin:11px 20px 0;text-align:center;font-size:14px;font-weight:600;color:var(--a-ink-2)}
+.kbCtx{margin:11px 20px 0;text-align:center;font-size:16px;font-weight:650;color:var(--a-ink)}
+.kbCtx u{text-decoration:none;border-bottom:3px solid var(--a-pastel);padding:0 14px}
+
+.kb{flex:none;padding:8px 5px 12px;background:var(--a-key);border-top:1px solid var(--a-line)}
+.kbrow{display:flex;gap:4px;justify-content:center;margin-bottom:5px}
+.kbrow:last-child{margin-bottom:0}
+.key{
+  flex:1;max-width:34px;height:42px;border-radius:8px;
+  background:#FFFFFF;box-shadow:0 1px 0 rgba(42,34,64,.28);
+  font-size:16px;font-weight:600;color:var(--a-ink);
+  display:grid;place-items:center;text-transform:lowercase;
+  transition:transform .08s,background .1s;
+}
+.key.live{
+  background:var(--a-purple);color:#fff;font-weight:750;
+  box-shadow:0 2px 0 var(--a-purple-deep);
+}
+.key.live:active{transform:translateY(2px);box-shadow:none}
+.key.dead{opacity:.34;pointer-events:none;color:var(--a-ink-3);box-shadow:0 1px 0 rgba(42,34,64,.12)}
+.key.wide{max-width:none;flex:1.6;font-size:12.5px;font-weight:700;letter-spacing:.03em}
+.key.act{background:var(--a-soft);color:var(--a-purple-deep);box-shadow:0 1px 0 rgba(42,34,64,.2)}
+.key svg{width:19px;height:19px}
+
+/* ============================================================
+   9. KONUŞMA (say_word / say_sentence / dialog_say)
+   ============================================================ */
+.saytarget{
+  margin:16px 20px 0;padding:20px 18px;border-radius:20px;background:var(--a-surface);
+  border:1px solid var(--a-line);text-align:center;
+}
+.saytarget .st{font-size:25px;font-weight:750;letter-spacing:-.5px;line-height:1.35}
+.saytarget .st w{display:inline-block;transition:color .18s,transform .18s}
+.saytarget .st w.hit{color:var(--a-green)}
+.saytarget .st w.miss{color:var(--a-red)}
+.saytarget .ipa{font-family:ui-monospace,monospace;font-size:13px;color:var(--a-ink-3);margin-top:5px}
+.saytarget .tr{font-size:13.5px;color:var(--a-ink-2);margin-top:8px}
+.mic{
+  margin:18px auto 0;width:96px;height:96px;border-radius:50%;display:grid;place-items:center;
+  background:var(--a-purple);color:#fff;box-shadow:0 16px 34px -18px rgba(124,58,237,.95);
+  transition:transform .12s,background .18s;
+}
+.mic svg{width:34px;height:34px}
+.mic:active{transform:scale(.95)}
+.mic.hot{background:var(--a-red);animation:ring 1.1s infinite}
+.mic.doneok{background:var(--a-green)}
+@keyframes ring{
+  0%{box-shadow:0 0 0 0 rgba(239,68,68,.45)}
+  70%{box-shadow:0 0 0 18px rgba(239,68,68,0)}
+  100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}
+}
+.micstate{text-align:center;font-size:13px;font-weight:600;color:var(--a-ink-3);margin-top:12px;min-height:19px}
+.score{text-align:center;margin-top:8px;font-size:13px;font-weight:700;color:var(--a-purple-deep);min-height:18px}
+
+/* ============================================================
+   10. GÖRSEL (image_choice) — CSS/SVG ile çizili, dosya yok
+   ============================================================ */
+.artbox{
+  margin:14px 20px 0;border-radius:22px;border:1px solid var(--a-line);
+  background:linear-gradient(170deg,#F7F3FF,#FFFFFF);
+  padding:14px;display:grid;place-items:center;
+}
+.artbox svg{width:100%;max-width:230px;height:auto;display:block}
+
+/* ============================================================
+   11. GRAMER DESEN EKRANI
+   ============================================================ */
+.gramwrap{padding:8px 20px 24px}
+.gramh{font-size:25px;font-weight:750;letter-spacing:-.6px;line-height:1.15;margin-top:6px}
+.gramsub{font-size:14.5px;line-height:1.55;color:var(--a-ink-2);margin-top:9px}
+.slotrow{margin-top:16px;display:flex;gap:7px;align-items:stretch}
+.slot{flex:1;border-radius:14px;padding:11px 8px 10px;text-align:center;color:#fff;position:relative}
+.slot .role{display:block;font-size:9.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;opacity:.82}
+.slot .val{display:block;font-size:18px;font-weight:750;margin-top:4px;letter-spacing:-.3px}
+.slot.subj{background:var(--slot-subj)}
+.slot.be{background:var(--slot-be)}
+.slot.comp{background:var(--slot-comp)}
+.slot.poss{background:var(--slot-poss)}
+.slot.wide{flex:1.6}
+.slotcap{font-size:12.5px;color:var(--a-ink-3);margin-top:7px;text-align:center}
+.exrows{margin-top:18px;display:grid;gap:7px}
+.exrow{display:flex;align-items:center;gap:8px;padding:10px 13px;border-radius:13px;background:var(--a-soft)}
+.exrow .en{font-size:15.5px;font-weight:700}
+.exrow .tr{margin-left:auto;font-size:12.5px;color:var(--a-ink-2)}
+.twocard{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.tc{padding:13px 12px;border-radius:15px;border:1.5px solid var(--a-line);background:var(--a-surface)}
+.tc .flag{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.tc .tcw{font-size:16px;font-weight:700;letter-spacing:-.2px}
+.tc.good{border-color:#BBF7D0;background:var(--a-ok-bg)}
+.tc.good .flag{color:#047857}
+.tc.bad{border-color:#FECACA;background:var(--a-no-bg)}
+.tc.bad .flag{color:#B91C1C}
+.tc.bad .tcw{text-decoration:line-through;text-decoration-color:#FCA5A5}
+
+/* ============================================================
+   12. BİTİŞ KARTI
+   ============================================================ */
+.finish{padding:26px 22px 24px;text-align:center}
+.fring{
+  width:96px;height:96px;margin:6px auto 0;border-radius:50%;
+  background:linear-gradient(150deg,var(--a-purple-mid),var(--a-purple-deep));
+  display:grid;place-items:center;color:#fff;
+  box-shadow:0 20px 40px -20px rgba(109,40,217,.9);
+}
+.fring svg{width:40px;height:40px}
+.fring.gold{background:linear-gradient(150deg,#FBBF24,#D97706);box-shadow:0 20px 40px -20px rgba(217,119,6,.9)}
+.finish h2{font-size:26px;font-weight:750;letter-spacing:-.6px;margin-top:18px}
+.finish .fsub{font-size:14.5px;color:var(--a-ink-2);margin-top:7px}
+.fstats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+.fstat{padding:14px 12px;border-radius:16px;background:var(--a-surface);border:1px solid var(--a-line)}
+.fstat b{display:block;font-size:24px;font-weight:750;letter-spacing:-.5px}
+.fstat span{display:block;font-size:11.5px;font-weight:600;color:var(--a-ink-3);margin-top:2px}
+.fstat.g b{color:var(--a-green)}
+.fstat.p b{color:var(--a-purple-deep)}
+.fstat.a b{color:var(--a-amber)}
+.fwords{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:18px}
+.fgain{margin-top:18px;padding:14px 15px;border-radius:16px;background:var(--a-soft);border:1px solid var(--a-line);text-align:left}
+.fgain .cap{font-size:10.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--a-purple-deep)}
+.fgain p{font-size:14.5px;margin-top:4px;line-height:1.45}
+
+/* ============================================================
+   13. GEZİNME PANELİ
+   ============================================================ */
+.rail{display:flex;flex-direction:column;gap:26px;min-width:0}
+.railhead{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.railhead h2{font-size:24px;font-weight:700}
+.seclabel{font-family:"JetBrains Mono",monospace;font-size:10.5px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+.navpanel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px 16px 18px;box-shadow:var(--shadow)}
+.navtools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding-bottom:14px;margin-bottom:12px;border-bottom:1px solid var(--line-2)}
+.navtools .grow{flex:1}
+.idxgroup{margin-top:14px}
+.idxgroup:first-of-type{margin-top:0}
+.idxcap{font-family:"JetBrains Mono",monospace;font-size:10px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between;gap:10px}
+.idxlist{display:grid;gap:3px}
+.irow{
+  display:grid;grid-template-columns:26px 1fr auto;gap:10px;align-items:center;
+  padding:7px 10px;border-radius:10px;width:100%;
+  border:1px solid transparent;transition:background .13s,border-color .13s;
+}
+.irow:hover{background:var(--panel-2)}
+.irow[aria-current="true"]{background:var(--accent-soft);border-color:var(--line)}
+.irow .n{font-family:"JetBrains Mono",monospace;font-size:10.5px;color:var(--muted)}
+.irow .t{font-size:13.5px;font-weight:500;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.irow[aria-current="true"] .t{font-weight:700}
+.irow .m{font-family:"JetBrains Mono",monospace;font-size:9.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.irow .m.d{color:var(--ok)}
+.irow .m.x{color:#DC2626}
+.irow.rep .t::after{content:" · tekrar";color:var(--warn);font-weight:600}
+
+.note{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px 22px;box-shadow:var(--shadow)}
+.note h3{font-size:19px;font-weight:700;margin-bottom:3px}
+.note .sub{color:var(--muted);font-size:13px;margin-bottom:16px}
+.dl{display:grid;gap:13px}
+.dl>div{display:grid;grid-template-columns:130px 1fr;gap:14px;align-items:start}
+@media (max-width:560px){.dl>div{grid-template-columns:1fr;gap:2px}}
+.dl dt{font-family:"JetBrains Mono",monospace;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+.dl dd{margin:0;color:var(--ink-2);font-size:14px}
+.dl dd b{color:var(--ink);font-weight:600}
+.dl dd code{font-family:"JetBrains Mono",monospace;font-size:12.5px;color:var(--accent)}
+.tally{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.tallychip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;background:var(--panel-2);border:1px solid var(--line-2);font-size:12px}
+.tallychip b{font-family:"JetBrains Mono",monospace;font-weight:600;color:var(--accent)}
+.footnote{margin-top:44px;padding-top:22px;border-top:1px solid var(--line);color:var(--muted);font-size:13px;max-width:74ch}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+}
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="eyebrow">Slova · A0 · Prototip</div>
+    <h1 id="pageTitle">Node 5 — This is my mother</h1>
+    <p class="lede">
+      Bir A0 node’unun tamamı oynanabilir hâlde: <b id="pageCount">33 ders ekranı</b> + 3 part bitiş kartı + 1 node bitiş kartı.
+      Can yok, süre yok. Yanlış cevap sadece <b>part sonunda tekrar</b> demek.
+      19 egzersiz tipinin hepsi gerçekten çalışıyor — klavye uygulamanın kendi klavyesi,
+      “dinle ve yaz” duyamayana kendini kapatmıyor.
+    </p>
+    <div class="chips" id="pageChips"></div>
+  </header>
+
+  <div class="bench">
+    <div class="stage">
+      <div class="phone">
+        <div class="glass">
+          <div class="notch"></div>
+          <div class="statusbar">
+            <span>9:41</span>
+            <span class="sig" aria-hidden="true">
+              <i class="bar" style="height:5px"></i>
+              <i class="bar" style="height:7px"></i>
+              <i class="bar" style="height:9px"></i>
+              <i class="bar" style="height:11px"></i>
+            </span>
+          </div>
+          <div id="stage"></div>
+        </div>
+      </div>
+      <div class="stagebar">
+        <button class="navbtn" id="btnPrev">&larr; Geri</button>
+        <span class="counter" id="counter">1 / 39</span>
+        <button class="navbtn" id="btnNext">İleri &rarr;</button>
+        <button class="navbtn" id="btnReset">Sıfırla</button>
+      </div>
+    </div>
+
+    <div class="rail">
+      <div class="railhead">
+        <h2>Gezinme</h2>
+        <span class="seclabel" id="railMeta">39 ekran</span>
+      </div>
+
+      <div class="navpanel">
+        <div class="navtools">
+          <button class="navbtn" id="btnPrev2" aria-label="Önceki ekran">&larr;</button>
+          <button class="navbtn" id="btnNext2" aria-label="Sonraki ekran">&rarr;</button>
+          <span class="counter" id="counter2">1 / 39</span>
+          <span class="grow"></span>
+          <button class="navbtn" id="btnReset2">Sıfırla</button>
+        </div>
+        <div id="navIndex"></div>
+      </div>
+
+      <div class="note">
+        <h3>Bu prototipin kararları</h3>
+        <p class="sub">Neyi neden böyle yaptım</p>
+        <dl class="dl">
+          <div>
+            <dt>Klavye</dt>
+            <dd>Uygulamanın kendi klavyesi. Sistem klavyesi ve <code>&lt;input&gt;</code> yok. <b>Yalnızca o kelimede geçen harfler</b> mor, kabartmalı ve basılabilir; kalanlar soluk ve tıklanamaz. Kademelenme yok — 12. ekranda da, 33. ekranda da aynı kolaylık. Yanlış sıradaki harf kutuya girer, kutu kızarır ve harf geri alınır.</dd>
+          </div>
+          <div>
+            <dt>Duyamıyorum</dt>
+            <dd><b>listen_write</b> ekranlarının altında her zaman duran bağlantı. Basınca egzersiz yerinde <b>translate_meaning</b>’e dönüşüyor: hedef yazıyla geliyor, “Bu ne demek?” diye dört Türkçe şık soruluyor, doğru cevap puan alıyor. Sesi duyamayan kullanıcı çıkmaz sokakta kalmıyor.</dd>
+          </div>
+          <div>
+            <dt>Konuşma</dt>
+            <dd>Tarayıcıda <code>webkitSpeechRecognition</code> varsa gerçek tanıma çalışıyor; yoksa 1,5 saniyelik dinleme animasyonundan sonra hedef kelime kelime yeşile boyanıyor. Puan, gerçek uygulamadaki <code>sayThisMatchScore</code> gibi eşleşen kelime oranı. Her konuşma ekranında <b>Atla</b> var.</dd>
+          </div>
+          <div>
+            <dt>Kalp yok</dt>
+            <dd>Yanlış cevapta doğrusu gösteriliyor, “Devam” geliyor. O soru <b>part sonunda bir kez daha</b> soruluyor — gezinme listesinde “tekrar” etiketiyle beliriyor. Ceza yok, tekrar var.</dd>
+          </div>
+          <div>
+            <dt>Part 3</dt>
+            <dd>Tamamen cümle ve diyalog. Tek kelime egzersizi girmiyor: buradaki <b>listen_write</b> bile bir cümle yazdırıyor.</dd>
+          </div>
+          <div>
+            <dt>Sözcük kısıtı</dt>
+            <dd>Bütün İngilizce dizeler <code>vocabulary_budget</code> içinden — çeldiriciler dâhil. Tek istisna şartnamenin kendi diyaloğundaki <code>meet</code>.</dd>
+          </div>
+          <div>
+            <dt>Veri şeması</dt>
+            <dd><code>NODE_DATA</code> tek kaynak. Render fonksiyonlarının hiçbiri node numarasına bakmıyor; node 6 ve 7 sadece bu sabite veri eklenerek açılır. Alan alan dökümü dosyanın başındaki yorum bloğunda.</dd>
+          </div>
+          <div>
+            <dt>Tip dağılımı</dt>
+            <dd class="tally" id="tally"></dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <p class="footnote">
+    Arayüz Türkçe, öğretilen dil İngilizce — ikisi de veriden geliyor, kodda sabitlenmiş dil yok.
+    Ses için tarayıcının <span class="mono">speechSynthesis</span>’i kullanılıyor; gerçek uygulamada bunun yerine Gemini TTS var.
+  </p>
+</div>
+
+<script>
+"use strict";
+
+/* ================================================================
+   VERİ ŞEMASI — node 6, 7 ... eklerken tek okuman gereken yer.
+   ----------------------------------------------------------------
+   NODE_DATA[n] = {
+     title      : string   node başlığı
+     grammar    : string   gramer noktası (Türkçe etiket)
+     grammarEx  : string   gramer örneği (İngilizce tek cümle)
+     outcome    : string   kazanım cümlesi (Türkçe)
+     words      : [{ w, ipa, tr, ex, exTr }]   4 kelime
+     hardWord   : string   part 1'in say_word hedefi
+     part1 / part2 / part3 : [ egzersiz nesnesi ]   part_templates sırasıyla
+   }
+
+   Her egzersiz nesnesi { type: "...", ... } biçiminde. Render
+   fonksiyonları YALNIZCA bu alanlara bakar, node numarasına bakmaz.
+
+   word_card            { w, ipa, tr, ex, exTr }
+   mc_meaning           { w, ipa, correct(tr), options[tr x4] }
+   mc_reverse           { tr, correct(en), options[en x4] }
+   match4               { pairs: [[en, tr] x4] }
+   image_choice         { art, correct(en), options[en x4], prompt?(tr) }
+                          art -> ART kayıt anahtarı. prompt verilmezse "Görseldeki kim?".
+   listen_pick          { audio(en), ipa, correct(en), options[en x4] }
+   listen_write         { audio(en), answer(en), tr, options[tr x4] }
+     - answer boşluk içerebilir (cümle). Boşluklar otomatik atlanır.
+     - options: "Duyamıyorum" yolunda sorulan translate_meaning şıkları.
+   listen_sentence_gap  { sentence(en, "___" içerir), correct(en), options[en x3-4], tr }
+   letter_keys          { answer(en), tr, context?(en "___" içerir), contextTr? }
+   fill_blank           { sentence(en, "___"), correct(en), options[en x3-4], tr }
+   build_sentence       { target(en), extra?[en tokenlar], tr }
+   build_translate      { tr, target(en), extra?[en tokenlar] }
+   mc_sentence          { sentence(en, "___"), correct(en), options[en x3-4], tr }
+   say_word             { target(en), ipa, tr }
+   say_sentence         { target(en), tr }
+   translate_meaning    { target(en), correct(tr), options[tr x4] }
+   grammar_pattern      { head, sub(tek cümle), slots:[{role, val, cls, wide?}],
+                          cls: subj | be | poss | comp — renk hep aynı işi gösterir,
+                          slotCap, examples:[{en, tr}], good:{en,note}, bad:{en,note} }
+   dialog_gap           { lines:[{who, en, mine?}], gapLine(index), correct(en),
+                          options[en x3-4], tr }
+                          gapLine satırının en'i "___" içerir.
+   dialog_build         { lines:[{who, en, mine?}], replyIndex, target(en), extra?[], tr }
+                          replyIndex satırı build ile kurulur (lines'ta en boş bırakılır).
+   dialog_say           { lines:[{who, en, mine?}], replyIndex, target(en), tr }
+
+   Ekran sayısı = part1.length + part2.length + part3.length.
+   Tekrar kuyruğu bunlara ek olarak çalışma sırasında üretilir.
+   ================================================================ */
+
+/* A0 haritası — 24 node */
+const NODES = [
+  {n:1,  t:"Hello",               w:["hello","hi","goodbye","bye"],           g:"Selamlaşma kalıpları",     o:"Birini selamlayabilir ve vedalaşabilirsin."},
+  {n:2,  t:"Please and thanks",   w:["please","thanks","yes","no"],           g:"yes / no kısa cevap",      o:"Rica edip teşekkür edebilirsin."},
+  {n:3,  t:"I am",                w:["I","am","name","my"],                   g:"'be': I am",               o:"Adını söyleyebilirsin."},
+  {n:4,  t:"You are",             w:["you","are","your","nice"],              g:"'be': you are",            o:"Tanışma cümlesi kurabilirsin."},
+  {n:5,  t:"This is my mother",   w:["mother","father","family","this"],      g:"'this is' + isim",         o:"Yanındaki kişiyi tanıtabilirsin."},
+  {n:6,  t:"Brother and sister",  w:["sister","brother","son","daughter"],    g:"'this is my' + aile ismi", o:"Ailenin tamamını tanıtabilirsin."},
+  {n:7,  t:"Where are you from",  w:["from","country","where","live"],        g:"'be from' + yer",          o:"Nereli olduğunu söyleyebilirsin."},
+  {n:8,  t:"Home and people",     w:["city","here","home","people"],          g:"'live in' + yer",          o:"Nerede yaşadığını söyleyebilirsin."},
+  {n:9,  t:"One to four",         w:["one","two","three","four"],             g:"Sayılar 1-10",             o:"Ona kadar sayabilirsin."},
+  {n:10, t:"How many",            w:["five","ten","number","how many"],       g:"'how many' + çoğul",       o:"Kaç tane olduğunu sorabilirsin."},
+  {n:11, t:"My phone number",     w:["phone","email","address","street"],     g:"'my ... is'",              o:"Numaranı ve adresini verebilirsin."},
+  {n:12, t:"Write and call",      w:["write","call","give","number"],         g:"Numara ve adres verme",    o:"Numara ya da adres isteyebilirsin."},
+  {n:13, t:"Day and week",        w:["day","week","today","tomorrow"],        g:"Haftanın günleri",         o:"Bugün hangi gün olduğunu söyleyebilirsin."},
+  {n:14, t:"Morning and night",   w:["morning","night","time","now"],         g:"in the morning / at night",o:"Günün vaktini söyleyebilirsin."},
+  {n:15, t:"Colours",             w:["red","blue","green","colour"],          g:"Sıfat isimden önce gelir", o:"Bir şeyin rengini söyleyebilirsin."},
+  {n:16, t:"A red car",           w:["black","white","car","book"],           g:"sıfat + isim",             o:"Renk ve nesneyi birleştirebilirsin."},
+  {n:17, t:"In my bag",           w:["pen","bag","key","thing"],              g:"a / an",                   o:"Çantanda ne olduğunu söyleyebilirsin."},
+  {n:18, t:"An apple",            w:["phone","money","water","apple"],        g:"a / an (sesli harf)",      o:"a ve an ayrımını yapabilirsin."},
+  {n:19, t:"Sorry",               w:["sorry","excuse","okay","maybe"],        g:"Kısa cevap: Yes, I am",    o:"Özür dileyebilirsin."},
+  {n:20, t:"Say it again",        w:["again","slowly","understand","help"],   g:"Kısa cevap: No, I'm not",  o:"Tekrar isteyebilirsin."},
+  {n:21, t:"How much is it",      w:["much","price","cost","cheap"],          g:"'how much' sorusu",        o:"Fiyat sorabilirsin."},
+  {n:22, t:"Buy and pay",         w:["euro","dollar","buy","pay"],            g:"'how much' + para",        o:"Ödeme yapabilirsin."},
+  {n:23, t:"Open and closed",     w:["open","closed","entrance","exit"],      g:"Tabela kalıpları",         o:"Açık-kapalı tabelalarını okuyabilirsin."},
+  {n:24, t:"Signs in the city",   w:["stop","toilet","station","parking"],    g:"Tabela kalıpları",         o:"Şehirdeki tabelaları okuyabilirsin."}
+];
+
+/* Tamamlanmış node'lar ve oynanabilir node */
+const DONE_NODES = [1,2,3,4];
+let ACTIVE_NODE = 5;
+
+/* ================================================================
+   NODE İÇERİĞİ — başka bir node eklemek için buraya bir anahtar ekle.
+   Şu an 5, 6 ve 7 dolu. Haritadaki diğer node'lar burada kaydı olmadığı
+   için oynanamaz; veri eklendiği anda oynanır hâle gelirler.
+   İngilizce dizeler vocabulary_budget içinden (cumulative + glue +
+   proper_nouns). Tek istisna: "meet" — şartnamenin kendi node 5
+   diyaloğunda geçiyor ("Nice to meet you.").
+   ================================================================ */
+const NODE_DATA = {
+  5: {
+    title:"This is my mother",
+    grammar:"'this is' + isim",
+    grammarEx:"This is my mother.",
+    outcome:"Yanındaki kişiyi tanıtabilirsin.",
+    hardWord:"family",
+    words:[
+      {w:"mother", ipa:"/ˈmʌðər/",  tr:"anne", ex:"This is my mother.", exTr:"Bu benim annem."},
+      {w:"father", ipa:"/ˈfɑːðər/", tr:"baba", ex:"This is my father.", exTr:"Bu benim babam."},
+      {w:"family", ipa:"/ˈfæməli/", tr:"aile", ex:"This is my family.", exTr:"Bu benim ailem."},
+      {w:"this",   ipa:"/ðɪs/",     tr:"bu",   ex:"This is Ana.",       exTr:"Bu Ana."}
+    ],
+
+    /* ---------- PART 1 · Kelimeler · 14 ekran ---------- */
+    part1:[
+      {type:"word_card", w:"mother", ipa:"/ˈmʌðər/", tr:"anne", ex:"This is my mother.", exTr:"Bu benim annem."},
+      {type:"word_card", w:"father", ipa:"/ˈfɑːðər/", tr:"baba", ex:"This is my father.", exTr:"Bu benim babam."},
+      {type:"mc_meaning", w:"mother", ipa:"/ˈmʌðər/", correct:"anne", options:["anne","baba","aile","isim"]},
+      {type:"mc_reverse", tr:"baba", correct:"father", options:["father","mother","family","name"]},
+      {type:"listen_pick", audio:"father", ipa:"/ˈfɑːðər/", correct:"father", options:["father","mother","family","my"]},
+      {type:"word_card", w:"family", ipa:"/ˈfæməli/", tr:"aile", ex:"This is my family.", exTr:"Bu benim ailem."},
+      {type:"word_card", w:"this", ipa:"/ðɪs/", tr:"bu", ex:"This is Ana.", exTr:"Bu Ana."},
+      {type:"match4", pairs:[["mother","anne"],["father","baba"],["family","aile"],["this","bu"]]},
+      {type:"image_choice", art:"mother", correct:"mother", options:["mother","father","family","name"]},
+      {type:"letter_keys", answer:"father", tr:"baba"},
+      {type:"mc_meaning", w:"family", ipa:"/ˈfæməli/", correct:"aile", options:["aile","anne","baba","bu"]},
+      {type:"listen_write", audio:"mother", answer:"mother", tr:"anne", options:["anne","baba","aile","isim"]},
+      {type:"letter_keys", answer:"this", tr:"bu"},
+      {type:"say_word", target:"family", ipa:"/ˈfæməli/", tr:"aile"}
+    ],
+
+    /* ---------- PART 2 · Gramer · 9 ekran ---------- */
+    part2:[
+      {type:"grammar_pattern",
+       head:"This is + isim",
+       sub:"Yanındaki kişiyi ya da şeyi göstererek tanıtırken cümle “This is” ile başlar.",
+       slots:[{role:"işaret", val:"This", cls:"subj"},{role:"be", val:"is", cls:"be"},{role:"isim", val:"my mother", cls:"comp", wide:true}],
+       slotCap:"Üç parça hep bu sırada: This → is → tanıttığın kişi.",
+       examples:[{en:"This is my mother.", tr:"Bu benim annem."},{en:"This is my father.", tr:"Bu benim babam."},{en:"This is Ana.", tr:"Bu Ana."}],
+       good:{en:"This is my mother."},
+       bad:{en:"This my mother."}},
+      {type:"fill_blank", sentence:"This ___ my mother.", correct:"is", options:["is","am","are","my"], tr:"Bu benim annem."},
+      {type:"build_translate", tr:"Bu benim babam.", target:"This is my father.", extra:["mother","am"]},
+      {type:"fill_blank", sentence:"___ is my family.", correct:"This", options:["This","My","You","Are"], tr:"Bu benim ailem."},
+      {type:"listen_sentence_gap", sentence:"This is my ___.", correct:"mother", options:["mother","father","family","name"], tr:"Bu benim annem."},
+      {type:"build_sentence", target:"This is Ana.", extra:["my"], tr:"Bu Ana."},
+      {type:"letter_keys", answer:"this", tr:"bu", context:"___ is my father.", contextTr:"Bu benim babam."},
+      {type:"say_sentence", target:"This is my family.", tr:"Bu benim ailem."},
+      {type:"mc_sentence", sentence:"This is ___ father.", correct:"my", options:["my","I","me","am"], tr:"Bu benim babam."}
+    ],
+
+    /* ---------- PART 3 · Cümle ve diyalog · 10 ekran ---------- */
+    part3:[
+      {type:"dialog_gap",
+       lines:[{who:"Sam", en:"Hello! This is my ___."},{who:"Sen", en:"Hi! Nice to meet you.", mine:true}],
+       gapLine:0, correct:"mother", options:["mother","my","this","name"],
+       tr:"Merhaba! Bu benim annem. — Selam! Tanıştığımıza memnun oldum."},
+      {type:"build_translate", tr:"Bu benim ailem.", target:"This is my family.", extra:["father","are"]},
+      {type:"dialog_build",
+       lines:[{who:"Sam", en:"Hello! This is my mother."},{who:"Sen", en:"", mine:true}],
+       replyIndex:1, target:"Hi! Nice to meet you.", extra:["my"],
+       tr:"Selam! Tanıştığımıza memnun oldum."},
+      {type:"listen_write", audio:"This is my father.", answer:"This is my father", tr:"Bu benim babam.",
+       options:["Bu benim babam.","Bu benim annem.","Bu benim ailem.","Benim adım Ana."]},
+      {type:"dialog_gap",
+       lines:[{who:"Ana", en:"This is my family."},{who:"Sen", en:"Nice ___ meet you.", mine:true}],
+       gapLine:1, correct:"to", options:["to","and","is","in"],
+       tr:"Bu benim ailem. — Tanıştığımıza memnun oldum."},
+      {type:"say_sentence", target:"This is Ana.", tr:"Bu Ana."},
+      {type:"fill_blank", sentence:"My mother ___ Ana.", correct:"is", options:["is","am","are"], tr:"Annem Ana."},
+      {type:"dialog_say",
+       lines:[{who:"Ana", en:"This is my family."},{who:"Sen", en:"", mine:true}],
+       replyIndex:1, target:"Nice to meet you.",
+       tr:"Tanıştığımıza memnun oldum."},
+      {type:"listen_sentence_gap", sentence:"My mother is ___.", correct:"Ana", options:["Ana","Sam","Leo","Mia"], tr:"Annem Ana."},
+      {type:"say_sentence", target:"This is my mother.", tr:"Bu benim annem."}
+    ]
+  },
+
+  6: {
+    title:"Brother and sister",
+    grammar:"'this is my' + aile ismi",
+    grammarEx:"This is my brother.",
+    outcome:"Ailenin tamamını tanıtabilirsin.",
+    hardWord:"daughter",
+    words:[
+      {w:"sister",   ipa:"/ˈsɪstər/",  tr:"kız kardeş",   ex:"This is my sister.",  exTr:"Bu benim kız kardeşim."},
+      {w:"brother",  ipa:"/ˈbrʌðər/",  tr:"erkek kardeş", ex:"This is my brother.", exTr:"Bu benim erkek kardeşim."},
+      {w:"son",      ipa:"/sʌn/",      tr:"oğul",         ex:"My son is Leo.",      exTr:"Oğlum Leo."},
+      {w:"daughter", ipa:"/ˈdɔːtər/",  tr:"kız evlat",    ex:"My daughter is Mia.", exTr:"Kızım Mia."}
+    ],
+
+    /* ---------- PART 1 · Kelimeler · 18 ekran ----------
+       Dört kelime iki minimal çift: sister↔brother, son↔daughter.
+       Hata "kelimeyi unutmak" değil, "çiftin yanlış tarafını seçmek" —
+       o yüzden node 5'in 14'lük dizisine ayırt etme egzersizi eklendi:
+       +1 image_choice, +1 mc_reverse, +1 match4, +1 listen_pick.
+       Her çeldiricide çiftin öteki üyesi duruyor. */
+    part1:[
+      {type:"word_card", w:"sister", ipa:"/ˈsɪstər/", tr:"kız kardeş", ex:"This is my sister.", exTr:"Bu benim kız kardeşim."},
+      {type:"word_card", w:"brother", ipa:"/ˈbrʌðər/", tr:"erkek kardeş", ex:"This is my brother.", exTr:"Bu benim erkek kardeşim."},
+      {type:"mc_meaning", w:"sister", ipa:"/ˈsɪstər/", correct:"kız kardeş", options:["kız kardeş","erkek kardeş","anne","aile"]},
+      {type:"mc_reverse", tr:"erkek kardeş", correct:"brother", options:["brother","sister","father","mother"]},
+      {type:"listen_pick", audio:"brother", ipa:"/ˈbrʌðər/", correct:"brother", options:["brother","sister","mother","father"]},
+      {type:"image_choice", art:"sister", correct:"sister", options:["sister","brother","mother","father"]},
+      {type:"word_card", w:"son", ipa:"/sʌn/", tr:"oğul", ex:"My son is Leo.", exTr:"Oğlum Leo."},
+      {type:"word_card", w:"daughter", ipa:"/ˈdɔːtər/", tr:"kız evlat", ex:"My daughter is Mia.", exTr:"Kızım Mia."},
+      {type:"match4", pairs:[["sister","kız kardeş"],["brother","erkek kardeş"],["son","oğul"],["daughter","kız evlat"]]},
+      {type:"mc_reverse", tr:"kız evlat", correct:"daughter", options:["daughter","son","sister","mother"]},
+      {type:"image_choice", art:"son", correct:"son", options:["son","daughter","mother","father"]},
+      {type:"letter_keys", answer:"brother", tr:"erkek kardeş"},
+      {type:"mc_meaning", w:"son", ipa:"/sʌn/", correct:"oğul", options:["oğul","kız evlat","erkek kardeş","baba"]},
+      {type:"listen_pick", audio:"daughter", ipa:"/ˈdɔːtər/", correct:"daughter", options:["daughter","son","sister","mother"]},
+      {type:"listen_write", audio:"sister", answer:"sister", tr:"kız kardeş", options:["kız kardeş","erkek kardeş","oğul","kız evlat"]},
+      {type:"match4", pairs:[["brother","erkek kardeş"],["sister","kız kardeş"],["mother","anne"],["father","baba"]]},
+      {type:"letter_keys", answer:"daughter", tr:"kız evlat"},
+      {type:"say_word", target:"daughter", ipa:"/ˈdɔːtər/", tr:"kız evlat"}
+    ],
+
+    /* ---------- PART 2 · Gramer · 6 ekran ----------
+       Yeni yapı yok: node 5'in “This is …” deseninin devamı. Bu yüzden
+       uzun anlatım değil, tek ekranlık desen hatırlatması ve 5 kullanım.
+       Node 5'in ekranı birebir tekrar edilmiyor — vurgu artık kalıbın
+       kendisinde değil, düşmemesi gereken “my” parçasında. */
+    part2:[
+      {type:"grammar_pattern",
+       head:"This is my + aile ismi",
+       sub:"Node 5'teki kalıbın aynısı. Değişen tek şey son parça: yerine yeni aile ismini koyuyorsun.",
+       slots:[{role:"işaret", val:"This", cls:"subj"},{role:"be", val:"is", cls:"be"},{role:"iyelik", val:"my", cls:"poss"},{role:"aile ismi", val:"brother", cls:"comp", wide:true}],
+       slotCap:"“my” düşmüyor: This is my brother — This is brother değil.",
+       examples:[{en:"This is my brother.", tr:"Bu benim erkek kardeşim."},{en:"This is my sister.", tr:"Bu benim kız kardeşim."},{en:"This is my daughter.", tr:"Bu benim kızım."}],
+       good:{en:"This is my sister."},
+       bad:{en:"This is sister."}},
+      {type:"fill_blank", sentence:"This is ___ brother.", correct:"my", options:["my","I","me","is"], tr:"Bu benim erkek kardeşim."},
+      {type:"build_translate", tr:"Bu benim kız kardeşim.", target:"This is my sister.", extra:["brother","am"]},
+      {type:"listen_sentence_gap", sentence:"This is my ___.", correct:"daughter", options:["daughter","son","sister","brother"], tr:"Bu benim kızım."},
+      {type:"say_sentence", target:"This is my brother.", tr:"Bu benim erkek kardeşim."},
+      {type:"mc_sentence", sentence:"My son ___ Leo.", correct:"is", options:["is","am","are"], tr:"Oğlum Leo."}
+    ],
+
+    /* ---------- PART 3 · Cümle ve diyalog · 12 ekran ----------
+       Bu node'un kazanımı tek kişi değil, birden fazla kişiyi tanıtmak:
+       diyaloglarda isim de veriliyor (“This is my brother, Sam.”) ve
+       bir diyalogda iki kişi arka arkaya tanıtılıyor. */
+    part3:[
+      {type:"dialog_gap",
+       lines:[{who:"Ana", en:"This is my ___, Sam."},{who:"Sen", en:"Hello Sam! Nice to meet you.", mine:true}],
+       gapLine:0, correct:"brother", options:["brother","sister","son","daughter"],
+       tr:"Bu benim erkek kardeşim, Sam. — Merhaba Sam! Tanıştığımıza memnun oldum."},
+      {type:"build_translate", tr:"Bu benim oğlum.", target:"This is my son.", extra:["daughter","are"]},
+      {type:"dialog_build",
+       lines:[{who:"Ana", en:"This is my brother, Sam."},{who:"Sen", en:"", mine:true}],
+       replyIndex:1, target:"Hello Sam! Nice to meet you.", extra:["my"],
+       tr:"Merhaba Sam! Tanıştığımıza memnun oldum."},
+      {type:"listen_write", audio:"This is my sister.", answer:"This is my sister", tr:"Bu benim kız kardeşim.",
+       options:["Bu benim kız kardeşim.","Bu benim erkek kardeşim.","Bu benim oğlum.","Bu benim kızım."]},
+      {type:"dialog_gap",
+       lines:[{who:"Sam", en:"Is this your sister?"},{who:"Sen", en:"Yes. This is my ___, Mia.", mine:true}],
+       gapLine:1, correct:"sister", options:["sister","brother","son","daughter"],
+       tr:"Bu senin kız kardeşin mi? — Evet. Bu benim kız kardeşim, Mia."},
+      {type:"say_sentence", target:"This is my daughter.", tr:"Bu benim kızım."},
+      {type:"fill_blank", sentence:"My daughter ___ Mia.", correct:"is", options:["is","am","are"], tr:"Kızım Mia."},
+      {type:"dialog_say",
+       lines:[{who:"Ana", en:"This is my son, Leo."},{who:"Ana", en:"And this is my daughter, Mia."},{who:"Sen", en:"", mine:true}],
+       replyIndex:2, target:"Nice to meet you.",
+       tr:"Tanıştığımıza memnun oldum."},
+      {type:"listen_sentence_gap", sentence:"This is my brother, ___.", correct:"Sam", options:["Sam","Leo","Mia","Ana"], tr:"Bu benim erkek kardeşim, Sam."},
+      {type:"mc_sentence", sentence:"This is ___ sister, Mia.", correct:"my", options:["my","I","me","is"], tr:"Bu benim kız kardeşim, Mia."},
+      {type:"dialog_build",
+       lines:[{who:"Sam", en:"Is this your sister?"},{who:"Sen", en:"", mine:true}],
+       replyIndex:1, target:"Yes. This is my sister.", extra:["brother"],
+       tr:"Evet. Bu benim kız kardeşim."},
+      {type:"say_sentence", target:"This is my brother, Sam.", tr:"Bu benim erkek kardeşim, Sam."}
+    ]
+  },
+
+  7: {
+    title:"Where are you from",
+    grammar:"'be from' + yer",
+    grammarEx:"I am from Turkey.",
+    outcome:"Nereli olduğunu söyleyebilir ve sorabilirsin.",
+    hardWord:"country",
+    words:[
+      {w:"from",    ipa:"/frʌm/",     tr:"-den, -dan", ex:"I am from Turkey.",     exTr:"Ben Türkiye'denim."},
+      {w:"country", ipa:"/ˈkʌntri/",  tr:"ülke",       ex:"Turkey is my country.", exTr:"Türkiye benim ülkem."},
+      {w:"where",   ipa:"/weər/",     tr:"nerede",     ex:"Where are you from?",   exTr:"Nerelisin?"},
+      {w:"live",    ipa:"/lɪv/",      tr:"yaşamak",    ex:"I live in Italy.",      exTr:"İtalya'da yaşıyorum."}
+    ],
+
+    /* ---------- PART 1 · Kelimeler · 12 ekran ----------
+       Dördün üçü soyut: from bir edat, where bir soru sözcüğü, live bir
+       fiil. Tek başına resmedilemez, tek başına ezberlenmesi de işe
+       yaramaz — o yüzden part 1 kısa ve ağırlık kelime kartlarının örnek
+       cümlesinde. image_choice yalnızca country'de (küre + bayrak);
+       from ve live cümle içinde çalışılıyor (letter_keys context'li,
+       fill_blank). Asıl iş part 2'ye bırakılıyor. */
+    part1:[
+      {type:"word_card", w:"from", ipa:"/frʌm/", tr:"-den, -dan", ex:"I am from Turkey.", exTr:"Ben Türkiye'denim."},
+      {type:"word_card", w:"where", ipa:"/weər/", tr:"nerede", ex:"Where are you from?", exTr:"Nerelisin?"},
+      {type:"mc_meaning", w:"from", ipa:"/frʌm/", correct:"-den, -dan", options:["-den, -dan","nerede","ülke","yaşamak"]},
+      {type:"mc_reverse", tr:"nerede", correct:"where", options:["where","from","live","country"]},
+      {type:"listen_pick", audio:"from", ipa:"/frʌm/", correct:"from", options:["from","where","live","country"]},
+      {type:"word_card", w:"country", ipa:"/ˈkʌntri/", tr:"ülke", ex:"Turkey is my country.", exTr:"Türkiye benim ülkem."},
+      {type:"word_card", w:"live", ipa:"/lɪv/", tr:"yaşamak", ex:"I live in Italy.", exTr:"İtalya'da yaşıyorum."},
+      {type:"match4", pairs:[["from","-den, -dan"],["country","ülke"],["where","nerede"],["live","yaşamak"]]},
+      {type:"image_choice", art:"country", prompt:"Görseldeki ne?", correct:"country", options:["country","family","brother","mother"]},
+      {type:"letter_keys", answer:"live", tr:"yaşamak", context:"I ___ in Italy.", contextTr:"İtalya'da yaşıyorum."},
+      {type:"fill_blank", sentence:"You are ___ Spain.", correct:"from", options:["from","in","live","where"], tr:"Sen İspanya'dansın."},
+      {type:"say_word", target:"country", ipa:"/ˈkʌntri/", tr:"ülke"}
+    ],
+
+    /* ---------- PART 2 · Gramer · 15 ekran ----------
+       A0'ın buraya kadarki en zor noktası: gramer iki yapı taşıyor.
+       (1) düz cümle  I am from Turkey.
+       (2) devrik soru  Where are you from?  — be özneden ÖNCE.
+       Her birinin kendi grammar_pattern ekranı var. Aralarında kelime
+       sırası çalışması (build_sentence / build_translate) ve
+       'I am from X' ile 'I live in X' ayrımını sınayan mc_sentence'lar.
+       İki desen ekranı 1 ve 7. sıralarda: önce düz cümle oturuyor,
+       sonra aynı parçalar soru sırasına diziliyor. */
+    part2:[
+      {type:"grammar_pattern",
+       head:"I am from + ülke",
+       sub:"Nereli olduğunu söylerken be'den sonra from, from'dan sonra ülke geliyor.",
+       slots:[{role:"özne", val:"I", cls:"subj"},{role:"be", val:"am", cls:"be"},{role:"from + ülke", val:"from Turkey", cls:"comp", wide:true}],
+       slotCap:"from düşmüyor: I am from Turkey — I am Turkey değil.",
+       examples:[{en:"I am from Turkey.", tr:"Ben Türkiye'denim."},{en:"You are from Spain.", tr:"Sen İspanya'dansın."},{en:"My family is from Japan.", tr:"Ailem Japonya'dan."}],
+       good:{en:"I am from Turkey."},
+       bad:{en:"I from Turkey."}},
+      {type:"fill_blank", sentence:"I ___ from Turkey.", correct:"am", options:["am","is","are","my"], tr:"Ben Türkiye'denim."},
+      {type:"build_translate", tr:"Sen İspanya'dansın.", target:"You are from Spain.", extra:["am","live"]},
+      {type:"mc_sentence", sentence:"I ___ in Italy.", correct:"live", options:["live","am","from","are"], tr:"İtalya'da yaşıyorum."},
+      {type:"mc_sentence", sentence:"I am ___ Turkey.", correct:"from", options:["from","in","live","to"], tr:"Ben Türkiye'denim."},
+      {type:"listen_sentence_gap", sentence:"My family is from ___.", correct:"Japan", options:["Japan","Spain","Italy","Turkey"], tr:"Ailem Japonya'dan."},
+      {type:"grammar_pattern",
+       head:"Where + are + you + from?",
+       sub:"Aynı parçalar, soru sırasında: be özneden ÖNCE geliyor.",
+       slots:[{role:"soru", val:"Where", cls:"comp"},{role:"be", val:"are", cls:"be"},{role:"özne", val:"you", cls:"subj"},{role:"kuyruk", val:"from?", cls:"comp"}],
+       slotCap:"Düz cümle: You are from Spain. Soru: Where are you from?",
+       examples:[{en:"Where are you from?", tr:"Nerelisin?"},{en:"Where is your family from?", tr:"Ailen nereden?"},{en:"I am from Spain.", tr:"Ben İspanya'danım."}],
+       good:{en:"Where are you from?"},
+       bad:{en:"Where you are from?"}},
+      {type:"build_sentence", target:"Where are you from?", extra:["is","am"], tr:"Nerelisin?"},
+      {type:"build_translate", tr:"İtalya'da yaşıyorum.", target:"I live in Italy.", extra:["from","where"]},
+      {type:"fill_blank", sentence:"___ are you from?", correct:"Where", options:["Where","You","Are","From"], tr:"Nerelisin?"},
+      {type:"letter_keys", answer:"where", tr:"nerede", context:"___ is your family from?", contextTr:"Ailen nereden?"},
+      {type:"listen_sentence_gap", sentence:"Where ___ you from?", correct:"are", options:["are","am","is","from"], tr:"Nerelisin?"},
+      {type:"say_sentence", target:"I live in Italy.", tr:"İtalya'da yaşıyorum."},
+      {type:"say_sentence", target:"I am from Turkey.", tr:"Ben Türkiye'denim."},
+      {type:"mc_sentence", sentence:"Where ___ your family from?", correct:"is", options:["is","are","am","from"], tr:"Ailen nereden?"}
+    ],
+
+    /* ---------- PART 3 · Cümle ve diyalog · 12 ekran ----------
+       Bu node'un tüm amacı soru-cevap: diyalog egzersizleri ağır basıyor
+       (6 diyalog ekranı). Karşı taraf soruyor, sen cevaplıyorsun; son
+       ekranda soruyu sen soruyorsun. */
+    part3:[
+      {type:"dialog_gap",
+       lines:[{who:"Sam", en:"Where are you ___?"},{who:"Sen", en:"I am from Turkey.", mine:true}],
+       gapLine:0, correct:"from", options:["from","live","in","where"],
+       tr:"Nerelisin? — Ben Türkiye'denim."},
+      {type:"dialog_build",
+       lines:[{who:"Sam", en:"Where are you from?"},{who:"Sen", en:"", mine:true}],
+       replyIndex:1, target:"I am from Turkey.", extra:["live","are"],
+       tr:"Ben Türkiye'denim."},
+      {type:"listen_write", audio:"I live in Italy.", answer:"I live in Italy", tr:"İtalya'da yaşıyorum.",
+       options:["İtalya'da yaşıyorum.","Ben İtalya'danım.","Ailem İtalya'dan.","Nerelisin?"]},
+      {type:"dialog_gap",
+       lines:[{who:"Ana", en:"I am from Spain. ___ are you from?"},{who:"Sen", en:"I am from Japan.", mine:true}],
+       gapLine:0, correct:"Where", options:["Where","You","From","Live"],
+       tr:"Ben İspanya'danım. Nerelisin? — Ben Japonya'danım."},
+      {type:"build_translate", tr:"Ailem Japonya'dan.", target:"My family is from Japan.", extra:["am","live"]},
+      {type:"say_sentence", target:"I am from Spain.", tr:"Ben İspanya'danım."},
+      {type:"fill_blank", sentence:"Where is your ___ from?", correct:"family", options:["family","country","live","where"], tr:"Ailen nereden?"},
+      {type:"dialog_say",
+       lines:[{who:"Ana", en:"I am from Spain. Where are you from?"},{who:"Sen", en:"", mine:true}],
+       replyIndex:1, target:"I am from Japan. I live in Italy.",
+       tr:"Ben Japonya'danım. İtalya'da yaşıyorum."},
+      {type:"listen_sentence_gap", sentence:"I am from ___.", correct:"Spain", options:["Spain","Turkey","Italy","Japan"], tr:"Ben İspanya'danım."},
+      {type:"dialog_gap",
+       lines:[{who:"Mia", en:"Where is your family ___?"},{who:"Sen", en:"My family is from Japan.", mine:true}],
+       gapLine:0, correct:"from", options:["from","live","country","where"],
+       tr:"Ailen nereden? — Ailem Japonya'dan."},
+      {type:"dialog_build",
+       lines:[{who:"Mia", en:"Where is your family from?"},{who:"Sen", en:"", mine:true}],
+       replyIndex:1, target:"My family is from Spain.", extra:["live","am"],
+       tr:"Ailem İspanya'dan."},
+      {type:"say_sentence", target:"Where are you from?", tr:"Nerelisin?"}
+    ]
+  }
+};
+
+/* ================================================================
+   Yardımcılar
+   ================================================================ */
+const ICON = {
+  back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 19 8 12l7-7"/></svg>',
+  close:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5.2 5.3L20 6.8"/></svg>',
+  star:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 3 2.7 5.9 6.3.7-4.7 4.3 1.3 6.3L12 17.1 6.4 20.2l1.3-6.3L3 9.6l6.3-.7z"/></svg>',
+  lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="10.5" rx="2.6"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>',
+  sound:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6.5 9H3v6h3.5L11 19z"/><path d="M15.5 8.6a4.6 4.6 0 0 1 0 6.8"/><path d="M18.4 5.4a9 9 0 0 1 0 13.2"/></svg>',
+  mic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2.5" width="6" height="11.5" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0"/><path d="M12 18v3.5"/></svg>',
+  del:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 5.5H9.4L3 12l6.4 6.5H20a1.5 1.5 0 0 0 1.5-1.5V7a1.5 1.5 0 0 0-1.5-1.5z"/><path d="m12 9.6 5 4.8M17 9.6l-5 4.8"/></svg>'
+};
+
+/* CSS/SVG ile çizili illüstrasyonlar — dosya gömülmüyor. */
+const ART = {
+  mother:
+    '<svg viewBox="0 0 200 150" role="img" aria-label="Bir kadın ve yanında bir çocuk">'+
+      '<ellipse cx="100" cy="140" rx="78" ry="7" fill="#EDE9FE"/>'+
+      '<path d="M50 132q0-40 28-40t28 40z" fill="#7C3AED"/>'+
+      '<rect x="56" y="28" width="44" height="48" rx="22" fill="#4C1D95"/>'+
+      '<circle cx="78" cy="52" r="16" fill="#F7DFC9"/>'+
+      '<circle cx="72" cy="50" r="2" fill="#4C1D95"/><circle cx="84" cy="50" r="2" fill="#4C1D95"/>'+
+      '<path d="M73 59q5 4 10 0" stroke="#4C1D95" stroke-width="2" fill="none" stroke-linecap="round"/>'+
+      '<path d="M116 132q0-28 18-28t18 28z" fill="#DDD6FE"/>'+
+      '<rect x="120" y="62" width="28" height="30" rx="14" fill="#8B5CF6"/>'+
+      '<circle cx="134" cy="80" r="11" fill="#F7DFC9"/>'+
+      '<circle cx="130" cy="78" r="1.6" fill="#4C1D95"/><circle cx="138" cy="78" r="1.6" fill="#4C1D95"/>'+
+      '<path d="M130 85q4 3 8 0" stroke="#4C1D95" stroke-width="1.8" fill="none" stroke-linecap="round"/>'+
+      '<path d="M104 104q8 4 14 8" stroke="#7C3AED" stroke-width="5" fill="none" stroke-linecap="round"/>'+
+    '</svg>',
+  father:
+    '<svg viewBox="0 0 200 150" role="img" aria-label="Bir erkek ve yanında bir çocuk">'+
+      '<ellipse cx="100" cy="140" rx="78" ry="7" fill="#EDE9FE"/>'+
+      '<path d="M54 132V96a24 24 0 0 1 48 0v36z" fill="#2563EB"/>'+
+      '<rect x="58" y="30" width="40" height="26" rx="13" fill="#1F2937"/>'+
+      '<circle cx="78" cy="52" r="16" fill="#F7DFC9"/>'+
+      '<circle cx="72" cy="50" r="2" fill="#1F2937"/><circle cx="84" cy="50" r="2" fill="#1F2937"/>'+
+      '<path d="M73 59q5 4 10 0" stroke="#1F2937" stroke-width="2" fill="none" stroke-linecap="round"/>'+
+      '<path d="M116 132q0-28 18-28t18 28z" fill="#DDD6FE"/>'+
+      '<rect x="120" y="62" width="28" height="30" rx="14" fill="#8B5CF6"/>'+
+      '<circle cx="134" cy="80" r="11" fill="#F7DFC9"/>'+
+      '<circle cx="130" cy="78" r="1.6" fill="#1F2937"/><circle cx="138" cy="78" r="1.6" fill="#1F2937"/>'+
+      '<path d="M130 85q4 3 8 0" stroke="#1F2937" stroke-width="1.8" fill="none" stroke-linecap="round"/>'+
+    '</svg>',
+  family:
+    '<svg viewBox="0 0 200 150" role="img" aria-label="Üç kişilik bir aile yan yana">'+
+      '<ellipse cx="100" cy="140" rx="84" ry="7" fill="#EDE9FE"/>'+
+      '<path d="M14 132q0-34 24-34t24 34z" fill="#7C3AED"/>'+
+      '<rect x="20" y="42" width="36" height="42" rx="18" fill="#4C1D95"/>'+
+      '<circle cx="38" cy="62" r="14" fill="#F7DFC9"/>'+
+      '<path d="M76 132V102a22 22 0 0 1 44 0v30z" fill="#2563EB"/>'+
+      '<rect x="80" y="44" width="36" height="24" rx="12" fill="#1F2937"/>'+
+      '<circle cx="98" cy="62" r="14" fill="#F7DFC9"/>'+
+      '<path d="M138 132q0-26 17-26t17 26z" fill="#DDD6FE"/>'+
+      '<rect x="141" y="70" width="28" height="28" rx="14" fill="#8B5CF6"/>'+
+      '<circle cx="155" cy="86" r="11" fill="#F7DFC9"/>'+
+    '</svg>',
+  /* Minimal çiftlerde soru "hangisi" değil "çiftin hangi tarafı" —
+     o yüzden iki figür de sahnede, sorulan olan kesik halka içinde. */
+  sister:
+    '<svg viewBox="0 0 200 150" role="img" aria-label="İki kardeş; halkanın içindeki kız işaretli, yanındaki oğlan soluk">'+
+      '<ellipse cx="100" cy="140" rx="80" ry="7" fill="#EDE9FE"/>'+
+      '<circle cx="66" cy="88" r="47" fill="#F5F3FF"/>'+
+      '<circle cx="66" cy="88" r="47" fill="none" stroke="#7C3AED" stroke-width="3" stroke-dasharray="7 5"/>'+
+      '<path d="M44 130q0-33 22-33t22 33z" fill="#7C3AED"/>'+
+      '<rect x="48" y="48" width="36" height="42" rx="18" fill="#4C1D95"/>'+
+      '<circle cx="66" cy="68" r="14" fill="#F7DFC9"/>'+
+      '<circle cx="61" cy="66" r="1.8" fill="#4C1D95"/><circle cx="71" cy="66" r="1.8" fill="#4C1D95"/>'+
+      '<path d="M61 74q5 4 10 0" stroke="#4C1D95" stroke-width="1.8" fill="none" stroke-linecap="round"/>'+
+      '<g opacity=".4">'+
+        '<path d="M120 130q0-31 20-31t20 31z" fill="#2563EB"/>'+
+        '<rect x="126" y="50" width="28" height="17" rx="8.5" fill="#1F2937"/>'+
+        '<circle cx="140" cy="70" r="13" fill="#F7DFC9"/>'+
+        '<circle cx="135" cy="68" r="1.7" fill="#1F2937"/><circle cx="145" cy="68" r="1.7" fill="#1F2937"/>'+
+        '<path d="M135 76q5 4 10 0" stroke="#1F2937" stroke-width="1.8" fill="none" stroke-linecap="round"/>'+
+      '</g>'+
+    '</svg>',
+  son:
+    '<svg viewBox="0 0 200 150" role="img" aria-label="Bir anne ve çocuğu; halkanın içindeki oğlan çocuğu işaretli">'+
+      '<ellipse cx="100" cy="140" rx="80" ry="7" fill="#EDE9FE"/>'+
+      '<g opacity=".4">'+
+        '<path d="M34 132q0-40 28-40t28 40z" fill="#7C3AED"/>'+
+        '<rect x="40" y="28" width="44" height="48" rx="22" fill="#4C1D95"/>'+
+        '<circle cx="62" cy="52" r="16" fill="#F7DFC9"/>'+
+        '<circle cx="56" cy="50" r="2" fill="#4C1D95"/><circle cx="68" cy="50" r="2" fill="#4C1D95"/>'+
+        '<path d="M57 59q5 4 10 0" stroke="#4C1D95" stroke-width="2" fill="none" stroke-linecap="round"/>'+
+      '</g>'+
+      '<circle cx="140" cy="90" r="44" fill="#F5F3FF"/>'+
+      '<circle cx="140" cy="90" r="44" fill="none" stroke="#7C3AED" stroke-width="3" stroke-dasharray="7 5"/>'+
+      '<path d="M120 130q0-31 20-31t20 31z" fill="#2563EB"/>'+
+      '<rect x="126" y="52" width="28" height="17" rx="8.5" fill="#1F2937"/>'+
+      '<circle cx="140" cy="72" r="13" fill="#F7DFC9"/>'+
+      '<circle cx="135" cy="70" r="1.7" fill="#1F2937"/><circle cx="145" cy="70" r="1.7" fill="#1F2937"/>'+
+      '<path d="M135 78q5 4 10 0" stroke="#1F2937" stroke-width="1.8" fill="none" stroke-linecap="round"/>'+
+    '</svg>',
+  /* country soyut: insan değil, üstüne bayrak dikilmiş bir küre. */
+  country:
+    '<svg viewBox="0 0 200 150" role="img" aria-label="Üzerine bayrak dikilmiş bir dünya küresi">'+
+      '<ellipse cx="100" cy="141" rx="66" ry="6" fill="#EDE9FE"/>'+
+      '<circle cx="100" cy="78" r="50" fill="#DDD6FE"/>'+
+      '<ellipse cx="100" cy="78" rx="21" ry="50" fill="none" stroke="#7C3AED" stroke-width="2.2" opacity=".5"/>'+
+      '<path d="M50 78h100M60 54h80M60 102h80" stroke="#7C3AED" stroke-width="2.2" opacity=".5" stroke-linecap="round"/>'+
+      '<path d="M72 62q14-11 26-1t20 7-13 17-29 2-4-25z" fill="#7C3AED" opacity=".8"/>'+
+      '<path d="M104 98q12-6 19 2t-6 15-19-4 6-13z" fill="#7C3AED" opacity=".8"/>'+
+      '<circle cx="100" cy="78" r="50" fill="none" stroke="#6D28D9" stroke-width="3"/>'+
+      '<path d="M138 44V12" stroke="#4C1D95" stroke-width="3.4" stroke-linecap="round"/>'+
+      '<path d="M138 14h26l-7 8 7 8h-26z" fill="#EF4444"/>'+
+    '</svg>'
+};
+
+function esc(s){
+  return String(s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+/* Tohumlu RNG. Eski sürüm zayıf karıştırıyordu: "p1-3", "p1-4" gibi birbirine
+   benzeyen tohumlar benzer ilk sayıyı üretiyor, doğru şık 4 seçenekli
+   sorularda neredeyse hiç son sıraya düşmüyordu. xmur3 + mulberry32 ile
+   tohum tam karışıyor. */
+function seedRand(seed){
+  let h = 1779033703 ^ seed.length;
+  for (let i=0;i<seed.length;i++){
+    h = Math.imul(h ^ seed.charCodeAt(i), 3432918353);
+    h = (h << 13) | (h >>> 19);
+  }
+  h = Math.imul(h ^ (h >>> 16), 2246822507);
+  h = Math.imul(h ^ (h >>> 13), 3266489909);
+  let a = (h ^ (h >>> 16)) >>> 0;
+  return function(){
+    a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function shuffle(arr, seed){
+  const r = seedRand(String(seed)), a = arr.slice();
+  for (let i=a.length-1;i>0;i--){ const j = Math.floor(r()*(i+1)); const t=a[i]; a[i]=a[j]; a[j]=t; }
+  return a;
+}
+function say(text, btn){
+  if (btn){ btn.classList.add("playing"); setTimeout(function(){ btn.classList.remove("playing"); }, 640); }
+  try{
+    if (!("speechSynthesis" in window)) return false;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "en-US"; u.rate = 0.8;
+    window.speechSynthesis.speak(u);
+    return true;
+  }catch(e){ return false; }
+}
+function norm(s){
+  return String(s).toLowerCase().replace(/[.,!?;:’']/g,"").replace(/\s+/g," ").trim();
+}
+function words(s){ return norm(s).split(" ").filter(Boolean); }
+
+/* ================================================================
+   Durum
+   ================================================================ */
+const S = { i:0, res:{}, xp:0, combo:0, bestCombo:0, repeated:{} };
+const SCREENS = [];
+
+/* blurb yok: part alt yazısı partBlurb() ile ekran sayısından türüyor,
+   yoksa node 6/7'de node 5'in sayıları yazardı. */
+const PARTS = [
+  {key:"p1", no:1, name:"Kelimeler",        color:"#2563EB"},
+  {key:"p2", no:2, name:"Gramer",           color:"#DB2777"},
+  {key:"p3", no:3, name:"Cümle ve diyalog", color:"#059669"}
+];
+function partOf(key){ return PARTS.filter(function(p){ return p.key===key; })[0]; }
+/* Part alt yazısı ekran sayısından türüyor — node'a göre değişiyor. */
+function partBlurb(p){
+  const all = partScreens(p.key).length;
+  const teach = partScreens(p.key).filter(function(s){ return s.teach; }).length;
+  if (p.no === 1) return teach+" kelime kartı + "+(all-teach)+" alıştırma";
+  if (p.no === 2) return teach+" desen ekranı + "+(all-teach)+" alıştırma";
+  return all+" cümle ve diyalog alıştırması";
+}
+function nodeTotal(n){
+  const d = NODE_DATA[n];
+  if (!d) return 0;
+  return (d.part1||[]).length + (d.part2||[]).length + (d.part3||[]).length;
+}
+function nodeMeta(n){ return NODES.filter(function(x){ return x.n===n; })[0]; }
+function partScreens(key){ return SCREENS.filter(function(s){ return s.part===key && s.kind==="ex"; }); }
+function partAnswered(key){ return partScreens(key).filter(function(s){ return typeof S.res[s.id]==="boolean"; }).length; }
+function partScore(key){ return partScreens(key).filter(function(s){ return S.res[s.id]===true; }).length; }
+function partDone(key){ const a=partScreens(key); return a.length>0 && partAnswered(key)===a.length; }
+
+function record(id, ok){
+  if (typeof S.res[id] === "boolean") return;
+  S.res[id] = !!ok;
+  if (ok){
+    S.combo++;
+    if (S.combo > S.bestCombo) S.bestCombo = S.combo;
+    S.xp += 10 + Math.min(10, (S.combo-1)*2);
+  } else {
+    S.combo = 0;
+  }
+}
+function go(n){
+  S.i = Math.max(0, Math.min(SCREENS.length-1, n));
+  render();
+}
+function goId(id){
+  const k = SCREENS.findIndex(function(s){ return s.id===id; });
+  if (k >= 0) go(k);
+}
+/* Part'ın son alıştırmasından çıkarken yanlışları tekrar kuyruğuna al. */
+function advance(){
+  const cur = SCREENS[S.i];
+  if (cur && cur.kind === "ex" && !cur.repeat){
+    const nxt = SCREENS[S.i+1];
+    const isLast = !nxt || nxt.part !== cur.part || nxt.kind !== "ex";
+    if (isLast) queueRepeats(cur.part);
+  }
+  go(S.i+1);
+}
+function queueRepeats(pkey){
+  const wrong = partScreens(pkey).filter(function(s){
+    return !s.repeat && S.res[s.id] === false && !S.repeated[s.id];
+  });
+  if (!wrong.length) return;
+  let at = SCREENS.findIndex(function(s){ return s.id===SCREENS[S.i].id; }) + 1;
+  wrong.forEach(function(s){
+    S.repeated[s.id] = true;
+    const clone = makeScreen(partOf(pkey), s.id + "-r", s.item, true);
+    SCREENS.splice(at++, 0, clone);
+  });
+}
+
+/* ================================================================
+   Ekran iskeleti
+   ================================================================ */
+function topbarHTML(sc){
+  const list = partScreens(sc.part);
+  const dots = list.map(function(s){
+    let cls = "";
+    if (s.id === sc.id) cls = "now";
+    else if (S.res[s.id] === true) cls = "done";
+    else if (S.res[s.id] === false) cls = "miss";
+    return '<i class="'+cls+'"></i>';
+  }).join("");
+  const step = list.findIndex(function(s){ return s.id===sc.id; }) + 1;
+  return '<div class="topbar">'+
+    '<button class="iconbtn" data-home aria-label="Derse ara ver, node ekranına dön">'+ICON.close+'</button>'+
+    '<div class="stepdots" aria-hidden="true">'+dots+'</div>'+
+    '<span class="hud"><span class="xp">'+S.xp+' XP</span>'+
+      (S.combo>1 ? '<span class="combo">&times;'+S.combo+'</span>' : '')+
+    '</span>'+
+    '<span class="tcount">'+step+'/'+list.length+'</span>'+
+  '</div>';
+}
+function frame(host, sc, bodyHTML, opts){
+  opts = opts || {};
+  host.innerHTML =
+    topbarHTML(sc) +
+    '<div class="scroll mid"><div class="mid-in">'+bodyHTML+'</div></div>' +
+    (opts.kb || "") +
+    '<div class="footerbar'+(opts.plainFoot ? " plain" : "")+'" data-foot></div>';
+  const home = host.querySelector("[data-home]");
+  if (home) home.addEventListener("click", function(){ goId("detail"); });
+}
+function setFoot(host, o){
+  const f = host.querySelector("[data-foot]");
+  f.innerHTML =
+    (o.fb ? '<div class="fb '+o.fb.kind+'" role="status">'+o.fb.html+'</div>' : "") +
+    '<button class="appbtn'+(o.cls ? " "+o.cls : "")+'"'+(o.disabled ? " disabled" : "")+'>'+esc(o.label)+'</button>';
+  const b = f.querySelector("button");
+  if (!o.disabled && o.onClick) b.addEventListener("click", o.onClick);
+  return b;
+}
+function fbOk(extra){ return {kind:"ok", html:"<b>Doğru.</b>" + (extra ? " "+esc(extra) : "")}; }
+function fbNo(extra){ return {kind:"no", html:"<b>Olmadı.</b>" + (extra ? " "+esc(extra) : "")}; }
+function contFoot(host, ok, msg){
+  setFoot(host, {
+    fb: ok ? fbOk(msg) : fbNo(msg),
+    label:"Devam", cls: ok ? "ok" : "", onClick: advance
+  });
+}
+/* Ses düğmelerini bağla: [data-say="metin"] */
+function wireSay(host){
+  host.querySelectorAll("[data-say]").forEach(function(b){
+    b.addEventListener("click", function(){ say(b.getAttribute("data-say"), b); });
+  });
+}
+/* Şık listesi — tek seçimlik, cevaptan sonra kilitlenir. */
+function wireOpts(host, correctText, onPick){
+  host.querySelectorAll("[data-opt]").forEach(function(b){
+    b.addEventListener("click", function(){
+      const v = b.getAttribute("data-opt");
+      const ok = v === correctText;
+      host.querySelectorAll("[data-opt]").forEach(function(x){
+        x.disabled = true;
+        if (x.getAttribute("data-opt") === correctText) x.classList.add("right");
+        else if (x === b) x.classList.add("wrong");
+        else x.classList.add("dim");
+      });
+      onPick(ok, v);
+    });
+  });
+}
+
+/* ================================================================
+   UYGULAMA İÇİ KLAVYE
+   Sadece cevapta geçen harfler canlı. Kademelenme yok — hep böyle.
+   ================================================================ */
+const KB_ROWS = ["qwertyuiop","asdfghjkl","zxcvbnm"];
+function keyboardHTML(answer){
+  const need = {};
+  answer.toLowerCase().replace(/[^a-z]/g,"").split("").forEach(function(c){ need[c]=1; });
+  const rows = KB_ROWS.map(function(row, ri){
+    let keys = row.split("").map(function(c){
+      const live = need[c] ? "live" : "dead";
+      return '<button class="key '+live+'" data-k="'+c+'"'+(need[c] ? '' : ' tabindex="-1" aria-hidden="true"')+'>'+c+'</button>';
+    }).join("");
+    if (ri === 2) keys += '<button class="key wide act" data-del aria-label="Son harfi sil">'+ICON.del+'</button>';
+    return '<div class="kbrow">'+keys+'</div>';
+  }).join("");
+  return '<div class="kb" role="group" aria-label="Uygulama klavyesi, yalnızca gereken harfler etkin">'+rows+'</div>';
+}
+function boxesHTML(answer){
+  return '<div class="slotbox" data-boxes>' + answer.split("").map(function(ch, i){
+    if (ch === " ") return '<i class="lbspace"></i>';
+    return '<div class="lb" data-b="'+i+'"></div>';
+  }).join("") + '</div>';
+}
+/* Klavyeyi ve kutuları bağlar. onDone(): cevap tamamlandığında çağrılır. */
+function mountKeyboard(host, answer, onDone){
+  const chars = answer.split("");
+  const boxOf = function(i){ return host.querySelector('[data-b="'+i+'"]'); };
+  let pos = 0, locked = false;
+  function skip(){ while (pos < chars.length && chars[pos] === " ") pos++; }
+  function paintCursor(){
+    host.querySelectorAll(".lb").forEach(function(b){ b.classList.remove("cursor"); });
+    const b = boxOf(pos);
+    if (b) b.classList.add("cursor");
+  }
+  skip(); paintCursor();
+  host.querySelectorAll("[data-k]").forEach(function(k){
+    k.addEventListener("click", function(){
+      if (locked || pos >= chars.length) return;
+      const want = chars[pos].toLowerCase();
+      const got = k.getAttribute("data-k");
+      const b = boxOf(pos);
+      if (got === want){
+        b.textContent = chars[pos];
+        b.classList.remove("cursor","bad");
+        b.classList.add("done");
+        pos++; skip(); paintCursor();
+        if (pos >= chars.length){
+          locked = true;
+          host.querySelectorAll(".key").forEach(function(x){ x.classList.add("dead"); });
+          onDone();
+        }
+      } else {
+        /* yanlış sıra: kutu kızarır, harf geri alınır */
+        b.textContent = got;
+        b.classList.add("bad");
+        setTimeout(function(){
+          b.textContent = "";
+          b.classList.remove("bad");
+          paintCursor();
+        }, 340);
+      }
+    });
+  });
+  const del = host.querySelector("[data-del]");
+  if (del) del.addEventListener("click", function(){
+    if (locked) return;
+    let p = pos - 1;
+    while (p >= 0 && chars[p] === " ") p--;
+    if (p < 0) return;
+    const b = boxOf(p);
+    b.textContent = ""; b.classList.remove("done","bad");
+    pos = p; paintCursor();
+  });
+}
+
+/* ================================================================
+   KONUŞMA — webkitSpeechRecognition varsa gerçek, yoksa simülasyon
+   ================================================================ */
+function mountSpeech(host, target, onScore){
+  const mic = host.querySelector("[data-mic]");
+  const state = host.querySelector("[data-micstate]");
+  const scoreEl = host.querySelector("[data-score]");
+  const tw = Array.prototype.slice.call(host.querySelectorAll("[data-w]"));
+  const goal = words(target);
+  let busy = false, settled = false;
+
+  function paint(hits){
+    tw.forEach(function(el, i){ if (hits[i]) el.classList.add("hit"); });
+  }
+  function finish(score, note){
+    if (settled) return;
+    settled = true; busy = false;
+    mic.classList.remove("hot");
+    const ok = score >= 0.6;
+    if (ok) mic.classList.add("doneok");
+    state.textContent = note;
+    scoreEl.textContent = "Eşleşme " + Math.round(score*100) + "%";
+    onScore(ok, score);
+  }
+  function simulate(note){
+    state.textContent = "Dinleniyor…";
+    mic.classList.add("hot");
+    setTimeout(function(){
+      mic.classList.remove("hot");
+      const hits = goal.map(function(){ return false; });
+      let i = 0;
+      (function step(){
+        if (i >= goal.length){ finish(1, note); return; }
+        hits[i] = true; paint(hits); i++;
+        setTimeout(step, 230);
+      })();
+    }, 1500);
+  }
+  mic.addEventListener("click", function(){
+    if (busy || settled) return;
+    busy = true;
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR){ simulate("Duyuldu (simülasyon)"); return; }
+    let rec;
+    try{ rec = new SR(); }catch(e){ simulate("Duyuldu (simülasyon)"); return; }
+    rec.lang = "en-US"; rec.interimResults = false; rec.maxAlternatives = 1;
+    let got = false;
+    const guard = setTimeout(function(){
+      if (got || settled) return;
+      try{ rec.abort(); }catch(e){}
+      simulate("Duyuldu (simülasyon)");
+    }, 7000);
+    rec.onresult = function(ev){
+      got = true; clearTimeout(guard);
+      const heard = words(ev.results[0][0].transcript);
+      const hits = goal.map(function(w){ return heard.indexOf(w) >= 0; });
+      paint(hits);
+      const sc = hits.filter(Boolean).length / goal.length;
+      finish(sc, sc >= 0.6 ? "Duyuldu" : "Tam çıkmadı");
+    };
+    rec.onerror = function(){ clearTimeout(guard); if (!got) simulate("Duyuldu (simülasyon)"); };
+    rec.onend = function(){ clearTimeout(guard); if (!got && !settled) simulate("Duyuldu (simülasyon)"); };
+    state.textContent = "Dinleniyor…";
+    mic.classList.add("hot");
+    try{ rec.start(); }catch(e){ clearTimeout(guard); simulate("Duyuldu (simülasyon)"); }
+  });
+}
+function speechBlockHTML(target){
+  return '<button class="mic" data-mic aria-label="Mikrofonu aç ve söyle">'+ICON.mic+'</button>'+
+    '<p class="micstate" data-micstate>Hazır olduğunda mikrofona bas</p>'+
+    '<p class="score" data-score></p>'+
+    '<p class="microNote">Tarayıcıda konuşma tanıma yoksa bu ekran simülasyona düşer; gerçek uygulamada SFSpeechRecognizer çalışıyor.</p>';
+}
+function targetWordsHTML(target){
+  return target.split(" ").map(function(w){ return '<w data-w>'+esc(w)+'</w>'; }).join(" ");
+}
+
+/* ================================================================
+   Ortak parçalar
+   ================================================================ */
+function optsHTML(list, seed, rowClass){
+  return '<div class="opts'+(rowClass ? " row" : "")+'">' + shuffle(list, seed).map(function(o){
+    return '<button class="opt" data-opt="'+esc(o)+'">'+esc(o)+'</button>';
+  }).join("") + '</div>';
+}
+function speakBtn(text, label){
+  return '<button class="speak" data-say="'+esc(text)+'">'+ICON.sound+esc(label || "Dinle")+'</button>';
+}
+function bigSpeak(text, small){
+  return '<button class="bigspeak'+(small ? " sm" : "")+'" data-say="'+esc(text)+'" aria-label="Sesi çal">'+ICON.sound+'</button>';
+}
+function gapSentence(sentence, filled){
+  const parts = String(sentence).split("___");
+  return esc(parts[0]) +
+    '<span class="gap'+(filled ? " filled" : "")+'" data-gap>'+(filled ? esc(filled) : "&nbsp;")+'</span>' +
+    esc(parts[1] || "");
+}
+function scoredScreens(key){ return partScreens(key).filter(function(s){ return !s.teach; }); }
+function visit(id){ if (typeof S.res[id] !== "boolean") S.res[id] = true; }
+
+/* ================================================================
+   ALIŞTIRMA YAPICILARI
+   Her biri (host, sc) alır; veriye sc.item üzerinden bakar.
+   ================================================================ */
+const BUILDERS = {};
+
+/* --- word_card ------------------------------------------------ */
+BUILDERS.word_card = function(host, sc){
+  const it = sc.item;
+  frame(host, sc,
+    '<p class="prompt">Yeni kelime</p>'+
+    '<div class="wordcard">'+
+      '<div class="w">'+esc(it.w)+'</div>'+
+      '<div class="ipa">'+esc(it.ipa)+'</div>'+
+      '<div class="gloss">'+esc(it.tr)+'</div>'+
+      speakBtn(it.w)+
+    '</div>'+
+    '<div class="exline">'+
+      '<span class="cap">Örnek</span>'+
+      '<span class="en">'+esc(it.ex)+'</span>'+
+      '<span class="tr">'+esc(it.exTr)+'</span>'+
+      '<div>'+speakBtn(it.ex, "Cümleyi dinle")+'</div>'+
+    '</div>');
+  wireSay(host);
+  setFoot(host, {label:"Anladım", onClick:function(){ visit(sc.id); advance(); }});
+};
+
+/* --- mc_meaning ----------------------------------------------- */
+BUILDERS.mc_meaning = function(host, sc){
+  const it = sc.item;
+  frame(host, sc,
+    '<p class="prompt">Bu ne demek?</p>'+
+    '<div class="wordcard">'+
+      '<div class="w">'+esc(it.w)+'</div>'+
+      '<div class="ipa">'+esc(it.ipa || "")+'</div>'+
+      speakBtn(it.w)+
+    '</div>'+
+    optsHTML(it.options, sc.id));
+  wireSay(host);
+  setFoot(host, {label:"Bir şık seç", disabled:true});
+  wireOpts(host, it.correct, function(ok){
+    record(sc.id, ok);
+    contFoot(host, ok, ok ? "" : it.w + " = " + it.correct);
+  });
+};
+
+/* --- mc_reverse ----------------------------------------------- */
+BUILDERS.mc_reverse = function(host, sc){
+  const it = sc.item;
+  frame(host, sc,
+    '<p class="prompt">İngilizcesi hangisi?</p>'+
+    '<div class="wordcard">'+
+      '<div class="w" style="color:var(--slot-subj)">'+esc(it.tr)+'</div>'+
+    '</div>'+
+    optsHTML(it.options, sc.id));
+  setFoot(host, {label:"Bir şık seç", disabled:true});
+  wireOpts(host, it.correct, function(ok){
+    record(sc.id, ok);
+    say(it.correct);
+    contFoot(host, ok, ok ? "" : it.tr + " = " + it.correct);
+  });
+};
+
+/* --- match4 --------------------------------------------------- */
+BUILDERS.match4 = function(host, sc){
+  const it = sc.item;
+  const en = shuffle(it.pairs.map(function(p){ return p[0]; }), sc.id+"a");
+  const tr = shuffle(it.pairs.map(function(p){ return p[1]; }), sc.id+"b");
+  const map = {};
+  it.pairs.forEach(function(p){ map[p[0]] = p[1]; });
+  let cells = "";
+  for (let i=0;i<4;i++){
+    cells += '<button class="mcell en" data-en="'+esc(en[i])+'">'+esc(en[i])+'</button>';
+    cells += '<button class="mcell tr" data-tr="'+esc(tr[i])+'">'+esc(tr[i])+'</button>';
+  }
+  frame(host, sc,
+    '<p class="prompt">Eşleştir</p>'+
+    '<p class="qbig">Önce İngilizce kelimeye, sonra karşılığına dokun.</p>'+
+    '<div class="matchgrid">'+cells+'</div>');
+  setFoot(host, {label:"Dört çifti eşleştir", disabled:true});
+  let sel = null, left = 4, miss = 0;
+  host.querySelectorAll(".mcell").forEach(function(c){
+    c.addEventListener("click", function(){
+      if (c.classList.contains("gone")) return;
+      const isEn = c.hasAttribute("data-en");
+      if (isEn){
+        host.querySelectorAll(".mcell").forEach(function(x){ x.classList.remove("sel"); });
+        c.classList.add("sel"); sel = c;
+        say(c.getAttribute("data-en"));
+        return;
+      }
+      if (!sel) return;
+      const w = sel.getAttribute("data-en");
+      if (map[w] === c.getAttribute("data-tr")){
+        [sel, c].forEach(function(x){ x.classList.remove("sel"); x.classList.add("hit"); });
+        const a = sel, b = c; sel = null; left--;
+        setTimeout(function(){ a.classList.add("gone"); b.classList.add("gone"); }, 380);
+        if (left === 0){
+          record(sc.id, miss === 0);
+          contFoot(host, miss === 0, miss === 0 ? "" : miss + " kez şaşırdın, hepsi doğru eşleşti.");
+        }
+      } else {
+        miss++;
+        const a = sel, b = c;
+        b.classList.add("err"); a.classList.add("err");
+        setTimeout(function(){ b.classList.remove("err"); a.classList.remove("err","sel"); }, 380);
+        sel = null;
+      }
+    });
+  });
+};
+
+/* --- image_choice --------------------------------------------- */
+BUILDERS.image_choice = function(host, sc){
+  const it = sc.item;
+  frame(host, sc,
+    '<p class="prompt">'+esc(it.prompt || "Görseldeki kim?")+'</p>'+
+    '<div class="artbox">'+(ART[it.art] || "")+'</div>'+
+    optsHTML(it.options, sc.id, true));
+  setFoot(host, {label:"Bir şık seç", disabled:true});
+  wireOpts(host, it.correct, function(ok){
+    record(sc.id, ok);
+    say(it.correct);
+    contFoot(host, ok, ok ? "" : "Doğrusu: " + it.correct);
+  });
+};
+
+/* --- listen_pick ---------------------------------------------- */
+BUILDERS.listen_pick = function(host, sc){
+  const it = sc.item;
+  frame(host, sc,
+    '<p class="prompt">Hangisini duydun?</p>'+
+    bigSpeak(it.audio)+
+    '<p class="hintipa" data-ipa></p>'+
+    optsHTML(it.options, sc.id, true));
+  wireSay(host);
+  setFoot(host, {label:"Bir şık seç", disabled:true});
+  const ipa = host.querySelector("[data-ipa]");
+  host.querySelector(".bigspeak").addEventListener("click", function(){ ipa.textContent = it.ipa || ""; });
+  wireOpts(host, it.correct, function(ok){
+    record(sc.id, ok);
+    contFoot(host, ok, ok ? "" : "Duyduğun: " + it.correct);
+  });
+};
+
+/* --- translate_meaning (aynı zamanda listen_write'ın yedek yolu) - */
+function renderTranslateMeaning(host, sc, target, correct, options, note){
+  frame(host, sc,
+    '<p class="prompt">Bu ne demek?</p>'+
+    '<div class="sentcard"><p class="s">'+esc(target)+'</p></div>'+
+    (note ? '<p class="microNote">'+esc(note)+'</p>' : '')+
+    '<div style="text-align:center;margin-top:12px">'+speakBtn(target, "Yine de dinle")+'</div>'+
+    optsHTML(options, sc.id));
+  wireSay(host);
+  setFoot(host, {label:"Bir şık seç", disabled:true});
+  wireOpts(host, correct, function(ok){
+    record(sc.id, ok);
+    contFoot(host, ok, ok ? "" : target + " = " + correct);
+  });
+}
+BUILDERS.translate_meaning = function(host, sc){
+  const it = sc.item;
+  renderTranslateMeaning(host, sc, it.target, it.correct, it.options);
+};
+
+/* --- letter_keys ---------------------------------------------- */
+BUILDERS.letter_keys = function(host, sc){
+  const it = sc.item;
+  const head = it.context
+    ? '<p class="kbCtx">'+esc(String(it.context).split("___")[0])+'<u>&nbsp;&nbsp;&nbsp;</u>'+esc(String(it.context).split("___")[1] || "")+'</p>'+
+      '<p class="kbTr">'+esc(it.contextTr || "")+'</p>'
+    : '<div class="wordcard" style="padding:18px"><div class="w" style="font-size:30px;color:var(--slot-subj)">'+esc(it.tr)+'</div>'+
+      speakBtn(it.answer)+'</div>';
+  frame(host, sc,
+    '<p class="prompt">Harflerle yaz</p>'+
+    head +
+    boxesHTML(it.answer)+
+    '<p class="microNote">Klavyede yalnızca bu kelimenin harfleri açık. Harfleri hatırlamak zorunda değilsin, sırayı sen kuruyorsun.</p>',
+    {kb: keyboardHTML(it.answer)});
+  wireSay(host);
+  setFoot(host, {label:"Harfleri sırayla bas", disabled:true});
+  mountKeyboard(host, it.answer, function(){
+    record(sc.id, true);
+    say(it.answer);
+    contFoot(host, true, it.answer + " = " + it.tr);
+  });
+};
+
+/* --- listen_write (adaptif) ------------------------------------ */
+BUILDERS.listen_write = function(host, sc){
+  const it = sc.item;
+  function typingMode(){
+    frame(host, sc,
+      '<p class="prompt">Dinle ve yaz</p>'+
+      bigSpeak(it.audio, true)+
+      boxesHTML(it.answer)+
+      '<button class="escape" data-cant>Duyamıyorum</button>',
+      {kb: keyboardHTML(it.answer)});
+    wireSay(host);
+    setFoot(host, {label:"Dinle, sonra harflere bas", disabled:true});
+    mountKeyboard(host, it.answer, function(){
+      record(sc.id, true);
+      contFoot(host, true, it.answer + " = " + it.tr);
+    });
+    host.querySelector("[data-cant]").addEventListener("click", function(){
+      /* Egzersiz yerinde translate_meaning'e dönüşüyor: sesi duyamayan
+         kullanıcı çıkmaz sokakta kalmıyor, puanı da alabiliyor. */
+      renderTranslateMeaning(host, sc, it.answer, it.tr, it.options,
+        "Sesi kapattık. Yazısı burada — anlamını seç, puanın aynı.");
+    });
+    setTimeout(function(){ say(it.audio); }, 240);
+  }
+  typingMode();
+};
+
+/* --- listen_sentence_gap -------------------------------------- */
+BUILDERS.listen_sentence_gap = function(host, sc){
+  const it = sc.item;
+  const full = String(it.sentence).replace("___", it.correct);
+  frame(host, sc,
+    '<p class="prompt">Cümleyi dinle, boşluğu doldur</p>'+
+    bigSpeak(full)+
+    '<div class="sentcard" style="margin-top:18px">'+
+      '<p class="s">'+gapSentence(it.sentence)+'</p>'+
+      '<p class="tr">'+esc(it.tr)+'</p>'+
+    '</div>'+
+    optsHTML(it.options, sc.id, true));
+  wireSay(host);
+  setFoot(host, {label:"Bir şık seç", disabled:true});
+  setTimeout(function(){ say(full); }, 240);
+  const gap = host.querySelector("[data-gap]");
+  wireOpts(host, it.correct, function(ok, v){
+    gap.textContent = v; gap.classList.add("filled");
+    record(sc.id, ok);
+    if (!ok) setTimeout(function(){ gap.textContent = it.correct; }, 420);
+    contFoot(host, ok, ok ? "" : full);
+  });
+};
+
+/* --- fill_blank ----------------------------------------------- */
+BUILDERS.fill_blank = function(host, sc){
+  const it = sc.item;
+  frame(host, sc,
+    '<p class="prompt">Boşluğu doldur</p>'+
+    '<div class="sentcard">'+
+      '<p class="s">'+gapSentence(it.sentence)+'</p>'+
+      '<p class="tr">'+esc(it.tr)+'</p>'+
+    '</div>'+
+    optsHTML(it.options, sc.id, true));
+  setFoot(host, {label:"Bir şık seç", disabled:true});
+  const gap = host.querySelector("[data-gap]");
+  wireOpts(host, it.correct, function(ok, v){
+    gap.textContent = v; gap.classList.add("filled");
+    record(sc.id, ok);
+    const full = String(it.sentence).replace("___", it.correct);
+    if (!ok) setTimeout(function(){ gap.textContent = it.correct; }, 420);
+    say(full);
+    contFoot(host, ok, ok ? "" : full);
+  });
+};
+
+/* --- mc_sentence ---------------------------------------------- */
+BUILDERS.mc_sentence = function(host, sc){
+  const it = sc.item;
+  frame(host, sc,
+    '<p class="prompt">Doğru formu seç</p>'+
+    '<div class="sentcard">'+
+      '<p class="s">'+gapSentence(it.sentence)+'</p>'+
+      '<p class="tr">'+esc(it.tr)+'</p>'+
+    '</div>'+
+    optsHTML(it.options, sc.id, true));
+  setFoot(host, {label:"Bir şık seç", disabled:true});
+  const gap = host.querySelector("[data-gap]");
+  wireOpts(host, it.correct, function(ok, v){
+    gap.textContent = v; gap.classList.add("filled");
+    record(sc.id, ok);
+    const full = String(it.sentence).replace("___", it.correct);
+    if (!ok) setTimeout(function(){ gap.textContent = it.correct; }, 420);
+    say(full);
+    contFoot(host, ok, ok ? "" : full);
+  });
+};
+
+/* --- cümle kurma ortak motoru --------------------------------- */
+/* Cümle sonu noktalaması parçaya yapışmasın: "Where are you from?" bankada
+   "from?" diye bir token üretiyordu. */
+function tokensOf(target){ return String(target).replace(/[.?!]+$/,"").split(" ").filter(Boolean); }
+function mountBuilder(host, sc, target, extra, onResult){
+  const goal = tokensOf(target);
+  const bank = shuffle(goal.concat(extra || []), sc.id);
+  const line = host.querySelector("[data-line]");
+  const bankEl = host.querySelector("[data-bank]");
+  bankEl.innerHTML = bank.map(function(t, i){
+    return '<button class="tok" data-t="'+esc(t)+'" data-i="'+i+'">'+esc(t)+'</button>';
+  }).join("");
+  let picked = [];
+  function repaint(){
+    line.innerHTML = picked.map(function(p){
+      return '<button class="tok inline" data-p="'+p.i+'">'+esc(p.t)+'</button>';
+    }).join("");
+    line.querySelectorAll("[data-p]").forEach(function(b){
+      b.addEventListener("click", function(){
+        const i = b.getAttribute("data-p");
+        picked = picked.filter(function(p){ return String(p.i) !== String(i); });
+        const src = bankEl.querySelector('[data-i="'+i+'"]');
+        if (src) src.classList.remove("used");
+        repaint();
+      });
+    });
+    const btn = host.querySelector("[data-foot] .appbtn");
+    if (btn) btn.disabled = picked.length !== goal.length;
+  }
+  bankEl.querySelectorAll("[data-t]").forEach(function(b){
+    b.addEventListener("click", function(){
+      if (b.classList.contains("used")) return;
+      b.classList.add("used");
+      picked.push({t:b.getAttribute("data-t"), i:b.getAttribute("data-i")});
+      repaint();
+    });
+  });
+  setFoot(host, {label:"Kontrol et", disabled:false, onClick:function(){
+    const said = picked.map(function(p){ return p.t; }).join(" ");
+    const ok = norm(said) === norm(goal.join(" "));
+    line.classList.add(ok ? "right" : "wrong");
+    line.querySelectorAll(".tok").forEach(function(t){ t.style.pointerEvents = "none"; });
+    bankEl.querySelectorAll(".tok").forEach(function(t){ t.style.pointerEvents = "none"; });
+    record(sc.id, ok);
+    say(target);
+    onResult(ok);
+  }});
+  const b0 = host.querySelector("[data-foot] .appbtn");
+  if (b0) b0.disabled = true;
+}
+
+/* --- build_sentence ------------------------------------------- */
+BUILDERS.build_sentence = function(host, sc){
+  const it = sc.item;
+  frame(host, sc,
+    '<p class="prompt">Cümleyi kur</p>'+
+    '<div style="text-align:center;margin-top:6px">'+speakBtn(it.target, "Cümleyi dinle")+'</div>'+
+    '<p class="qbig">'+esc(it.tr || "")+'</p>'+
+    '<div class="answerline" data-line></div>'+
+    '<div class="bank" data-bank></div>');
+  wireSay(host);
+  mountBuilder(host, sc, it.target, it.extra, function(ok){
+    contFoot(host, ok, ok ? "" : it.target);
+  });
+};
+
+/* --- build_translate ------------------------------------------ */
+BUILDERS.build_translate = function(host, sc){
+  const it = sc.item;
+  frame(host, sc,
+    '<p class="prompt">Türkçeden kur</p>'+
+    '<div class="sentcard"><p class="s" style="font-size:20px;color:var(--slot-subj)">'+esc(it.tr)+'</p></div>'+
+    '<div class="answerline" data-line></div>'+
+    '<div class="bank" data-bank></div>');
+  mountBuilder(host, sc, it.target, it.extra, function(ok){
+    contFoot(host, ok, ok ? "" : it.target);
+  });
+};
+
+/* --- say_word / say_sentence ---------------------------------- */
+function renderSay(host, sc, opts){
+  frame(host, sc,
+    '<p class="prompt">'+esc(opts.prompt)+'</p>'+
+    (opts.dialog || '')+
+    '<div class="saytarget">'+
+      '<p class="st">'+targetWordsHTML(opts.target)+'</p>'+
+      (opts.ipa ? '<p class="ipa">'+esc(opts.ipa)+'</p>' : '')+
+      '<p class="tr">'+esc(opts.tr || "")+'</p>'+
+      '<div>'+speakBtn(opts.target, "Önce dinle")+'</div>'+
+    '</div>'+
+    speechBlockHTML(opts.target)+
+    '<button class="escape" data-skip>Atla</button>');
+  wireSay(host);
+  setFoot(host, {label:"Mikrofona bas ve söyle", disabled:true});
+  mountSpeech(host, opts.target, function(ok){
+    record(sc.id, ok);
+    contFoot(host, ok, ok ? "" : "Hedef: " + opts.target);
+  });
+  host.querySelector("[data-skip]").addEventListener("click", function(){
+    visit(sc.id);   /* atlamak ceza değil ama XP de vermiyor */
+    setFoot(host, {fb:{kind:"ok", html:"<b>Atlandı.</b> Bu ekran puan vermeden geçildi."}, label:"Devam", onClick:advance});
+  });
+}
+BUILDERS.say_word = function(host, sc){
+  const it = sc.item;
+  renderSay(host, sc, {prompt:"Kelimeyi söyle", target:it.target, ipa:it.ipa, tr:it.tr});
+};
+BUILDERS.say_sentence = function(host, sc){
+  const it = sc.item;
+  renderSay(host, sc, {prompt:"Cümleyi söyle", target:it.target, tr:it.tr});
+};
+
+/* --- grammar_pattern (şema, metin değil) ----------------------- */
+BUILDERS.grammar_pattern = function(host, sc){
+  const it = sc.item;
+  const slots = it.slots.map(function(s){
+    return '<div class="slot '+s.cls+(s.wide ? " wide" : "")+'">'+
+      '<span class="role">'+esc(s.role)+'</span>'+
+      '<span class="val">'+esc(s.val)+'</span></div>';
+  }).join("");
+  const ex = (it.examples || []).map(function(e){
+    return '<div class="exrow"><span class="en">'+esc(e.en)+'</span><span class="tr">'+esc(e.tr)+'</span></div>';
+  }).join("");
+  frame(host, sc,
+    '<div class="gramwrap">'+
+      '<p class="prompt" style="text-align:left;margin:0">Desen</p>'+
+      '<h2 class="gramh">'+esc(it.head)+'</h2>'+
+      '<p class="gramsub">'+esc(it.sub)+'</p>'+
+      '<div class="slotrow">'+slots+'</div>'+
+      '<p class="slotcap">'+esc(it.slotCap || "")+'</p>'+
+      '<div class="exrows">'+ex+'</div>'+
+      '<div class="twocard">'+
+        '<div class="tc good"><p class="flag">Böyle</p><p class="tcw">'+esc(it.good.en)+'</p></div>'+
+        '<div class="tc bad"><p class="flag">Böyle değil</p><p class="tcw">'+esc(it.bad.en)+'</p></div>'+
+      '</div>'+
+      '<div style="text-align:center;margin-top:16px">'+speakBtn(it.good.en, "Deseni dinle")+'</div>'+
+    '</div>');
+  wireSay(host);
+  setFoot(host, {label:"Anladım", onClick:function(){ visit(sc.id); advance(); }});
+};
+
+/* --- diyalog ortak ------------------------------------------- */
+function dialogHTML(lines, opts){
+  opts = opts || {};
+  return '<div class="dialog">' + lines.map(function(l, i){
+    const side = l.mine ? "r" : "l";
+    if (opts.pendingIndex === i){
+      return '<div class="bub pending"><span class="who">'+esc(l.who)+'</span>'+esc(opts.pendingText || "…")+'</div>';
+    }
+    let body;
+    if (opts.gapIndex === i){
+      const parts = String(l.en).split("___");
+      body = esc(parts[0]) + '<span class="gap" data-gap>&nbsp;&nbsp;&nbsp;&nbsp;</span>' + esc(parts[1] || "");
+    } else {
+      body = esc(l.en);
+    }
+    return '<div class="bub '+side+'"><span class="who">'+esc(l.who)+'</span>'+body+'</div>';
+  }).join("") + '</div>';
+}
+
+/* --- dialog_gap ----------------------------------------------- */
+BUILDERS.dialog_gap = function(host, sc){
+  const it = sc.item;
+  frame(host, sc,
+    '<p class="prompt">Diyalogdaki boşluk</p>'+
+    dialogHTML(it.lines, {gapIndex: it.gapLine})+
+    '<p class="dtr">'+esc(it.tr || "")+'</p>'+
+    optsHTML(it.options, sc.id, true));
+  setFoot(host, {label:"Bir şık seç", disabled:true});
+  const gap = host.querySelector("[data-gap]");
+  wireOpts(host, it.correct, function(ok, v){
+    gap.textContent = v; gap.classList.add("filled");
+    record(sc.id, ok);
+    const full = String(it.lines[it.gapLine].en).replace("___", it.correct);
+    if (!ok) setTimeout(function(){ gap.textContent = it.correct; }, 420);
+    say(full);
+    contFoot(host, ok, ok ? "" : full);
+  });
+};
+
+/* --- dialog_build --------------------------------------------- */
+BUILDERS.dialog_build = function(host, sc){
+  const it = sc.item;
+  frame(host, sc,
+    '<p class="prompt">Senin repliğini kur</p>'+
+    dialogHTML(it.lines, {pendingIndex: it.replyIndex, pendingText:"…"})+
+    '<p class="dtr">'+esc(it.tr || "")+'</p>'+
+    '<div class="answerline" data-line></div>'+
+    '<div class="bank" data-bank></div>');
+  mountBuilder(host, sc, it.target, it.extra, function(ok){
+    const pend = host.querySelector(".bub.pending");
+    if (pend){
+      pend.className = "bub r";
+      pend.innerHTML = '<span class="who">'+esc(it.lines[it.replyIndex].who)+'</span>'+esc(it.target);
+    }
+    contFoot(host, ok, ok ? "" : it.target);
+  });
+};
+
+/* --- dialog_say ----------------------------------------------- */
+BUILDERS.dialog_say = function(host, sc){
+  const it = sc.item;
+  renderSay(host, sc, {
+    prompt:"Sıra sende — repliği söyle",
+    dialog: dialogHTML(it.lines, {pendingIndex: it.replyIndex, pendingText:"…"}),
+    target: it.target,
+    tr: it.tr
+  });
+};
+
+/* ================================================================
+   Ekran üretimi
+   ================================================================ */
+const TYPE_LABEL = {
+  word_card:"Kelime kartı", mc_meaning:"Anlam seç", mc_reverse:"Ters anlam",
+  match4:"Dörtlü eşleştirme", image_choice:"Görselden seç", listen_pick:"Dinle ve seç",
+  listen_write:"Dinle ve yaz", listen_sentence_gap:"Cümleyi dinle", letter_keys:"Harf klavyesi",
+  fill_blank:"Boşluk doldur", build_sentence:"Cümle kur", build_translate:"Türkçeden kur",
+  mc_sentence:"Cümle içi seçim", say_word:"Kelimeyi söyle", say_sentence:"Cümleyi söyle",
+  dialog_gap:"Diyalog boşluğu", dialog_build:"Diyalog repliği kur", dialog_say:"Repliği söyle",
+  grammar_pattern:"Gramer deseni", translate_meaning:"Anlamı seç"
+};
+function subjectOf(it){
+  if (it.w) return it.w;
+  if (it.answer) return it.answer;
+  if (it.target) return it.target;
+  if (it.audio) return it.audio;
+  if (it.sentence) return String(it.sentence).replace("___","___");
+  if (it.correct) return it.correct;
+  if (it.pairs) return it.pairs.map(function(p){ return p[0]; }).join(" · ");
+  if (it.head) return it.head;
+  return "";
+}
+function labelFor(it){
+  const s = subjectOf(it);
+  return TYPE_LABEL[it.type] + (s ? " · " + s : "");
+}
+function makeScreen(part, id, item, isRepeat){
+  return {
+    id:id, kind:"ex", part:part.key, type:item.type, item:item,
+    repeat:!!isRepeat,
+    teach:(item.type === "word_card" || item.type === "grammar_pattern"),
+    label:labelFor(item),
+    build:function(host){ BUILDERS[item.type](host, this); }
+  };
+}
+
+/* --- harita --------------------------------------------------- */
+function mapScreen(){
+  return {id:"map", kind:"map", part:"nav", label:"A0 haritası · 24 node", build:function(host){
+    const cards = NODES.map(function(n){
+      const done = DONE_NODES.indexOf(n.n) >= 0;
+      const now = n.n === ACTIVE_NODE;
+      const playable = !!NODE_DATA[n.n];
+      /* içeriği olan her node oynanabilir; "içeriği yok" notu yalnızca
+         NODE_DATA kaydı olmayan node'larda kalıyor. */
+      const ready = !done && !now && playable;
+      const soon = !done && !now && !playable && n.n <= ACTIVE_NODE + 2;
+      let cls = "nodecard";
+      if (done) cls += " done";
+      else if (now) cls += " now";
+      else if (ready) cls += " ready";
+      else if (soon) cls += " soon";
+      else cls += " locked";
+      const segs = PARTS.map(function(p){
+        if (done) return '<i class="f"></i>';
+        if (now) return '<i class="'+(partDone(p.key) ? "f" : (partAnswered(p.key) ? "p" : ""))+'"></i>';
+        return '<i></i>';
+      }).join("");
+      const lbl = done ? "3/3 part"
+        : (now ? (PARTS.filter(function(p){ return partDone(p.key); }).length)+"/3 part"
+        : (ready ? "hazır" : "kilitli"));
+      return '<button class="'+cls+'" data-node="'+n.n+'"'+(now || ready ? '' : ' aria-disabled="true"')+'>'+
+        '<div class="ncTop">'+
+          '<span class="ncNo">'+(done ? ICON.check : n.n)+'</span>'+
+          '<h3>'+esc(n.t)+'</h3>'+
+          (now || done || ready ? '' : '<span class="ncLock" aria-hidden="true">'+ICON.lock+'</span>')+
+        '</div>'+
+        '<div class="ncWords">'+n.w.map(function(w){ return '<span class="wchip">'+esc(w)+'</span>'; }).join("")+'</div>'+
+        '<div class="ncGram"><span class="gi" aria-hidden="true"></span>'+esc(n.g)+'</div>'+
+        (soon ? '<p class="ncSoon">Bu prototipte içeriği yok — NODE_DATA’ya eklenince açılır.</p>' : '')+
+        '<div class="ncParts"><div class="segs">'+segs+'</div><span class="lbl">'+lbl+'</span></div>'+
+      '</button>';
+    }).join("");
+    host.innerHTML =
+      '<div class="pathhead">'+
+        '<div class="lvl">A0 · Başlangıç<span>24 node · her biri 4 kelime + 1 gramer</span></div>'+
+        '<div class="stats"><span class="stat fire">4</span><span class="stat xp">'+S.xp+' XP</span></div>'+
+      '</div>'+
+      '<div class="scroll"><div class="nodelist">'+cards+'</div></div>';
+    host.querySelectorAll("[data-node]").forEach(function(b){
+      b.addEventListener("click", function(){
+        const k = Number(b.getAttribute("data-node"));
+        if (!NODE_DATA[k]) return;
+        if (k !== ACTIVE_NODE){ ACTIVE_NODE = k; reset(); }
+        goId("detail");
+      });
+    });
+  }};
+}
+
+/* --- node detay ------------------------------------------------ */
+function detailScreen(){
+  return {id:"detail", kind:"detail", part:"nav", label:"Node "+ACTIVE_NODE+" · detay", build:function(host){
+    const d = NODE_DATA[ACTIVE_NODE];
+    const rows = PARTS.map(function(p){
+      const list = scoredScreens(p.key);
+      const done = partDone(p.key);
+      return '<button class="prow'+(done ? " done" : "")+'" data-part="'+p.key+'">'+
+        '<span class="idx" style="background:'+p.color+'">'+p.no+'</span>'+
+        '<span><b class="name">'+esc(p.name)+'</b><span class="sub">'+esc(partBlurb(p))+'</span></span>'+
+        '<span class="right">'+
+          (done ? '<span class="tick">'+ICON.check+'</span>' : '')+
+          '<span class="cnt">'+partAnswered(p.key)+'/'+partScreens(p.key).length+'</span>'+
+        '</span>'+
+      '</button>';
+    }).join("");
+    host.innerHTML =
+      '<div class="topbar"><button class="iconbtn" data-back aria-label="Haritaya dön">'+ICON.back+'</button>'+
+        '<div class="stepdots" aria-hidden="true"></div>'+
+        '<span class="hud"><span class="xp">'+S.xp+' XP</span></span></div>'+
+      '<div class="scroll">'+
+        '<div class="nodetitle"><h2>'+esc(d.title)+'</h2><span class="topicpill">Node '+ACTIVE_NODE+' · '+nodeTotal(ACTIVE_NODE)+' ekran</span></div>'+
+        '<div class="outcome"><p class="cap">Bu node bitince</p><p>'+esc(d.outcome)+'</p></div>'+
+        '<div class="detailsec"><p class="cap">Gramer</p>'+
+          '<div class="gramcard"><p class="gp">'+esc(d.grammar)+'</p><p class="ge">'+esc(d.grammarEx)+'</p></div></div>'+
+        '<div class="detailsec"><p class="cap">Kelimeler</p><div class="wordrows">'+
+          d.words.map(function(w){
+            return '<div class="wordrow"><b>'+esc(w.w)+'</b><span class="ip">'+esc(w.ipa)+'</span><span class="tr">'+esc(w.tr)+'</span></div>';
+          }).join("")+
+        '</div></div>'+
+        '<div class="detailsec"><p class="cap">Partlar</p></div>'+
+        '<div class="parts">'+rows+'</div>'+
+        '<p class="notepill"><b>Can yok.</b> Yanlış cevapta doğrusu gösteriliyor ve o soru part sonunda bir kez daha soruluyor.</p>'+
+      '</div>';
+    host.querySelector("[data-back]").addEventListener("click", function(){ goId("map"); });
+    host.querySelectorAll("[data-part]").forEach(function(b){
+      b.addEventListener("click", function(){
+        const k = b.getAttribute("data-part");
+        const first = SCREENS.find(function(s){ return s.part===k && s.kind==="ex"; });
+        if (first) goId(first.id);
+      });
+    });
+  }};
+}
+
+/* --- part bitişi ---------------------------------------------- */
+function partEndScreen(p){
+  return {id:p.key+"-end", kind:"partend", part:p.key, label:"Part "+p.no+" bitti", build:function(host){
+    const list = scoredScreens(p.key);
+    const ok = list.filter(function(s){ return S.res[s.id]===true; }).length;
+    const again = list.filter(function(s){ return S.res[s.id]===false; }).length;
+    host.innerHTML =
+      '<div class="scroll"><div class="finish">'+
+        '<div class="fring">'+ICON.check+'</div>'+
+        '<h2>Part '+p.no+' bitti</h2>'+
+        '<p class="fsub">'+esc(p.name)+' · '+partScreens(p.key).length+' ekran</p>'+
+        '<div class="fstats">'+
+          '<div class="fstat g"><b>'+ok+'/'+list.length+'</b><span>Doğru</span></div>'+
+          '<div class="fstat p"><b>'+S.xp+'</b><span>Toplam XP</span></div>'+
+          '<div class="fstat a"><b>&times;'+S.bestCombo+'</b><span>En iyi seri</span></div>'+
+          '<div class="fstat"><b>'+again+'</b><span>Tekrara giden</span></div>'+
+        '</div>'+
+        '<div class="fgain"><p class="cap">Sırada</p><p>'+esc(p.no < 3 ? "Part "+(p.no+1)+" · "+PARTS[p.no].name : "Node bitiş kartı")+'</p></div>'+
+      '</div></div>'+
+      '<div class="footerbar plain"><button class="appbtn ok">Devam</button></div>';
+    host.querySelector(".appbtn").addEventListener("click", function(){ go(S.i+1); });
+  }};
+}
+
+/* --- node bitişi ---------------------------------------------- */
+function nodeEndScreen(){
+  return {id:"node-end", kind:"nodeend", part:"nav", label:"Node "+ACTIVE_NODE+" bitti", build:function(host){
+    const d = NODE_DATA[ACTIVE_NODE];
+    const nxt = nodeMeta(ACTIVE_NODE + 1);
+    let all = 0, ok = 0;
+    PARTS.forEach(function(p){
+      scoredScreens(p.key).forEach(function(s){ all++; if (S.res[s.id]===true) ok++; });
+    });
+    host.innerHTML =
+      '<div class="scroll"><div class="finish">'+
+        '<div class="fring gold">'+ICON.star+'</div>'+
+        '<h2>'+esc(d.title)+'</h2>'+
+        '<p class="fsub">Node '+ACTIVE_NODE+' tamamlandı · '+nodeTotal(ACTIVE_NODE)+' ekran</p>'+
+        '<div class="fstats">'+
+          '<div class="fstat g"><b>'+ok+'/'+all+'</b><span>Doğru</span></div>'+
+          '<div class="fstat p"><b>'+S.xp+'</b><span>XP</span></div>'+
+          '<div class="fstat a"><b>&times;'+S.bestCombo+'</b><span>En iyi seri</span></div>'+
+          '<div class="fstat"><b>'+d.words.length+'</b><span>Yeni kelime</span></div>'+
+        '</div>'+
+        '<div class="fwords">'+d.words.map(function(w){ return '<span class="wchip">'+esc(w.w)+'</span>'; }).join("")+'</div>'+
+        '<div class="fgain"><p class="cap">Artık yapabilirsin</p><p>'+esc(d.outcome)+'</p></div>'+
+        '<div class="fgain"><p class="cap">Sırada</p><p>'+esc(nxt ? "Node "+nxt.n+" · "+nxt.t : "A1")+'</p></div>'+
+      '</div></div>'+
+      '<div class="footerbar plain"><button class="appbtn">Haritaya dön</button></div>';
+    host.querySelector(".appbtn").addEventListener("click", function(){ goId("map"); });
+  }};
+}
+
+function buildScreens(){
+  SCREENS.length = 0;
+  SCREENS.push(mapScreen(), detailScreen());
+  const d = NODE_DATA[ACTIVE_NODE];
+  PARTS.forEach(function(p){
+    (d["part"+p.no] || []).forEach(function(it, i){
+      SCREENS.push(makeScreen(p, p.key+"-"+(i+1), it));
+    });
+    SCREENS.push(partEndScreen(p));
+  });
+  SCREENS.push(nodeEndScreen());
+}
+
+/* ================================================================
+   Render + gezinme rayı
+   ================================================================ */
+function render(){
+  const stage = document.getElementById("stage");
+  const sc = SCREENS[S.i];
+  stage.innerHTML = "";
+  const wrap = document.createElement("div");
+  wrap.className = "scr";
+  stage.appendChild(wrap);
+  sc.build(wrap);
+
+  const label = (S.i+1) + " / " + SCREENS.length;
+  document.getElementById("counter").textContent = label;
+  document.getElementById("counter2").textContent = label;
+  [["btnPrev","btnPrev2"],["btnNext","btnNext2"]].forEach(function(pair, k){
+    pair.forEach(function(id){
+      const b = document.getElementById(id);
+      b.disabled = k === 0 ? S.i === 0 : S.i === SCREENS.length-1;
+    });
+  });
+  renderRail();
+}
+
+const RAIL_GROUPS = [
+  {cap:"Çerçeve", test:function(s){ return s.part === "nav" && s.kind !== "nodeend"; }},
+  {cap:"Part 1 · Kelimeler", test:function(s){ return s.part === "p1"; }},
+  {cap:"Part 2 · Gramer", test:function(s){ return s.part === "p2"; }},
+  {cap:"Part 3 · Cümle ve diyalog", test:function(s){ return s.part === "p3"; }},
+  {cap:"Node bitişi", test:function(s){ return s.kind === "nodeend"; }}
+];
+function renderRail(){
+  const host = document.getElementById("navIndex");
+  let html = "";
+  RAIL_GROUPS.forEach(function(g){
+    const rows = SCREENS.map(function(s, i){ return {s:s, i:i}; }).filter(function(r){ return g.test(r.s); });
+    if (!rows.length) return;
+    const cnt = rows.filter(function(r){ return r.s.kind === "ex"; }).length;
+    html += '<div class="idxgroup"><div class="idxcap"><span>'+esc(g.cap)+'</span>'+
+      (cnt ? '<span>'+cnt+' ekran</span>' : '')+'</div><div class="idxlist">';
+    rows.forEach(function(r){
+      let mark = "", cls = "";
+      if (r.s.kind === "ex"){
+        if (S.res[r.s.id] === true) { mark = '<span class="m d">geçildi</span>'; }
+        else if (S.res[r.s.id] === false) { mark = '<span class="m x">tekrar</span>'; }
+        else { mark = '<span class="m">'+esc(r.s.type)+'</span>'; }
+        if (r.s.repeat) cls = " rep";
+      } else {
+        mark = '<span class="m">'+esc(r.s.kind)+'</span>';
+      }
+      html += '<button class="irow'+cls+'" data-go="'+r.i+'"'+(r.i===S.i ? ' aria-current="true"' : '')+'>'+
+        '<span class="n">'+(r.i+1)+'</span>'+
+        '<span class="t">'+esc(r.s.label)+'</span>'+
+        mark+
+      '</button>';
+    });
+    html += '</div></div>';
+  });
+  host.innerHTML = html;
+  host.querySelectorAll("[data-go]").forEach(function(b){
+    b.addEventListener("click", function(){ go(Number(b.getAttribute("data-go"))); });
+  });
+  document.getElementById("railMeta").textContent = SCREENS.length + " ekran";
+}
+
+/* Sayfa başlığı da NODE_DATA'dan besleniyor — node değişince güncelleniyor. */
+function renderPageHead(){
+  const d = NODE_DATA[ACTIVE_NODE];
+  document.getElementById("pageTitle").textContent = "Node "+ACTIVE_NODE+" — "+d.title;
+  document.getElementById("pageCount").textContent = nodeTotal(ACTIVE_NODE)+" ders ekranı";
+  document.getElementById("pageChips").innerHTML =
+    PARTS.map(function(p){
+      return '<span class="chip"><i class="dot"></i>Part '+p.no+' '+esc(p.name)+' · '+(d["part"+p.no]||[]).length+' ekran</span>';
+    }).join("") +
+    '<span class="chip"><i class="dot"></i>Kalp yok · tekrar kuyruğu var</span>';
+}
+function renderTally(){
+  const d = NODE_DATA[ACTIVE_NODE];
+  const count = {};
+  PARTS.forEach(function(p){
+    (d["part"+p.no] || []).forEach(function(it){ count[it.type] = (count[it.type]||0) + 1; });
+  });
+  const el = document.getElementById("tally");
+  el.innerHTML = Object.keys(count).sort(function(a,b){ return count[b]-count[a] || a.localeCompare(b); })
+    .map(function(k){ return '<span class="tallychip">'+esc(k)+' <b>'+count[k]+'</b></span>'; }).join("");
+}
+
+function reset(){
+  S.i = 0; S.res = {}; S.xp = 0; S.combo = 0; S.bestCombo = 0; S.repeated = {};
+  try{ if ("speechSynthesis" in window) window.speechSynthesis.cancel(); }catch(e){}
+  buildScreens();
+  renderPageHead();
+  renderTally();
+  render();
+}
+
+/* ================================================================
+   Açılış
+   ================================================================ */
+buildScreens();
+renderPageHead();
+renderTally();
+render();
+
+document.getElementById("btnPrev").addEventListener("click", function(){ go(S.i-1); });
+document.getElementById("btnNext").addEventListener("click", function(){ go(S.i+1); });
+document.getElementById("btnPrev2").addEventListener("click", function(){ go(S.i-1); });
+document.getElementById("btnNext2").addEventListener("click", function(){ go(S.i+1); });
+document.getElementById("btnReset").addEventListener("click", reset);
+document.getElementById("btnReset2").addEventListener("click", reset);
+document.addEventListener("keydown", function(e){
+  if (e.target && /^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
+  if (e.key === "ArrowLeft") go(S.i-1);
+  if (e.key === "ArrowRight") go(S.i+1);
+});
+</script>
