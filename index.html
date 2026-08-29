@@ -504,6 +504,82 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .tc.bad .tcw{text-decoration:line-through;text-decoration-color:#FCA5A5}
 
 /* ============================================================
+   11b. YENİ TİPLER — pattern_mini / tf_meaning /
+        dialog_reply_translate. Kural kartı yok: desen bir
+        alıştırmanın içinde kendiliğinden görünüyor.
+   ============================================================ */
+.pmini{margin:14px 20px 0}
+.pmHead{
+  display:inline-block;padding:6px 12px;border-radius:99px;background:var(--a-soft);
+  color:var(--a-purple-deep);font-size:12.5px;font-weight:800;letter-spacing:-.1px;
+}
+.pmRows{margin-top:12px;display:grid;gap:8px}
+.pmRow{
+  padding:12px 14px;border-radius:15px;background:var(--a-surface);
+  border:1.5px solid var(--a-line);display:grid;gap:2px;
+  transition:border-color .16s,background .16s,opacity .16s;
+}
+.pmRow.known{opacity:.62;background:var(--a-soft);border-color:transparent}
+.pmRow.live{border-color:var(--a-pastel);box-shadow:0 8px 22px -20px rgba(42,34,64,.9)}
+.pmRow .pmEn{font-size:17px;font-weight:700;letter-spacing:-.2px;line-height:1.35}
+.pmRow .pmTr{font-size:12.5px;color:var(--a-ink-3)}
+.pmRow .hl{transition:color .22s,background .22s;border-radius:6px;padding:0 1px}
+.pmini.lit .pmRow{opacity:1;background:var(--a-surface);border-color:var(--a-line)}
+.pmini.lit .hl{
+  color:var(--a-purple-deep);background:var(--a-pastel);
+  box-shadow:0 0 0 2.5px var(--a-pastel);animation:pmpop .44s ease-out;
+}
+@keyframes pmpop{0%{background:transparent;box-shadow:none}45%{transform:translateY(-2px)}100%{transform:translateY(0)}}
+.pmGap{
+  display:inline-block;min-width:66px;border-bottom:3px solid var(--a-pastel);
+  color:var(--a-purple);vertical-align:baseline;text-align:center;
+}
+.pmGap.filled{border-bottom-color:var(--a-purple)}
+.pmRow.live.right{border-color:var(--a-green);background:var(--a-ok-bg)}
+.pmRow.live.wrong{border-color:var(--a-red);background:var(--a-no-bg);animation:shake .34s}
+.pmOpts{margin-top:13px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.pmOpt{
+  padding:12px 18px;border-radius:14px;border:1.5px solid var(--a-line);
+  background:var(--a-surface);font-size:16px;font-weight:700;
+  box-shadow:0 2px 0 var(--a-line);transition:transform .12s,border-color .14s,background .14s;
+}
+.pmOpt:active{transform:translateY(1px);box-shadow:none}
+.pmOpt.right{border-color:var(--a-green);background:var(--a-ok-bg)}
+.pmOpt.wrong{border-color:var(--a-red);background:var(--a-no-bg);animation:shake .34s}
+.pmOpt.dim{opacity:.42}
+.pmCap{margin-top:11px;text-align:center;font-size:12px;font-weight:700;color:var(--a-purple-deep);min-height:16px}
+
+.tfclaim{
+  margin:20px 20px 0;padding:22px 18px;border-radius:20px;background:var(--a-surface);
+  border:1px solid var(--a-line);text-align:center;box-shadow:0 12px 30px -26px rgba(42,34,64,.7);
+}
+.tfclaim .w{font-size:32px;font-weight:750;letter-spacing:-.9px}
+.tfclaim .eq{font-size:15px;font-weight:700;color:var(--a-ink-3);margin:5px 0}
+.tfclaim .cl{font-size:22px;font-weight:700;color:var(--slot-subj)}
+.tfbtns{margin:18px 20px 0;display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.tfbtn{
+  padding:20px 8px;border-radius:20px;border:2px solid var(--a-line);background:var(--a-surface);
+  font-size:14.5px;font-weight:750;display:grid;gap:6px;place-items:center;
+  transition:transform .12s,border-color .14s,background .14s;
+}
+.tfbtn .gl{font-size:30px;line-height:1}
+.tfbtn.yes .gl{color:var(--a-green)}
+.tfbtn.no .gl{color:var(--a-red)}
+.tfbtn:active{transform:scale(.97)}
+.tfbtn.right{border-color:var(--a-green);background:var(--a-ok-bg)}
+.tfbtn.wrong{border-color:var(--a-red);background:var(--a-no-bg);animation:shake .34s}
+.tfbtn.dim{opacity:.45}
+
+.rtCard{
+  margin:14px 20px 0;padding:14px 16px;border-radius:16px;
+  background:var(--a-soft);border:1.5px dashed var(--a-pastel);text-align:center;
+}
+.rtCard .cap{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--a-purple-deep)}
+.rtCard .m{font-size:18px;font-weight:750;letter-spacing:-.3px;margin-top:5px;color:var(--slot-subj)}
+.exline.frag{border-left:4px solid var(--a-pastel)}
+.exline.frag .en{font-size:19px}
+
+/* ============================================================
    12. BİTİŞ KARTI
    ============================================================ */
 .finish{padding:26px 22px 24px;text-align:center}
@@ -586,7 +662,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
     <p class="lede">
       Bir A0 node’unun tamamı oynanabilir hâlde: <b id="pageCount">33 ders ekranı</b> + 3 part bitiş kartı + 1 node bitiş kartı.
       Can yok, süre yok. Yanlış cevap sadece <b>part sonunda tekrar</b> demek.
-      19 egzersiz tipinin hepsi gerçekten çalışıyor — klavye uygulamanın kendi klavyesi,
+      <b id="pageTypes">19</b> egzersiz tipinin hepsi gerçekten çalışıyor — klavye uygulamanın kendi klavyesi,
       “dinle ve yaz” duyamayana kendini kapatmıyor.
     </p>
     <div class="chips" id="pageChips"></div>
@@ -660,7 +736,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
           </div>
           <div>
             <dt>Sözcük kısıtı</dt>
-            <dd>Bütün İngilizce dizeler <code>vocabulary_budget</code> içinden — çeldiriciler dâhil. Tek istisna şartnamenin kendi diyaloğundaki <code>meet</code>.</dd>
+            <dd>Bütün İngilizce dizeler <code>vocabulary_budget</code> içinden — çeldiriciler dâhil. <code>meet</code> yalnızca “Nice to meet you.” kalıbı içinde geçer.</dd>
           </div>
           <div>
             <dt>Veri şeması</dt>
@@ -728,6 +804,15 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
    dialog_build         { lines:[{who, en, mine?}], replyIndex, target(en), extra?[], tr }
                           replyIndex satırı build ile kurulur (lines'ta en boş bırakılır).
    dialog_say           { lines:[{who, en, mine?}], replyIndex, target(en), tr }
+   pattern_mini         { head(<=5 kelime), focus(ortak parça), cap?,
+                          lines:[{en, tr, known}], gapLine:{before, after, answer,
+                          options[2-3], tr} }
+     - Kural cümlesi yok: iki bilinen satır soluk, üçüncüsü eksik.
+       Cevaptan sonra focus üç satırda birden renkleniyor.
+   tf_meaning           { word, claim_tr, correct(bool), real_tr }
+   dialog_reply_translate { context:[{who, en, tr}], meaning_tr, target(en), extra?[] }
+     - Hedefin İngilizcesi ekranda HİÇBİR yerde yok; yalnızca anlamı var.
+   word_card ek alan    { fragment:true } -> "Örnek" yerine "Parça" (tam cümle değil)
 
    Ekran sayısı = part1.length + part2.length + part3.length.
    Tekrar kuyruğu bunlara ek olarak çalışma sırasında üretilir.
@@ -860,207 +945,197 @@ const NODE_DATA = {
     outcome:"Ailenin tamamını tanıtabilirsin.",
     hardWord:"daughter",
     words:[
-      {w:"sister",   ipa:"/ˈsɪstər/",  tr:"kız kardeş",   ex:"This is my sister.",  exTr:"Bu benim kız kardeşim."},
-      {w:"brother",  ipa:"/ˈbrʌðər/",  tr:"erkek kardeş", ex:"This is my brother.", exTr:"Bu benim erkek kardeşim."},
+      {w:"sister",   ipa:"/ˈsɪstər/",  tr:"kız kardeş",   ex:"My sister is Mia.",   exTr:"Kız kardeşim Mia."},
+      {w:"brother",  ipa:"/ˈbrʌðər/",  tr:"erkek kardeş", ex:"My brother is Sam.",  exTr:"Erkek kardeşim Sam."},
       {w:"son",      ipa:"/sʌn/",      tr:"oğul",         ex:"My son is Leo.",      exTr:"Oğlum Leo."},
       {w:"daughter", ipa:"/ˈdɔːtər/",  tr:"kız evlat",    ex:"My daughter is Mia.", exTr:"Kızım Mia."}
     ],
 
-    /* ---------- PART 1 · Kelimeler · 18 ekran ----------
+    /* ---------- PART 1 · Kelimeler · 11 ekran ----------
        Dört kelime iki minimal çift: sister↔brother, son↔daughter.
-       Hata "kelimeyi unutmak" değil, "çiftin yanlış tarafını seçmek" —
-       o yüzden node 5'in 14'lük dizisine ayırt etme egzersizi eklendi:
-       +1 image_choice, +1 mc_reverse, +1 match4, +1 listen_pick.
-       Her çeldiricide çiftin öteki üyesi duruyor. */
+       Örnek cümleler bilerek node 3-5 yapısında ("My sister is Mia.") —
+       bu node'un yapısı "This is my ..." part 2'de kuruluyor, part 1'de
+       kullanılmıyor. Çoktan seçmeli tek bir görsel ve tek bir ses
+       ayrımıyla sınırlı; kalanı üretim (klavye, tf, ses, kurma). */
     part1:[
-      {type:"word_card", w:"sister", ipa:"/ˈsɪstər/", tr:"kız kardeş", ex:"This is my sister.", exTr:"Bu benim kız kardeşim."},
-      {type:"word_card", w:"brother", ipa:"/ˈbrʌðər/", tr:"erkek kardeş", ex:"This is my brother.", exTr:"Bu benim erkek kardeşim."},
-      {type:"mc_meaning", w:"sister", ipa:"/ˈsɪstər/", correct:"kız kardeş", options:["kız kardeş","erkek kardeş","anne","aile"]},
-      {type:"mc_reverse", tr:"erkek kardeş", correct:"brother", options:["brother","sister","father","mother"]},
-      {type:"listen_pick", audio:"brother", ipa:"/ˈbrʌðər/", correct:"brother", options:["brother","sister","mother","father"]},
-      {type:"image_choice", art:"sister", correct:"sister", options:["sister","brother","mother","father"]},
+      {type:"word_card", w:"sister", ipa:"/ˈsɪstər/", tr:"kız kardeş", ex:"My sister is Mia.", exTr:"Kız kardeşim Mia."},
+      {type:"word_card", w:"brother", ipa:"/ˈbrʌðər/", tr:"erkek kardeş", ex:"My brother is Sam.", exTr:"Erkek kardeşim Sam."},
+      {type:"image_choice", art:"sister", correct:"sister", options:["brother","mother","sister"]},
+      {type:"listen_pick", audio:"brother", ipa:"/ˈbrʌðər/", correct:"brother", options:["daughter","brother","sister","son"]},
       {type:"word_card", w:"son", ipa:"/sʌn/", tr:"oğul", ex:"My son is Leo.", exTr:"Oğlum Leo."},
       {type:"word_card", w:"daughter", ipa:"/ˈdɔːtər/", tr:"kız evlat", ex:"My daughter is Mia.", exTr:"Kızım Mia."},
       {type:"match4", pairs:[["sister","kız kardeş"],["brother","erkek kardeş"],["son","oğul"],["daughter","kız evlat"]]},
-      {type:"mc_reverse", tr:"kız evlat", correct:"daughter", options:["daughter","son","sister","mother"]},
-      {type:"image_choice", art:"son", correct:"son", options:["son","daughter","mother","father"]},
-      {type:"letter_keys", answer:"brother", tr:"erkek kardeş"},
-      {type:"mc_meaning", w:"son", ipa:"/sʌn/", correct:"oğul", options:["oğul","kız evlat","erkek kardeş","baba"]},
-      {type:"listen_pick", audio:"daughter", ipa:"/ˈdɔːtər/", correct:"daughter", options:["daughter","son","sister","mother"]},
-      {type:"listen_write", audio:"sister", answer:"sister", tr:"kız kardeş", options:["kız kardeş","erkek kardeş","oğul","kız evlat"]},
-      {type:"match4", pairs:[["brother","erkek kardeş"],["sister","kız kardeş"],["mother","anne"],["father","baba"]]},
       {type:"letter_keys", answer:"daughter", tr:"kız evlat"},
-      {type:"say_word", target:"daughter", ipa:"/ˈdɔːtər/", tr:"kız evlat"}
+      {type:"tf_meaning", word:"son", claim_tr:"kız evlat", correct:false, real_tr:"oğul"},
+      {type:"say_word", target:"brother", ipa:"/ˈbrʌðər/", tr:"erkek kardeş"},
+      {type:"build_translate", tr:"Benim erkek kardeşim Sam.", target:"My brother is Sam.", extra:["sister","am"]}
     ],
 
     /* ---------- PART 2 · Gramer · 6 ekran ----------
-       Yeni yapı yok: node 5'in “This is …” deseninin devamı. Bu yüzden
-       uzun anlatım değil, tek ekranlık desen hatırlatması ve 5 kullanım.
-       Node 5'in ekranı birebir tekrar edilmiyor — vurgu artık kalıbın
-       kendisinde değil, düşmemesi gereken “my” parçasında. */
+       Kural kartı yok. pattern_mini iki bilinen cümleyi soluk gösteriyor,
+       üçüncüsünü öğrenci tamamlıyor; "This is my" üç satırda birden
+       renklenince desen kendiliğinden görünüyor. Kalan beş ekran hep
+       üretim: kurma, dinleme boşluğu, söyleme; tek çoktan seçmeli var. */
     part2:[
-      {type:"grammar_pattern",
-       head:"This is my + aile ismi",
-       sub:"Node 5'teki kalıbın aynısı. Değişen tek şey son parça: yerine yeni aile ismini koyuyorsun.",
-       slots:[{role:"işaret", val:"This", cls:"subj"},{role:"be", val:"is", cls:"be"},{role:"iyelik", val:"my", cls:"poss"},{role:"aile ismi", val:"brother", cls:"comp", wide:true}],
-       slotCap:"“my” düşmüyor: This is my brother — This is brother değil.",
-       examples:[{en:"This is my brother.", tr:"Bu benim erkek kardeşim."},{en:"This is my sister.", tr:"Bu benim kız kardeşim."},{en:"This is my daughter.", tr:"Bu benim kızım."}],
-       good:{en:"This is my sister."},
-       bad:{en:"This is sister."}},
-      {type:"fill_blank", sentence:"This is ___ brother.", correct:"my", options:["my","I","me","is"], tr:"Bu benim erkek kardeşim."},
+      {type:"pattern_mini",
+       head:"This is my + aile",
+       focus:"This is my",
+       cap:"Aynı parça: This is my",
+       lines:[
+         {en:"This is my mother.", tr:"Bu benim annem.", known:true},
+         {en:"This is my brother.", tr:"Bu benim erkek kardeşim.", known:true}
+       ],
+       gapLine:{before:"This is my ", after:".", answer:"sister", options:["Mia","sister","name"], tr:"Bu benim kız kardeşim."}},
       {type:"build_translate", tr:"Bu benim kız kardeşim.", target:"This is my sister.", extra:["brother","am"]},
-      {type:"listen_sentence_gap", sentence:"This is my ___.", correct:"daughter", options:["daughter","son","sister","brother"], tr:"Bu benim kızım."},
-      {type:"say_sentence", target:"This is my brother.", tr:"Bu benim erkek kardeşim."},
-      {type:"mc_sentence", sentence:"My son ___ Leo.", correct:"is", options:["is","am","are"], tr:"Oğlum Leo."}
+      {type:"listen_sentence_gap", sentence:"This is my ___.", correct:"son", options:["son","daughter","sister","brother"], tr:"Bu benim oğlum."},
+      {type:"build_sentence", target:"This is my daughter.", extra:["son"], tr:"Bu benim kızım."},
+      {type:"say_sentence", target:"This is my brother, Sam.", tr:"Bu benim erkek kardeşim, Sam."},
+      {type:"mc_sentence", sentence:"This is ___ son.", correct:"my", options:["my","me","I"], tr:"Bu benim oğlum."}
     ],
 
-    /* ---------- PART 3 · Cümle ve diyalog · 12 ekran ----------
-       Bu node'un kazanımı tek kişi değil, birden fazla kişiyi tanıtmak:
-       diyaloglarda isim de veriliyor (“This is my brother, Sam.”) ve
-       bir diyalogda iki kişi arka arkaya tanıtılıyor. */
+    /* ---------- PART 3 · Cümle ve diyalog · 11 ekran ----------
+       İki diyalog, her biri aynı merdiveni tırmanıyor:
+       ANLA (boşluk) → KUR (bankadan) → ANLAMDAN KUR (İngilizcesi ekranda
+       yok) → SÖYLE. Diyalog A tanıştırma, diyalog B "senin kardeşin mi?"
+       sorusuna cevap. */
     part3:[
       {type:"dialog_gap",
-       lines:[{who:"Ana", en:"This is my ___, Sam."},{who:"Sen", en:"Hello Sam! Nice to meet you.", mine:true}],
-       gapLine:0, correct:"brother", options:["brother","sister","son","daughter"],
-       tr:"Bu benim erkek kardeşim, Sam. — Merhaba Sam! Tanıştığımıza memnun oldum."},
-      {type:"build_translate", tr:"Bu benim oğlum.", target:"This is my son.", extra:["daughter","are"]},
+       lines:[{who:"Sam", en:"Hello! This is my ___, Mia."},{who:"Sen", en:"Hi Mia! Nice to meet you.", mine:true}],
+       gapLine:0, correct:"sister", options:["brother","son","daughter","sister"],
+       tr:"Merhaba! Bu benim kız kardeşim, Mia. — Selam Mia! Tanıştığımıza memnun oldum."},
       {type:"dialog_build",
-       lines:[{who:"Ana", en:"This is my brother, Sam."},{who:"Sen", en:"", mine:true}],
-       replyIndex:1, target:"Hello Sam! Nice to meet you.", extra:["my"],
-       tr:"Merhaba Sam! Tanıştığımıza memnun oldum."},
-      {type:"listen_write", audio:"This is my sister.", answer:"This is my sister", tr:"Bu benim kız kardeşim.",
-       options:["Bu benim kız kardeşim.","Bu benim erkek kardeşim.","Bu benim oğlum.","Bu benim kızım."]},
+       lines:[{who:"Sam", en:"Hello! This is my sister, Mia."},{who:"Sen", en:"", mine:true}],
+       replyIndex:1, target:"Hi Mia! Nice to meet you.", extra:["my","too"],
+       tr:"Selam Mia! Tanıştığımıza memnun oldum."},
+      {type:"dialog_reply_translate",
+       context:[
+         {who:"Sam", en:"Hello! This is my sister, Mia.", tr:"Merhaba! Bu benim kız kardeşim, Mia."},
+         {who:"Mia", en:"Hi! Nice to meet you.", tr:"Selam! Tanıştığımıza memnun oldum."}
+       ],
+       meaning_tr:"Ben de memnun oldum.", target:"Nice to meet you too.", extra:["my","and"]},
+      {type:"say_sentence", target:"Hi Mia! Nice to meet you.", tr:"Selam Mia! Tanıştığımıza memnun oldum."},
+      {type:"listen_write", audio:"Is this your brother?", answer:"Is this your brother", tr:"Bu senin erkek kardeşin mi?",
+       options:["Bu senin erkek kardeşin mi?","Bu senin kız kardeşin mi?","Bu benim oğlum.","Bu benim ailem."]},
       {type:"dialog_gap",
-       lines:[{who:"Sam", en:"Is this your sister?"},{who:"Sen", en:"Yes. This is my ___, Mia.", mine:true}],
-       gapLine:1, correct:"sister", options:["sister","brother","son","daughter"],
-       tr:"Bu senin kız kardeşin mi? — Evet. Bu benim kız kardeşim, Mia."},
-      {type:"say_sentence", target:"This is my daughter.", tr:"Bu benim kızım."},
-      {type:"fill_blank", sentence:"My daughter ___ Mia.", correct:"is", options:["is","am","are"], tr:"Kızım Mia."},
+       lines:[{who:"Ana", en:"Is this your brother?"},{who:"Sen", en:"Yes. This is my ___, Leo.", mine:true}],
+       gapLine:1, correct:"brother", options:["brother","sister","son","daughter"],
+       tr:"Bu senin erkek kardeşin mi? — Evet. Bu benim erkek kardeşim, Leo."},
+      {type:"dialog_reply_translate",
+       context:[{who:"Ana", en:"Is this your brother?", tr:"Bu senin erkek kardeşin mi?"}],
+       meaning_tr:"Evet. Bu benim erkek kardeşim, Leo.", target:"Yes. This is my brother, Leo.", extra:["are","am"]},
       {type:"dialog_say",
-       lines:[{who:"Ana", en:"This is my son, Leo."},{who:"Ana", en:"And this is my daughter, Mia."},{who:"Sen", en:"", mine:true}],
-       replyIndex:2, target:"Nice to meet you.",
-       tr:"Tanıştığımıza memnun oldum."},
-      {type:"listen_sentence_gap", sentence:"This is my brother, ___.", correct:"Sam", options:["Sam","Leo","Mia","Ana"], tr:"Bu benim erkek kardeşim, Sam."},
-      {type:"mc_sentence", sentence:"This is ___ sister, Mia.", correct:"my", options:["my","I","me","is"], tr:"Bu benim kız kardeşim, Mia."},
-      {type:"dialog_build",
-       lines:[{who:"Sam", en:"Is this your sister?"},{who:"Sen", en:"", mine:true}],
-       replyIndex:1, target:"Yes. This is my sister.", extra:["brother"],
-       tr:"Evet. Bu benim kız kardeşim."},
-      {type:"say_sentence", target:"This is my brother, Sam.", tr:"Bu benim erkek kardeşim, Sam."}
+       lines:[{who:"Ana", en:"Is this your brother?"},{who:"Sen", en:"", mine:true}],
+       replyIndex:1, target:"Yes. This is my brother, Leo.",
+       tr:"Evet. Bu benim erkek kardeşim, Leo."},
+      {type:"build_translate", tr:"Bu benim ailem.", target:"This is my family.", extra:["mother","are"]},
+      {type:"listen_sentence_gap", sentence:"This is my ___, Mia.", correct:"daughter", options:["son","sister","brother","daughter"], tr:"Bu benim kızım, Mia."},
+      {type:"say_sentence", target:"This is my family.", tr:"Bu benim ailem."}
     ]
   },
-
   7: {
     title:"Where are you from",
-    grammar:"'be from' + yer",
-    grammarEx:"I am from Turkey.",
+    grammar:"'be from' + yer, 'Where … from?'",
+    grammarEx:"Where are you from?",
     outcome:"Nereli olduğunu söyleyebilir ve sorabilirsin.",
     hardWord:"country",
     words:[
-      {w:"from",    ipa:"/frʌm/",     tr:"-den, -dan", ex:"I am from Turkey.",     exTr:"Ben Türkiye'denim."},
-      {w:"country", ipa:"/ˈkʌntri/",  tr:"ülke",       ex:"Turkey is my country.", exTr:"Türkiye benim ülkem."},
-      {w:"where",   ipa:"/weər/",     tr:"nerede",     ex:"Where are you from?",   exTr:"Nerelisin?"},
-      {w:"live",    ipa:"/lɪv/",      tr:"yaşamak",    ex:"I live in Italy.",      exTr:"İtalya'da yaşıyorum."}
+      {w:"country", ipa:"/ˈkʌntri/",  tr:"ülke",       ex:"Turkey is a country.", exTr:"Türkiye bir ülke."},
+      {w:"from",    ipa:"/frʌm/",     tr:"-den, -dan", ex:"from Turkey",          exTr:"Türkiye'den"},
+      {w:"where",   ipa:"/weər/",     tr:"nerede",     ex:"where?",               exTr:"nerede?"},
+      {w:"live",    ipa:"/lɪv/",      tr:"yaşamak",    ex:"I live in Turkey.",    exTr:"Türkiye'de yaşıyorum."}
     ],
 
-    /* ---------- PART 1 · Kelimeler · 12 ekran ----------
-       Dördün üçü soyut: from bir edat, where bir soru sözcüğü, live bir
-       fiil. Tek başına resmedilemez, tek başına ezberlenmesi de işe
-       yaramaz — o yüzden part 1 kısa ve ağırlık kelime kartlarının örnek
-       cümlesinde. image_choice yalnızca country'de (küre + bayrak);
-       from ve live cümle içinde çalışılıyor (letter_keys context'li,
-       fill_blank). Asıl iş part 2'ye bırakılıyor. */
+    /* ---------- PART 1 · Kelimeler · 10 ekran ----------
+       from ve where tek başına resmedilemez, tam cümleyle de
+       verilemez: cümlesi part 2'de kuruluyor. Bu yüzden ikisi
+       FRAGMENT kartı — "from Turkey — Türkiye'den" gibi bir parça.
+       Öğretmeden kullanmak yok: part 1'de "I am from ..." cümlesi
+       hiç geçmiyor. tf_meaning edat tuzağını (-de mi, -den mi)
+       ilk ekranlarda patlatıyor. Tek klavye ekranı burada. */
     part1:[
-      {type:"word_card", w:"from", ipa:"/frʌm/", tr:"-den, -dan", ex:"I am from Turkey.", exTr:"Ben Türkiye'denim."},
-      {type:"word_card", w:"where", ipa:"/weər/", tr:"nerede", ex:"Where are you from?", exTr:"Nerelisin?"},
-      {type:"mc_meaning", w:"from", ipa:"/frʌm/", correct:"-den, -dan", options:["-den, -dan","nerede","ülke","yaşamak"]},
-      {type:"mc_reverse", tr:"nerede", correct:"where", options:["where","from","live","country"]},
-      {type:"listen_pick", audio:"from", ipa:"/frʌm/", correct:"from", options:["from","where","live","country"]},
-      {type:"word_card", w:"country", ipa:"/ˈkʌntri/", tr:"ülke", ex:"Turkey is my country.", exTr:"Türkiye benim ülkem."},
-      {type:"word_card", w:"live", ipa:"/lɪv/", tr:"yaşamak", ex:"I live in Italy.", exTr:"İtalya'da yaşıyorum."},
-      {type:"match4", pairs:[["from","-den, -dan"],["country","ülke"],["where","nerede"],["live","yaşamak"]]},
-      {type:"image_choice", art:"country", prompt:"Görseldeki ne?", correct:"country", options:["country","family","brother","mother"]},
-      {type:"letter_keys", answer:"live", tr:"yaşamak", context:"I ___ in Italy.", contextTr:"İtalya'da yaşıyorum."},
-      {type:"fill_blank", sentence:"You are ___ Spain.", correct:"from", options:["from","in","live","where"], tr:"Sen İspanya'dansın."},
+      {type:"word_card", w:"country", ipa:"/ˈkʌntri/", tr:"ülke", ex:"Turkey is a country.", exTr:"Türkiye bir ülke."},
+      {type:"image_choice", art:"country", prompt:"Görseldeki ne?", correct:"country", options:["family","brother","country"]},
+      {type:"word_card", w:"from", ipa:"/frʌm/", tr:"-den, -dan", ex:"from Turkey", exTr:"Türkiye'den", fragment:true},
+      {type:"tf_meaning", word:"from", claim_tr:"-de, -da", correct:false, real_tr:"-den, -dan"},
+      {type:"word_card", w:"where", ipa:"/weər/", tr:"nerede", ex:"where?", exTr:"nerede?", fragment:true},
+      {type:"word_card", w:"live", ipa:"/lɪv/", tr:"yaşamak", ex:"I live in Turkey.", exTr:"Türkiye'de yaşıyorum."},
+      {type:"match4", pairs:[["country","ülke"],["from","-den, -dan"],["where","nerede"],["live","yaşamak"]]},
+      {type:"listen_pick", audio:"where", ipa:"/weər/", correct:"where", options:["live","country","where","from"]},
+      {type:"letter_keys", answer:"where", tr:"nerede"},
       {type:"say_word", target:"country", ipa:"/ˈkʌntri/", tr:"ülke"}
     ],
 
-    /* ---------- PART 2 · Gramer · 15 ekran ----------
-       A0'ın buraya kadarki en zor noktası: gramer iki yapı taşıyor.
-       (1) düz cümle  I am from Turkey.
-       (2) devrik soru  Where are you from?  — be özneden ÖNCE.
-       Her birinin kendi grammar_pattern ekranı var. Aralarında kelime
-       sırası çalışması (build_sentence / build_translate) ve
-       'I am from X' ile 'I live in X' ayrımını sınayan mc_sentence'lar.
-       İki desen ekranı 1 ve 7. sıralarda: önce düz cümle oturuyor,
-       sonra aynı parçalar soru sırasına diziliyor. */
+    /* ---------- PART 2 · Gramer · 11 ekran ----------
+       İki desen, ikisi de sezdirmeli (kural kartı yok):
+       (1) düz cümle — "I am Ana." biliniyor, "I am from Turkey."
+           duyuluyor, üçüncüsünü öğrenci tamamlıyor; from renkleniyor.
+       (2) soru — iki düz cümle biliniyor, "Where ___ you from?"
+           tamamlanınca are üç satırda birden renkleniyor.
+       Aradaki her ekran üretim; tek çoktan seçmeli live/from ayrımı. */
     part2:[
-      {type:"grammar_pattern",
+      {type:"pattern_mini",
        head:"I am from + ülke",
-       sub:"Nereli olduğunu söylerken be'den sonra from, from'dan sonra ülke geliyor.",
-       slots:[{role:"özne", val:"I", cls:"subj"},{role:"be", val:"am", cls:"be"},{role:"from + ülke", val:"from Turkey", cls:"comp", wide:true}],
-       slotCap:"from düşmüyor: I am from Turkey — I am Turkey değil.",
-       examples:[{en:"I am from Turkey.", tr:"Ben Türkiye'denim."},{en:"You are from Spain.", tr:"Sen İspanya'dansın."},{en:"My family is from Japan.", tr:"Ailem Japonya'dan."}],
-       good:{en:"I am from Turkey."},
-       bad:{en:"I from Turkey."}},
-      {type:"fill_blank", sentence:"I ___ from Turkey.", correct:"am", options:["am","is","are","my"], tr:"Ben Türkiye'denim."},
-      {type:"build_translate", tr:"Sen İspanya'dansın.", target:"You are from Spain.", extra:["am","live"]},
-      {type:"mc_sentence", sentence:"I ___ in Italy.", correct:"live", options:["live","am","from","are"], tr:"İtalya'da yaşıyorum."},
-      {type:"mc_sentence", sentence:"I am ___ Turkey.", correct:"from", options:["from","in","live","to"], tr:"Ben Türkiye'denim."},
-      {type:"listen_sentence_gap", sentence:"My family is from ___.", correct:"Japan", options:["Japan","Spain","Italy","Turkey"], tr:"Ailem Japonya'dan."},
-      {type:"grammar_pattern",
-       head:"Where + are + you + from?",
-       sub:"Aynı parçalar, soru sırasında: be özneden ÖNCE geliyor.",
-       slots:[{role:"soru", val:"Where", cls:"comp"},{role:"be", val:"are", cls:"be"},{role:"özne", val:"you", cls:"subj"},{role:"kuyruk", val:"from?", cls:"comp"}],
-       slotCap:"Düz cümle: You are from Spain. Soru: Where are you from?",
-       examples:[{en:"Where are you from?", tr:"Nerelisin?"},{en:"Where is your family from?", tr:"Ailen nereden?"},{en:"I am from Spain.", tr:"Ben İspanya'danım."}],
-       good:{en:"Where are you from?"},
-       bad:{en:"Where you are from?"}},
-      {type:"build_sentence", target:"Where are you from?", extra:["is","am"], tr:"Nerelisin?"},
-      {type:"build_translate", tr:"İtalya'da yaşıyorum.", target:"I live in Italy.", extra:["from","where"]},
-      {type:"fill_blank", sentence:"___ are you from?", correct:"Where", options:["Where","You","Are","From"], tr:"Nerelisin?"},
-      {type:"letter_keys", answer:"where", tr:"nerede", context:"___ is your family from?", contextTr:"Ailen nereden?"},
-      {type:"listen_sentence_gap", sentence:"Where ___ you from?", correct:"are", options:["are","am","is","from"], tr:"Nerelisin?"},
-      {type:"say_sentence", target:"I live in Italy.", tr:"İtalya'da yaşıyorum."},
+       focus:"from",
+       cap:"Yeni parça: from",
+       lines:[
+         {en:"I am Ana.", tr:"Ben Ana'yım.", known:true},
+         {en:"I am from Turkey.", tr:"Ben Türkiye'denim.", known:false}
+       ],
+       gapLine:{before:"You are from ", after:".", answer:"Spain", options:["name","live","Spain"], tr:"Sen İspanya'dansın."}},
+      {type:"build_translate", tr:"Ben İspanya'danım.", target:"I am from Spain.", extra:["live","are"]},
+      {type:"listen_sentence_gap", sentence:"I am from ___.", correct:"Italy", options:["Italy","Spain","Turkey","Japan"], tr:"Ben İtalya'danım."},
       {type:"say_sentence", target:"I am from Turkey.", tr:"Ben Türkiye'denim."},
-      {type:"mc_sentence", sentence:"Where ___ your family from?", correct:"is", options:["is","are","am","from"], tr:"Ailen nereden?"}
+      {type:"build_sentence", target:"You are from Japan.", extra:["am","in"], tr:"Sen Japonya'dansın."},
+      {type:"pattern_mini",
+       head:"Soru sırası",
+       focus:"are",
+       cap:"Aynı parça: are",
+       lines:[
+         {en:"You are from Spain.", tr:"Sen İspanya'dansın.", known:true},
+         {en:"You are from Japan.", tr:"Sen Japonya'dansın.", known:true}
+       ],
+       gapLine:{before:"Where ", after:" you from?", answer:"are", options:["are","am","is"], tr:"Nerelisin?"}},
+      {type:"build_sentence", target:"Where are you from?", extra:["is","am"], tr:"Nerelisin?"},
+      {type:"build_translate", tr:"Ailem Japonya'dan.", target:"My family is from Japan.", extra:["live","are"]},
+      {type:"mc_sentence", sentence:"I ___ in Italy.", correct:"live", options:["live","am","from"], tr:"İtalya'da yaşıyorum."},
+      {type:"listen_sentence_gap", sentence:"Where ___ you from?", correct:"are", options:["are","am","is","from"], tr:"Nerelisin?"},
+      {type:"say_sentence", target:"Where are you from?", tr:"Nerelisin?"}
     ],
 
-    /* ---------- PART 3 · Cümle ve diyalog · 12 ekran ----------
-       Bu node'un tüm amacı soru-cevap: diyalog egzersizleri ağır basıyor
-       (6 diyalog ekranı). Karşı taraf soruyor, sen cevaplıyorsun; son
-       ekranda soruyu sen soruyorsun. */
+    /* ---------- PART 3 · Cümle ve diyalog · 11 ekran ----------
+       İki diyalog, ikisi de merdiven: ANLA → KUR → ANLAMDAN KUR →
+       SÖYLE. Diyalog A'da kurma basamağı yalnız "I am from Turkey.",
+       tepe basamağı ise kuyruğuyla birlikte "I am from Turkey. And
+       you?" — iskele her basamakta bir parça çekiliyor. Diyalog B'nin
+       tepesi node'un en uzun kurması: iki cümle, yalnızca anlamdan.
+       Klavye ekranı yok. */
     part3:[
       {type:"dialog_gap",
-       lines:[{who:"Sam", en:"Where are you ___?"},{who:"Sen", en:"I am from Turkey.", mine:true}],
-       gapLine:0, correct:"from", options:["from","live","in","where"],
-       tr:"Nerelisin? — Ben Türkiye'denim."},
+       lines:[{who:"Mia", en:"Hello! ___ are you from?"},{who:"Sen", en:"I am from Turkey. And you?", mine:true}],
+       gapLine:0, correct:"Where", options:["You","Are","From","Where"],
+       tr:"Merhaba! Nerelisin? — Ben Türkiye'denim. Ya sen?"},
       {type:"dialog_build",
-       lines:[{who:"Sam", en:"Where are you from?"},{who:"Sen", en:"", mine:true}],
+       lines:[{who:"Mia", en:"Hello! Where are you from?"},{who:"Sen", en:"", mine:true}],
        replyIndex:1, target:"I am from Turkey.", extra:["live","are"],
        tr:"Ben Türkiye'denim."},
-      {type:"listen_write", audio:"I live in Italy.", answer:"I live in Italy", tr:"İtalya'da yaşıyorum.",
-       options:["İtalya'da yaşıyorum.","Ben İtalya'danım.","Ailem İtalya'dan.","Nerelisin?"]},
+      {type:"dialog_reply_translate",
+       context:[{who:"Mia", en:"Hello! Where are you from?", tr:"Merhaba! Nerelisin?"}],
+       meaning_tr:"Ben Türkiye'denim. Ya sen?", target:"I am from Turkey. And you?", extra:["are","is","live"]},
+      {type:"say_sentence", target:"I am from Turkey.", tr:"Ben Türkiye'denim."},
+      {type:"listen_sentence_gap", sentence:"I am from ___.", correct:"Italy", options:["Italy","Japan","Spain","Turkey"], tr:"Mia'nın cevabı: Ben İtalya'danım."},
       {type:"dialog_gap",
-       lines:[{who:"Ana", en:"I am from Spain. ___ are you from?"},{who:"Sen", en:"I am from Japan.", mine:true}],
-       gapLine:0, correct:"Where", options:["Where","You","From","Live"],
-       tr:"Ben İspanya'danım. Nerelisin? — Ben Japonya'danım."},
-      {type:"build_translate", tr:"Ailem Japonya'dan.", target:"My family is from Japan.", extra:["am","live"]},
-      {type:"say_sentence", target:"I am from Spain.", tr:"Ben İspanya'danım."},
-      {type:"fill_blank", sentence:"Where is your ___ from?", correct:"family", options:["family","country","live","where"], tr:"Ailen nereden?"},
+       lines:[{who:"Leo", en:"Is your ___ from Turkey?"},{who:"Sen", en:"Yes. My family is from Turkey.", mine:true}],
+       gapLine:0, correct:"family", options:["family","country","sister","brother"],
+       tr:"Ailen Türkiye'den mi? — Evet. Ailem Türkiye'den."},
+      {type:"build_translate", tr:"Ailem Türkiye'den.", target:"My family is from Turkey.", extra:["live","are"]},
+      {type:"dialog_reply_translate",
+       context:[{who:"Leo", en:"Is your family from Turkey?", tr:"Ailen Türkiye'den mi?"}],
+       meaning_tr:"Evet. Ailem Türkiye'den. İtalya'da yaşıyorum.", target:"Yes. My family is from Turkey. I live in Italy.", extra:["are","am","country"]},
       {type:"dialog_say",
-       lines:[{who:"Ana", en:"I am from Spain. Where are you from?"},{who:"Sen", en:"", mine:true}],
-       replyIndex:1, target:"I am from Japan. I live in Italy.",
-       tr:"Ben Japonya'danım. İtalya'da yaşıyorum."},
-      {type:"listen_sentence_gap", sentence:"I am from ___.", correct:"Spain", options:["Spain","Turkey","Italy","Japan"], tr:"Ben İspanya'danım."},
-      {type:"dialog_gap",
-       lines:[{who:"Mia", en:"Where is your family ___?"},{who:"Sen", en:"My family is from Japan.", mine:true}],
-       gapLine:0, correct:"from", options:["from","live","country","where"],
-       tr:"Ailen nereden? — Ailem Japonya'dan."},
-      {type:"dialog_build",
-       lines:[{who:"Mia", en:"Where is your family from?"},{who:"Sen", en:"", mine:true}],
-       replyIndex:1, target:"My family is from Spain.", extra:["live","am"],
-       tr:"Ailem İspanya'dan."},
+       lines:[{who:"Leo", en:"Is your family from Turkey?"},{who:"Sen", en:"", mine:true}],
+       replyIndex:1, target:"Yes. My family is from Turkey. I live in Italy.",
+       tr:"Evet. Ailem Türkiye'den. İtalya'da yaşıyorum."},
+      {type:"build_sentence", target:"I live in Italy.", extra:["from","am"], tr:"İtalya'da yaşıyorum."},
       {type:"say_sentence", target:"Where are you from?", tr:"Nerelisin?"}
     ]
   }
@@ -1242,7 +1317,15 @@ function partBlurb(p){
   const all = partScreens(p.key).length;
   const teach = partScreens(p.key).filter(function(s){ return s.teach; }).length;
   if (p.no === 1) return teach+" kelime kartı + "+(all-teach)+" alıştırma";
-  if (p.no === 2) return teach+" desen ekranı + "+(all-teach)+" alıştırma";
+  if (p.no === 2){
+    /* Desen ekranı = grammar_pattern (anlatan) + pattern_mini (sezdiren).
+       pattern_mini puanlı bir alıştırma, o yüzden teach sayılmıyor;
+       alt yazıda ikisi birden "desen ekranı" olarak görünüyor. */
+    const pat = partScreens(p.key).filter(function(s){
+      return s.type === "grammar_pattern" || s.type === "pattern_mini";
+    }).length;
+    return pat+" desen ekranı + "+(all-pat)+" alıştırma";
+  }
   return all+" cümle ve diyalog alıştırması";
 }
 function nodeTotal(n){
@@ -1563,11 +1646,11 @@ BUILDERS.word_card = function(host, sc){
       '<div class="gloss">'+esc(it.tr)+'</div>'+
       speakBtn(it.w)+
     '</div>'+
-    '<div class="exline">'+
-      '<span class="cap">Örnek</span>'+
+    '<div class="exline'+(it.fragment ? " frag" : "")+'">'+
+      '<span class="cap">'+(it.fragment ? "Parça" : "Örnek")+'</span>'+
       '<span class="en">'+esc(it.ex)+'</span>'+
       '<span class="tr">'+esc(it.exTr)+'</span>'+
-      '<div>'+speakBtn(it.ex, "Cümleyi dinle")+'</div>'+
+      '<div>'+speakBtn(it.ex, it.fragment ? "Parçayı dinle" : "Cümleyi dinle")+'</div>'+
     '</div>');
   wireSay(host);
   setFoot(host, {label:"Anladım", onClick:function(){ visit(sc.id); advance(); }});
@@ -1970,6 +2053,90 @@ BUILDERS.grammar_pattern = function(host, sc){
   setFoot(host, {label:"Anladım", onClick:function(){ visit(sc.id); advance(); }});
 };
 
+/* --- pattern_mini (sezdirmeli desen — kural kartı değil) -------
+   İki bilinen cümle soluk duruyor, üçüncüsü eksik. Öğrenci eksiği
+   koyunca üç satırdaki ortak parça (it.focus) aynı anda renkleniyor:
+   deseni cümle olarak anlatmıyoruz, gösteriyoruz. */
+function hlHTML(text, focus){
+  const t = String(text);
+  if (!focus) return esc(t);
+  const i = t.indexOf(focus);
+  if (i < 0) return esc(t);
+  return esc(t.slice(0, i)) + '<span class="hl">' + esc(focus) + '</span>' + esc(t.slice(i + focus.length));
+}
+BUILDERS.pattern_mini = function(host, sc){
+  const it = sc.item, g = it.gapLine;
+  const rows = it.lines.map(function(l){
+    return '<div class="pmRow'+(l.known ? " known" : "")+'">'+
+      '<span class="pmEn">'+hlHTML(l.en, it.focus)+'</span>'+
+      '<span class="pmTr">'+esc(l.tr || "")+'</span>'+
+    '</div>';
+  }).join("");
+  const gapRow = '<div class="pmRow live" data-gaprow>'+
+    '<span class="pmEn">'+hlHTML(g.before, it.focus)+
+      '<span class="pmGap" data-gap>&nbsp;&nbsp;</span>'+hlHTML(g.after || "", it.focus)+'</span>'+
+    '<span class="pmTr">'+esc(g.tr || "")+'</span>'+
+  '</div>';
+  const opts = shuffle(g.options, sc.id).map(function(o){
+    return '<button class="pmOpt" data-opt="'+esc(o)+'">'+esc(o)+'</button>';
+  }).join("");
+  frame(host, sc,
+    '<p class="prompt">Eksik parçayı koy</p>'+
+    '<div class="pmini" data-pm>'+
+      '<span class="pmHead">'+esc(it.head)+'</span>'+
+      '<div class="pmRows">'+rows+gapRow+'</div>'+
+      '<div class="pmOpts">'+opts+'</div>'+
+      '<p class="pmCap" data-cap></p>'+
+    '</div>');
+  setFoot(host, {label:"Eksik parçayı seç", disabled:true});
+  const gap = host.querySelector("[data-gap]");
+  const row = host.querySelector("[data-gaprow]");
+  const wrap = host.querySelector("[data-pm]");
+  wireOpts(host, g.answer, function(ok, v){
+    gap.textContent = v; gap.classList.add("filled");
+    row.classList.add(ok ? "right" : "wrong");
+    record(sc.id, ok);
+    const finish = function(){
+      if (it.focus && g.answer.indexOf(it.focus) >= 0) gap.classList.add("hl");
+      wrap.classList.add("lit");
+      const cap = host.querySelector("[data-cap]");
+      if (cap && it.cap) cap.textContent = it.cap;
+    };
+    if (!ok){
+      setTimeout(function(){
+        gap.textContent = g.answer;
+        row.classList.remove("wrong"); row.classList.add("right");
+        finish();
+      }, 420);
+    } else finish();
+    say(String(g.before + g.answer + (g.after || "")).replace(/\s+/g, " ").trim());
+    contFoot(host, ok, ok ? "" : (g.before + g.answer + (g.after || "")).replace(/\s+/g, " ").trim());
+  });
+};
+
+/* --- tf_meaning (2 saniyelik ritim kırıcı) --------------------- */
+BUILDERS.tf_meaning = function(host, sc){
+  const it = sc.item;
+  const key = it.correct ? "dogru" : "yanlis";
+  frame(host, sc,
+    '<p class="prompt">Doğru mu?</p>'+
+    '<div class="tfclaim">'+
+      '<p class="w">'+esc(it.word)+'</p>'+
+      '<p class="eq">=</p>'+
+      '<p class="cl">'+esc(it.claim_tr)+'</p>'+
+    '</div>'+
+    '<div class="tfbtns">'+
+      '<button class="tfbtn yes" data-opt="dogru"><span class="gl" aria-hidden="true">&#10003;</span>Doğru</button>'+
+      '<button class="tfbtn no" data-opt="yanlis"><span class="gl" aria-hidden="true">&#10007;</span>Yanlış</button>'+
+    '</div>');
+  setFoot(host, {label:"Doğru mu, yanlış mı?", disabled:true});
+  wireOpts(host, key, function(ok){
+    record(sc.id, ok);
+    say(it.word);
+    contFoot(host, ok, it.word + " = " + (it.correct ? it.claim_tr : it.real_tr));
+  });
+};
+
 /* --- diyalog ortak ------------------------------------------- */
 function dialogHTML(lines, opts){
   opts = opts || {};
@@ -2039,6 +2206,36 @@ BUILDERS.dialog_say = function(host, sc){
   });
 };
 
+/* --- dialog_reply_translate (merdivenin tepesi) ---------------
+   Partner konuşuyor (yazı + ses). Senin repliğin için ekranda
+   YALNIZCA Türkçe anlam var: hedef cümlenin İngilizcesi hiçbir
+   yerde görünmüyor, bankadaki parçalardan anlamı kuruyorsun. */
+BUILDERS.dialog_reply_translate = function(host, sc){
+  const it = sc.item;
+  const lines = it.context.map(function(l){ return {who:l.who, en:l.en}; });
+  const mineWho = it.who || "Sen";
+  lines.push({who:mineWho, en:"", mine:true});
+  const last = it.context[it.context.length-1];
+  const trLine = it.context.map(function(l){ return l.tr; }).filter(Boolean).join(" ");
+  frame(host, sc,
+    '<p class="prompt">Anlamdan kur</p>'+
+    dialogHTML(lines, {pendingIndex: lines.length-1, pendingText:"…"})+
+    (trLine ? '<p class="dtr">'+esc(trLine)+'</p>' : '')+
+    '<div style="text-align:center;margin-top:10px">'+speakBtn(last.en, "Repliği dinle")+'</div>'+
+    '<div class="rtCard"><span class="cap">Sen ne diyeceksin</span><p class="m">'+esc(it.meaning_tr)+'</p></div>'+
+    '<div class="answerline" data-line></div>'+
+    '<div class="bank" data-bank></div>');
+  wireSay(host);
+  mountBuilder(host, sc, it.target, it.extra, function(ok){
+    const pend = host.querySelector(".bub.pending");
+    if (pend){
+      pend.className = "bub r";
+      pend.innerHTML = '<span class="who">'+esc(mineWho)+'</span>'+esc(it.target);
+    }
+    contFoot(host, ok, ok ? "" : it.target);
+  });
+};
+
 /* ================================================================
    Ekran üretimi
    ================================================================ */
@@ -2049,10 +2246,16 @@ const TYPE_LABEL = {
   fill_blank:"Boşluk doldur", build_sentence:"Cümle kur", build_translate:"Türkçeden kur",
   mc_sentence:"Cümle içi seçim", say_word:"Kelimeyi söyle", say_sentence:"Cümleyi söyle",
   dialog_gap:"Diyalog boşluğu", dialog_build:"Diyalog repliği kur", dialog_say:"Repliği söyle",
-  grammar_pattern:"Gramer deseni", translate_meaning:"Anlamı seç"
+  grammar_pattern:"Gramer deseni", translate_meaning:"Anlamı seç",
+  pattern_mini:"Desen tamamlama", tf_meaning:"Doğru mu yanlış mı",
+  dialog_reply_translate:"Anlamdan replik kur"
 };
 function subjectOf(it){
+  /* Bu tipte hedefin İngilizcesi hiçbir yerde görünmemeli — gezinme
+     rayındaki etiket de dâhil. Ray hedefi değil anlamı gösteriyor. */
+  if (it.type === "dialog_reply_translate") return it.meaning_tr || "";
   if (it.w) return it.w;
+  if (it.word) return it.word;
   if (it.answer) return it.answer;
   if (it.target) return it.target;
   if (it.audio) return it.audio;
@@ -2311,6 +2514,8 @@ function renderPageHead(){
   const d = NODE_DATA[ACTIVE_NODE];
   document.getElementById("pageTitle").textContent = "Node "+ACTIVE_NODE+" — "+d.title;
   document.getElementById("pageCount").textContent = nodeTotal(ACTIVE_NODE)+" ders ekranı";
+  /* tip sayısı da veriden: yeni bir BUILDERS eklendiğinde metin kendini düzeltiyor */
+  document.getElementById("pageTypes").textContent = Object.keys(BUILDERS).length;
   document.getElementById("pageChips").innerHTML =
     PARTS.map(function(p){
       return '<span class="chip"><i class="dot"></i>Part '+p.no+' '+esc(p.name)+' · '+(d["part"+p.no]||[]).length+' ekran</span>';
