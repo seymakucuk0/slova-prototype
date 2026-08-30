@@ -97,6 +97,15 @@
   --slot-be:#DB2777;
   --slot-comp:#059669;
   --slot-poss:#7C3AED;
+  --slot-prep:#D97706;
+
+  /* Öğretim ekranı kicker renkleri — BeatTheme.kindAccent ile birebir. */
+  --k-rule:#DB2777;
+  --k-example:#2563EB;
+  --k-contrast:#D97706;
+  --k-hint-bg:#FFFBEB;
+  --k-hint-line:#FDE68A;
+  --k-hint-ink:#92400E;
 }
 
 *{box-sizing:border-box}
@@ -580,6 +589,111 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .exline.frag .en{font-size:19px}
 
 /* ============================================================
+   11c. ÖĞRETİM EKRANLARI (teach_grammar / teach_dialog)
+        Slova > Paths > BeatLessonPlayerView'ın HTML karşılığı:
+        kicker rozeti (renkli kare + harf aralıklı etiket), 29px
+        başlık (-.6 tracking), kodla çizilen diyagram, kısa gövde,
+        tek "Anladım" düğmesi. Fark: Slova'da her beat ayrı ekran,
+        burada üç blok TEK kaydırmalı ekranda alt alta.
+   ============================================================ */
+.teach{padding:4px 20px 26px}
+.teachTitle{font-size:29px;font-weight:750;letter-spacing:-.6px;line-height:1.14;margin-top:9px}
+.teachKind{font-size:11px;font-weight:800;letter-spacing:.12em;color:var(--a-ink-3)}
+.tBlock{margin-top:26px}
+.kicker{display:flex;align-items:center;gap:8px}
+.kicker i{width:18px;height:18px;border-radius:5px;flex:none;position:relative;background:currentColor}
+.kicker i::after{content:"";position:absolute;inset:5px;border-radius:2px;background:rgba(255,255,255,.62)}
+.kicker span{font-size:12px;font-weight:700;letter-spacing:.7px}
+.kicker.rule{color:var(--k-rule)}
+.kicker.example{color:var(--k-example)}
+.kicker.contrast{color:var(--k-contrast)}
+.tBody{font-size:15.5px;line-height:1.6;color:rgba(42,34,64,.84);margin-top:12px}
+
+/* slot_strip — renkli slot şeridi, rol etiketi ALTTA */
+.tgSlots{margin-top:15px;display:flex;gap:6px;align-items:stretch}
+.tgSlot{flex:1;min-width:0;border-radius:14px;padding:12px 5px 9px;text-align:center;color:#fff}
+.tgSlot.wide{flex:1.55}
+.tgSlot .v{display:block;font-size:15.5px;font-weight:750;letter-spacing:-.3px;line-height:1.2;overflow-wrap:anywhere}
+.tgSlot .r{display:block;font-size:8.5px;font-weight:800;letter-spacing:.09em;opacity:.85;margin-top:7px}
+.tgSlot.subj{background:var(--slot-subj)}
+.tgSlot.be{background:var(--slot-be)}
+.tgSlot.comp{background:var(--slot-comp)}
+.tgSlot.poss{background:var(--slot-poss)}
+.tgSlot.prep{background:var(--slot-prep)}
+.tgCap{margin-top:9px;text-align:center;font-size:12px;color:var(--a-ink-3)}
+
+/* morph_rows — I → am, you → are */
+.tgMorph{margin-top:15px;display:grid;gap:8px}
+.tgMrow{display:flex;align-items:center;gap:9px;padding:11px 14px;border-radius:14px;background:var(--a-soft)}
+.tgMrow .a{font-size:17px;font-weight:750;color:var(--slot-subj)}
+.tgMrow .ar{color:var(--a-ink-3);font-size:15px;font-weight:700}
+.tgMrow .b{font-size:17px;font-weight:750;color:var(--slot-be)}
+.tgMrow .n{margin-left:auto;font-size:11.5px;color:var(--a-ink-3);text-align:right}
+
+/* swap — devrik soru, "are"in öne geçişi kavisli okla */
+.tgSwap{position:relative;margin-top:15px}
+.tgSwapArc{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.tgRow{display:flex;flex-wrap:wrap;align-items:baseline;gap:5px;padding:12px 13px;border-radius:14px;background:var(--a-soft);font-size:16.5px;font-weight:650;letter-spacing:-.2px}
+.tgRow + .tgRow{margin-top:38px}
+.tgRow .mv{color:#fff;background:var(--slot-be);border-radius:8px;padding:1px 8px;font-weight:800}
+
+/* ÖRNEK bloğu — iki cümle, her birinde ses düğmesi, altında Türkçesi */
+.tEx{margin-top:13px;display:grid;gap:8px}
+.tExRow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:12px 13px;border-radius:14px;background:var(--a-soft)}
+.tExRow .en{display:block;font-size:16.5px;font-weight:700;letter-spacing:-.2px;line-height:1.3}
+.tExRow .tr{display:block;font-size:12.5px;color:var(--a-ink-2);margin-top:3px;line-height:1.35}
+.tExRow .sp{width:36px;height:36px;flex:none;border-radius:50%;background:var(--a-surface);border:1px solid var(--a-line);display:grid;place-items:center;color:var(--a-purple-deep)}
+.tExRow .sp svg{width:15px;height:15px}
+.tExRow .sp.playing{background:var(--a-pastel);border-color:var(--a-pastel)}
+
+/* KARŞITLIK bloğu — .tc kartlarına tek satır not.
+   Sınıf adı ".note" DEĞİL: sayfa çerçevesinde zaten bir .note kartı var. */
+.tcNote{font-size:11.5px;line-height:1.4;font-weight:500;color:var(--a-ink-2);margin-top:7px}
+
+/* teach_dialog — soru kalıbı ↔ cevap kalıbı, ok ile bağlı */
+.tdEx{margin-top:15px;display:grid;grid-template-columns:minmax(0,1fr) 24px minmax(0,1fr);gap:5px;align-items:stretch}
+.tdCard{border-radius:16px;padding:12px 11px;border:1.5px solid var(--a-line);background:var(--a-surface);min-width:0}
+.tdCard .cap{font-size:9px;font-weight:800;letter-spacing:.09em}
+.tdCard.ask{border-color:#BFDBFE}
+.tdCard.ask .cap{color:var(--slot-subj)}
+.tdCard.ans{border-color:#BBF7D0}
+.tdCard.ans .cap{color:var(--slot-comp)}
+.tdCard .en{font-size:15px;font-weight:750;letter-spacing:-.25px;line-height:1.3;margin-top:5px;overflow-wrap:anywhere}
+.tdCard .tr{font-size:11.5px;color:var(--a-ink-3);line-height:1.35;margin-top:5px}
+.tdBlank{display:inline-block;min-width:30px;border-bottom:3px solid var(--a-pastel);vertical-align:baseline}
+.tdArrow{display:grid;place-items:center;color:var(--a-purple)}
+.tdArrow svg{width:18px;height:18px}
+.tdPlay{margin:14px 0 0;display:flex;justify-content:center}
+.teach .dialog{margin:13px 0 0}
+.teach .dtr{margin:9px 0 0}
+
+/* word_image_pick — kelime üstte, altta dört görsel karo */
+.tiles{margin:16px 20px 0;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{
+  border-radius:18px;border:1.5px solid var(--a-line);background:var(--a-surface);
+  padding:10px 8px 8px;display:grid;gap:5px;justify-items:center;
+  transition:transform .12s,border-color .14s,background .14s,opacity .2s;
+}
+.tile:active{transform:scale(.982)}
+.tile svg{width:100%;max-width:104px;height:auto;display:block}
+.tile .cap{font-size:12px;font-weight:700;color:var(--a-ink-2);min-height:16px;opacity:0;transition:opacity .22s}
+.tiles.shown .tile .cap{opacity:1}
+.tile.right{border-color:var(--a-green);background:var(--a-ok-bg)}
+.tile.wrong{border-color:var(--a-red);background:var(--a-no-bg);animation:shake .34s}
+.tile.dim{opacity:.45}
+
+/* İpucu — build_translate / dialog_reply_translate */
+.hintbar{margin:12px 20px 0;display:flex;justify-content:center}
+.hintbtn{
+  display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:99px;
+  background:var(--k-hint-bg);border:1px solid var(--k-hint-line);
+  color:var(--k-hint-ink);font-size:13px;font-weight:700;
+}
+.hintbtn svg{width:15px;height:15px;flex:none}
+.hintbtn[disabled]{opacity:.42;cursor:default}
+.hintnote{margin:8px 20px 0;text-align:center;font-size:11.5px;font-weight:600;color:var(--k-hint-ink);min-height:15px}
+
+/* ============================================================
    12. BİTİŞ KARTI
    ============================================================ */
 .finish{padding:26px 22px 24px;text-align:center}
@@ -671,7 +785,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
   <div class="bench">
     <div class="stage">
       <div class="phone">
-        <div class="glass">
+        <div class="glass" lang="tr">
           <div class="notch"></div>
           <div class="statusbar">
             <span>9:41</span>
@@ -810,9 +924,37 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
      - Kural cümlesi yok: iki bilinen satır soluk, üçüncüsü eksik.
        Cevaptan sonra focus üç satırda birden renkleniyor.
    tf_meaning           { word, claim_tr, correct(bool), real_tr }
-   dialog_reply_translate { context:[{who, en, tr}], meaning_tr, target(en), extra?[] }
+   dialog_reply_translate { context:[{who, en, tr}], meaning_tr, target(en), extra?[],
+                            hint?(varsayılan açık) }
      - Hedefin İngilizcesi ekranda HİÇBİR yerde yok; yalnızca anlamı var.
+   dialog_choose_reply  { lines:[{who, en, mine?}], replyIndex, correct(en),
+                          options[en x3 TAM CÜMLE], tr }
+     - Boşluk yok: partner konuşur, sen tam repliği seçersin.
+       Diyalog merdiveninin ilk basamağı.
+   word_image_pick      { w, ipa, correct(tr), tiles:[{art, label(tr)} x4] }
+     - image_choice'in TERSİ: kelime verilir, anlamı görselden seçilir.
+       art -> TILE_ART anahtarı. Çeldirici karo minimal çiftin öteki üyesi.
+       Etiketler cevaptan sonra açılıyor.
+   build_translate ek   { hint:true } -> "İpucu" düğmesi. Her basış bir sonraki
+                          token'ı yerine koyar; kullanılırsa XP yarıya iner.
    word_card ek alan    { fragment:true } -> "Örnek" yerine "Parça" (tam cümle değil)
+
+   --- ÖĞRETİM EKRANLARI (puanlanmaz, tekrar kuyruğuna girmez) ---
+   teach_grammar        { title, blocks:[ blok ] }   Paths > BeatLessonPlayerView
+     blok = { kind:"rule"|"example"|"contrast", body?(<=2 cümle),
+              diagram?, examples?[{en,tr}], good?{en,note}, bad?{en,note} }
+     kicker rengi kind'dan: rule pembe, example mavi, contrast amber.
+     diagram (üçü de kodla çiziliyor, dosya yok):
+       { t:"slot_strip", slots:[{v, r, cls, wide?}], cap? }
+         cls: subj | be | poss | comp | prep — renk hep aynı rolü gösterir,
+         r = slotun ALTINDAKİ rol etiketi (ÖZNE / BE / EDAT / ÜLKE)
+       { t:"morph_rows", rows:[{a, b, n?}], cap? }        I -> am, you -> are
+       { t:"swap", top:{pre,mv,post}, bottom:{pre,mv,post}, cap? }
+         mv = yer değiştiren parça; ok iki satır arasında ölçülerek çiziliyor.
+   teach_dialog         { title, ask:{en,tr}, answer:{en,tr}, askCap?, ansCap?,
+                          body?, full:[{who, en, tr, mine?}] }
+     Soru kalıbı ve cevap kalıbı yan yana, ok ile bağlı; "___" boşluk olur.
+     Tam diyalog altta balonlarla bir kez sesli oynatılır. Part 3'ün ilk ekranı.
 
    Ekran sayısı = part1.length + part2.length + part3.length.
    Tekrar kuyruğu bunlara ek olarak çalışma sırasında üretilir.
@@ -951,32 +1093,54 @@ const NODE_DATA = {
       {w:"daughter", ipa:"/ˈdɔːtər/",  tr:"kız evlat",    ex:"My daughter is Mia.", exTr:"Kızım Mia."}
     ],
 
-    /* ---------- PART 1 · Kelimeler · 11 ekran ----------
+    /* ---------- PART 1 · Kelimeler · 12 ekran ----------
        Dört kelime iki minimal çift: sister↔brother, son↔daughter.
-       Örnek cümleler bilerek node 3-5 yapısında ("My sister is Mia.") —
-       bu node'un yapısı "This is my ..." part 2'de kuruluyor, part 1'de
-       kullanılmıyor. Çoktan seçmeli tek bir görsel ve tek bir ses
-       ayrımıyla sınırlı; kalanı üretim (klavye, tf, ses, kurma). */
+       Her kelime kartından hemen sonra o çiftin ayrımını yoklayan bir
+       ekran geliyor (görsel karo, ses, doğru-yanlış). match4 artık
+       ortada değil, PART SONUNA yakın: dört kelime de tanıtılıp tek tek
+       çalışıldıktan sonra topluca eşleşiyor. */
     part1:[
       {type:"word_card", w:"sister", ipa:"/ˈsɪstər/", tr:"kız kardeş", ex:"My sister is Mia.", exTr:"Kız kardeşim Mia."},
+      {type:"word_image_pick", w:"sister", ipa:"/ˈsɪstər/", correct:"kız kardeş",
+       tiles:[{art:"brother", label:"erkek kardeş"},{art:"sister", label:"kız kardeş"},
+              {art:"mother", label:"anne"},{art:"family", label:"aile"}]},
       {type:"word_card", w:"brother", ipa:"/ˈbrʌðər/", tr:"erkek kardeş", ex:"My brother is Sam.", exTr:"Erkek kardeşim Sam."},
-      {type:"image_choice", art:"sister", correct:"sister", options:["brother","mother","sister"]},
-      {type:"listen_pick", audio:"brother", ipa:"/ˈbrʌðər/", correct:"brother", options:["daughter","brother","sister","son"]},
+      {type:"listen_pick", audio:"brother", ipa:"/ˈbrʌðər/", correct:"brother", options:["daughter","sister","brother","son"]},
       {type:"word_card", w:"son", ipa:"/sʌn/", tr:"oğul", ex:"My son is Leo.", exTr:"Oğlum Leo."},
       {type:"word_card", w:"daughter", ipa:"/ˈdɔːtər/", tr:"kız evlat", ex:"My daughter is Mia.", exTr:"Kızım Mia."},
-      {type:"match4", pairs:[["sister","kız kardeş"],["brother","erkek kardeş"],["son","oğul"],["daughter","kız evlat"]]},
-      {type:"letter_keys", answer:"daughter", tr:"kız evlat"},
+      {type:"word_image_pick", w:"daughter", ipa:"/ˈdɔːtər/", correct:"kız evlat",
+       tiles:[{art:"son", label:"oğul"},{art:"daughter", label:"kız evlat"},
+              {art:"mother", label:"anne"},{art:"father", label:"baba"}]},
       {type:"tf_meaning", word:"son", claim_tr:"kız evlat", correct:false, real_tr:"oğul"},
+      {type:"letter_keys", answer:"daughter", tr:"kız evlat"},
+      {type:"match4", pairs:[["sister","kız kardeş"],["brother","erkek kardeş"],["son","oğul"],["daughter","kız evlat"]]},
       {type:"say_word", target:"brother", ipa:"/ˈbrʌðər/", tr:"erkek kardeş"},
-      {type:"build_translate", tr:"Benim erkek kardeşim Sam.", target:"My brother is Sam.", extra:["sister","am"]}
+      {type:"build_translate", tr:"Benim erkek kardeşim Sam.", target:"My brother is Sam.", extra:["sister","am"], hint:true}
     ],
 
-    /* ---------- PART 2 · Gramer · 6 ekran ----------
-       Kural kartı yok. pattern_mini iki bilinen cümleyi soluk gösteriyor,
-       üçüncüsünü öğrenci tamamlıyor; "This is my" üç satırda birden
-       renklenince desen kendiliğinden görünüyor. Kalan beş ekran hep
-       üretim: kurma, dinleme boşluğu, söyleme; tek çoktan seçmeli var. */
+    /* ---------- PART 2 · Gramer · 9 ekran ----------
+       Önce ANLATILIYOR: teach_grammar üç blokta (KURAL diyagramı →
+       ÖRNEK iki sesli cümle → KARŞITLIK iki kart) deseni gösteriyor,
+       puanlamıyor. pattern_mini artık bu öğretimin ilk pekiştirmesi,
+       ilk temas değil. Kalanı üretim. */
     part2:[
+      {type:"teach_grammar",
+       title:"This is my + kişi",
+       blocks:[
+         {kind:"rule",
+          diagram:{t:"slot_strip", cap:"Sıra hiç değişmez.",
+            slots:[{v:"This is", r:"KALIP", cls:"subj", wide:true},
+                   {v:"my", r:"İYELİK", cls:"poss"},
+                   {v:"brother", r:"KİŞİ", cls:"comp"}]},
+          body:"“This is” yanındaki kişiyi gösterir. Araya giren “my” onun senin ailenden olduğunu söyler."},
+         {kind:"example",
+          examples:[{en:"This is my brother.", tr:"Bu benim erkek kardeşim."},
+                    {en:"This is my daughter.", tr:"Bu benim kızım."}],
+          body:"Değişen tek şey son parça: kalıbın kendisi aynı kalıyor."},
+         {kind:"contrast",
+          good:{en:"This is my sister.", note:"“my” var: kimin kız kardeşi belli."},
+          bad:{en:"This is sister.", note:"“my” yok: kişi havada kalıyor."}}
+       ]},
       {type:"pattern_mini",
        head:"This is my + aile",
        focus:"This is my",
@@ -985,24 +1149,40 @@ const NODE_DATA = {
          {en:"This is my mother.", tr:"Bu benim annem.", known:true},
          {en:"This is my brother.", tr:"Bu benim erkek kardeşim.", known:true}
        ],
-       gapLine:{before:"This is my ", after:".", answer:"sister", options:["Mia","sister","name"], tr:"Bu benim kız kardeşim."}},
-      {type:"build_translate", tr:"Bu benim kız kardeşim.", target:"This is my sister.", extra:["brother","am"]},
-      {type:"listen_sentence_gap", sentence:"This is my ___.", correct:"son", options:["son","daughter","sister","brother"], tr:"Bu benim oğlum."},
+       gapLine:{before:"This is my ", after:".", answer:"sister", options:["brother","sister","Mia"], tr:"Bu benim kız kardeşim."}},
+      {type:"build_translate", tr:"Bu benim kız kardeşim.", target:"This is my sister.", extra:["brother","am"], hint:true},
+      {type:"listen_sentence_gap", sentence:"This is my ___.", correct:"son", options:["daughter","sister","son","brother"], tr:"Bu benim oğlum."},
       {type:"build_sentence", target:"This is my daughter.", extra:["son"], tr:"Bu benim kızım."},
+      {type:"mc_sentence", sentence:"This is ___ son.", correct:"my", options:["me","I","my"], tr:"Bu benim oğlum."},
       {type:"say_sentence", target:"This is my brother, Sam.", tr:"Bu benim erkek kardeşim, Sam."},
-      {type:"mc_sentence", sentence:"This is ___ son.", correct:"my", options:["my","me","I"], tr:"Bu benim oğlum."}
+      {type:"listen_write", audio:"This is my family.", answer:"This is my family", tr:"Bu benim ailem.",
+       options:["Bu benim ailem.","Bu benim annem.","Bu benim oğlum.","Bu benim kızım."]},
+      {type:"say_sentence", target:"This is my daughter, Mia.", tr:"Bu benim kızım, Mia."}
     ],
 
     /* ---------- PART 3 · Cümle ve diyalog · 11 ekran ----------
-       İki diyalog, her biri aynı merdiveni tırmanıyor:
-       ANLA (boşluk) → KUR (bankadan) → ANLAMDAN KUR (İngilizcesi ekranda
-       yok) → SÖYLE. Diyalog A tanıştırma, diyalog B "senin kardeşin mi?"
-       sorusuna cevap. */
+       Part önce DEĞİŞ TOKUŞU öğretiyor (teach_dialog, puanlanmaz),
+       sonra merdiven: TAM REPLİK SEÇ → BANKADAN KUR (İngilizce hedef
+       görünür) → ANLAMDAN KUR (İngilizcesi hiçbir yerde yok) → SÖYLE.
+       dialog_gap node başına tek: diyalog B'nin açılış sorusunda.
+       Diyalog A tanıştırma, diyalog B "senin kardeşin mi?" cevabı. */
     part3:[
-      {type:"dialog_gap",
-       lines:[{who:"Sam", en:"Hello! This is my ___, Mia."},{who:"Sen", en:"Hi Mia! Nice to meet you.", mine:true}],
-       gapLine:0, correct:"sister", options:["brother","son","daughter","sister"],
-       tr:"Merhaba! Bu benim kız kardeşim, Mia. — Selam Mia! Tanıştığımıza memnun oldum."},
+      {type:"teach_dialog",
+       title:"Tanıştırma değiş tokuşu",
+       askCap:"O TANITIR", ansCap:"SEN KARŞILIK VERİR",
+       ask:{en:"This is my ___.", tr:"Bu benim ___."},
+       answer:{en:"Nice to meet you.", tr:"Tanıştığımıza memnun oldum."},
+       body:"Karşı taraf yanındakini tanıtır, sen hep aynı kalıpla karşılık verirsin. Değişen tek şey tanıtılan kişi.",
+       full:[
+         {who:"Sam", en:"Hello! This is my sister, Mia.", tr:"Merhaba! Bu benim kız kardeşim, Mia."},
+         {who:"Sen", en:"Hi Mia! Nice to meet you.", tr:"Selam Mia! Tanıştığımıza memnun oldum.", mine:true},
+         {who:"Mia", en:"Nice to meet you too.", tr:"Ben de memnun oldum."}
+       ]},
+      {type:"dialog_choose_reply",
+       lines:[{who:"Sam", en:"Hello! This is my sister, Mia."},{who:"Sen", en:"", mine:true}],
+       replyIndex:1, correct:"Hi Mia! Nice to meet you.",
+       options:["Hi Mia! Nice to meet you.","Hello! This is my sister.","Yes. This is my brother."],
+       tr:"Merhaba! Bu benim kız kardeşim, Mia."},
       {type:"dialog_build",
        lines:[{who:"Sam", en:"Hello! This is my sister, Mia."},{who:"Sen", en:"", mine:true}],
        replyIndex:1, target:"Hi Mia! Nice to meet you.", extra:["my","too"],
@@ -1010,16 +1190,23 @@ const NODE_DATA = {
       {type:"dialog_reply_translate",
        context:[
          {who:"Sam", en:"Hello! This is my sister, Mia.", tr:"Merhaba! Bu benim kız kardeşim, Mia."},
-         {who:"Mia", en:"Hi! Nice to meet you.", tr:"Selam! Tanıştığımıza memnun oldum."}
+         {who:"Mia", en:"Hi! I am Mia.", tr:"Selam! Ben Mia."}
        ],
        meaning_tr:"Ben de memnun oldum.", target:"Nice to meet you too.", extra:["my","and"]},
-      {type:"say_sentence", target:"Hi Mia! Nice to meet you.", tr:"Selam Mia! Tanıştığımıza memnun oldum."},
-      {type:"listen_write", audio:"Is this your brother?", answer:"Is this your brother", tr:"Bu senin erkek kardeşin mi?",
-       options:["Bu senin erkek kardeşin mi?","Bu senin kız kardeşin mi?","Bu benim oğlum.","Bu benim ailem."]},
+      {type:"dialog_say",
+       lines:[{who:"Sam", en:"Hello! This is my sister, Mia."},{who:"Sen", en:"", mine:true}],
+       replyIndex:1, target:"Hi Mia! Nice to meet you.",
+       tr:"Selam Mia! Tanıştığımıza memnun oldum."},
+      {type:"listen_sentence_gap", sentence:"This is my ___, Mia.", correct:"daughter", options:["son","sister","brother","daughter"], tr:"Bu benim kızım, Mia."},
       {type:"dialog_gap",
-       lines:[{who:"Ana", en:"Is this your brother?"},{who:"Sen", en:"Yes. This is my ___, Leo.", mine:true}],
-       gapLine:1, correct:"brother", options:["brother","sister","son","daughter"],
+       lines:[{who:"Ana", en:"Is this your ___?"},{who:"Sen", en:"Yes. This is my brother, Leo.", mine:true}],
+       gapLine:0, correct:"brother", options:["sister","brother","son","daughter"],
        tr:"Bu senin erkek kardeşin mi? — Evet. Bu benim erkek kardeşim, Leo."},
+      {type:"dialog_choose_reply",
+       lines:[{who:"Ana", en:"Is this your brother?"},{who:"Sen", en:"", mine:true}],
+       replyIndex:1, correct:"Yes. This is my brother, Leo.",
+       options:["Yes. This is my son, Leo.","Yes. This is my brother, Leo.","Hi Leo! Nice to meet you."],
+       tr:"Bu senin erkek kardeşin mi?"},
       {type:"dialog_reply_translate",
        context:[{who:"Ana", en:"Is this your brother?", tr:"Bu senin erkek kardeşin mi?"}],
        meaning_tr:"Evet. Bu benim erkek kardeşim, Leo.", target:"Yes. This is my brother, Leo.", extra:["are","am"]},
@@ -1027,8 +1214,6 @@ const NODE_DATA = {
        lines:[{who:"Ana", en:"Is this your brother?"},{who:"Sen", en:"", mine:true}],
        replyIndex:1, target:"Yes. This is my brother, Leo.",
        tr:"Evet. Bu benim erkek kardeşim, Leo."},
-      {type:"build_translate", tr:"Bu benim ailem.", target:"This is my family.", extra:["mother","are"]},
-      {type:"listen_sentence_gap", sentence:"This is my ___, Mia.", correct:"daughter", options:["son","sister","brother","daughter"], tr:"Bu benim kızım, Mia."},
       {type:"say_sentence", target:"This is my family.", tr:"Bu benim ailem."}
     ]
   },
@@ -1045,97 +1230,149 @@ const NODE_DATA = {
       {w:"live",    ipa:"/lɪv/",      tr:"yaşamak",    ex:"I live in Turkey.",    exTr:"Türkiye'de yaşıyorum."}
     ],
 
-    /* ---------- PART 1 · Kelimeler · 10 ekran ----------
+    /* ---------- PART 1 · Kelimeler · 11 ekran ----------
        from ve where tek başına resmedilemez, tam cümleyle de
        verilemez: cümlesi part 2'de kuruluyor. Bu yüzden ikisi
        FRAGMENT kartı — "from Turkey — Türkiye'den" gibi bir parça.
        Öğretmeden kullanmak yok: part 1'de "I am from ..." cümlesi
-       hiç geçmiyor. tf_meaning edat tuzağını (-de mi, -den mi)
-       ilk ekranlarda patlatıyor. Tek klavye ekranı burada. */
+       hiç geçmiyor. Görsel karo yalnızca somut olan "country" için.
+       tf_meaning edat tuzağını (-de mi, -den mi) erken patlatıyor.
+       match4 part sonuna yakın: dört kelime de tanıtıldıktan sonra. */
     part1:[
       {type:"word_card", w:"country", ipa:"/ˈkʌntri/", tr:"ülke", ex:"Turkey is a country.", exTr:"Türkiye bir ülke."},
-      {type:"image_choice", art:"country", prompt:"Görseldeki ne?", correct:"country", options:["family","brother","country"]},
+      {type:"word_image_pick", w:"country", ipa:"/ˈkʌntri/", correct:"ülke",
+       tiles:[{art:"house", label:"ev"},{art:"country", label:"ülke"},
+              {art:"table", label:"masa"},{art:"book", label:"kitap"}]},
       {type:"word_card", w:"from", ipa:"/frʌm/", tr:"-den, -dan", ex:"from Turkey", exTr:"Türkiye'den", fragment:true},
       {type:"tf_meaning", word:"from", claim_tr:"-de, -da", correct:false, real_tr:"-den, -dan"},
       {type:"word_card", w:"where", ipa:"/weər/", tr:"nerede", ex:"where?", exTr:"nerede?", fragment:true},
+      {type:"listen_pick", audio:"where", ipa:"/weər/", correct:"where", options:["where","live","country","from"]},
       {type:"word_card", w:"live", ipa:"/lɪv/", tr:"yaşamak", ex:"I live in Turkey.", exTr:"Türkiye'de yaşıyorum."},
-      {type:"match4", pairs:[["country","ülke"],["from","-den, -dan"],["where","nerede"],["live","yaşamak"]]},
-      {type:"listen_pick", audio:"where", ipa:"/weər/", correct:"where", options:["live","country","where","from"]},
       {type:"letter_keys", answer:"where", tr:"nerede"},
-      {type:"say_word", target:"country", ipa:"/ˈkʌntri/", tr:"ülke"}
+      {type:"match4", pairs:[["country","ülke"],["from","-den, -dan"],["where","nerede"],["live","yaşamak"]]},
+      {type:"say_word", target:"country", ipa:"/ˈkʌntri/", tr:"ülke"},
+      {type:"build_translate", tr:"Türkiye bir ülke.", target:"Turkey is a country.", extra:["from","live"], hint:true}
     ],
 
     /* ---------- PART 2 · Gramer · 11 ekran ----------
-       İki desen, ikisi de sezdirmeli (kural kartı yok):
-       (1) düz cümle — "I am Ana." biliniyor, "I am from Turkey."
-           duyuluyor, üçüncüsünü öğrenci tamamlıyor; from renkleniyor.
-       (2) soru — iki düz cümle biliniyor, "Where ___ you from?"
-           tamamlanınca are üç satırda birden renkleniyor.
-       Aradaki her ekran üretim; tek çoktan seçmeli live/from ayrımı. */
+       A0'ın en zor noktası: iki ayrı yapı. Her ikisi de önce
+       ANLATILIYOR (teach_grammar, puanlanmaz), sonra çalışılıyor.
+       (1) düz cümle — slot şeridi I | am | from | Turkey, yanında
+           I→am / you→are satırları.
+       (2) devrik soru — swap diyagramı: "are" öznenin önüne geçiyor.
+       pattern_mini artık ilk temas değil, birinci öğretimin
+       pekiştirmesi. Tek çoktan seçmeli live/from ayrımı. */
     part2:[
+      {type:"teach_grammar",
+       title:"I am from + ülke",
+       blocks:[
+         {kind:"rule",
+          diagram:{t:"slot_strip", cap:"Dört parça hep bu sırada.",
+            slots:[{v:"I", r:"ÖZNE", cls:"subj"},
+                   {v:"am", r:"BE", cls:"be"},
+                   {v:"from", r:"EDAT", cls:"prep"},
+                   {v:"Turkey", r:"ÜLKE", cls:"comp"}]},
+          body:"Nereli olduğunu “be” ve “from” ile söylersin. “from” hep ülkeden hemen önce gelir."},
+         {kind:"example",
+          examples:[{en:"I am from Turkey.", tr:"Ben Türkiye'denim."},
+                    {en:"You are from Spain.", tr:"Sen İspanya'dansın."}],
+          diagram:{t:"morph_rows", cap:"Özne değişince “be” de değişiyor.",
+            rows:[{a:"I", b:"am", n:"ben"},{a:"you", b:"are", n:"sen"}]},
+          body:"Kalıbın değişen tek yeri “be”."},
+         {kind:"contrast",
+          good:{en:"I am from Turkey.", note:"“am” yerinde: cümle tam."},
+          bad:{en:"I from Turkey.", note:"“am” düşmüş: cümle kurulmuyor."}}
+       ]},
       {type:"pattern_mini",
        head:"I am from + ülke",
        focus:"from",
-       cap:"Yeni parça: from",
+       cap:"Aynı parça: from",
        lines:[
-         {en:"I am Ana.", tr:"Ben Ana'yım.", known:true},
-         {en:"I am from Turkey.", tr:"Ben Türkiye'denim.", known:false}
+         {en:"I am from Turkey.", tr:"Ben Türkiye'denim.", known:true},
+         {en:"I am from Japan.", tr:"Ben Japonya'danım.", known:true}
        ],
-       gapLine:{before:"You are from ", after:".", answer:"Spain", options:["name","live","Spain"], tr:"Sen İspanya'dansın."}},
-      {type:"build_translate", tr:"Ben İspanya'danım.", target:"I am from Spain.", extra:["live","are"]},
-      {type:"listen_sentence_gap", sentence:"I am from ___.", correct:"Italy", options:["Italy","Spain","Turkey","Japan"], tr:"Ben İtalya'danım."},
+       gapLine:{before:"You are from ", after:".", answer:"Spain", options:["Japan","Spain","live"], tr:"Sen İspanya'dansın."}},
+      {type:"build_translate", tr:"Ben İspanya'danım.", target:"I am from Spain.", extra:["live","are"], hint:true},
+      {type:"listen_sentence_gap", sentence:"I am from ___.", correct:"Italy", options:["Spain","Turkey","Japan","Italy"], tr:"Ben İtalya'danım."},
       {type:"say_sentence", target:"I am from Turkey.", tr:"Ben Türkiye'denim."},
-      {type:"build_sentence", target:"You are from Japan.", extra:["am","in"], tr:"Sen Japonya'dansın."},
-      {type:"pattern_mini",
-       head:"Soru sırası",
-       focus:"are",
-       cap:"Aynı parça: are",
-       lines:[
-         {en:"You are from Spain.", tr:"Sen İspanya'dansın.", known:true},
-         {en:"You are from Japan.", tr:"Sen Japonya'dansın.", known:true}
-       ],
-       gapLine:{before:"Where ", after:" you from?", answer:"are", options:["are","am","is"], tr:"Nerelisin?"}},
+      {type:"teach_grammar",
+       title:"Where are you from?",
+       blocks:[
+         {kind:"rule",
+          diagram:{t:"swap", cap:"“are” öznenin önüne geçiyor.",
+            top:{pre:"You ", mv:"are", post:" from Spain."},
+            bottom:{pre:"Where ", mv:"are", post:" you from?"}},
+          body:"Soruda “are” özneden önce gelir. Cümlenin başına da “Where” eklenir."},
+         {kind:"example",
+          examples:[{en:"Where are you from?", tr:"Nerelisin?"},
+                    {en:"I am from Japan.", tr:"Ben Japonya'danım."}],
+          body:"Soru hiç değişmez; değişen, cevaptaki ülke."},
+         {kind:"contrast",
+          good:{en:"Where are you from?", note:"are → you: soru sırası."},
+          bad:{en:"Where you are from?", note:"Düz cümle sırası: soru olmuyor."}}
+       ]},
       {type:"build_sentence", target:"Where are you from?", extra:["is","am"], tr:"Nerelisin?"},
-      {type:"build_translate", tr:"Ailem Japonya'dan.", target:"My family is from Japan.", extra:["live","are"]},
-      {type:"mc_sentence", sentence:"I ___ in Italy.", correct:"live", options:["live","am","from"], tr:"İtalya'da yaşıyorum."},
+      {type:"mc_sentence", sentence:"I ___ in Italy.", correct:"live", options:["am","from","live"], tr:"İtalya'da yaşıyorum."},
+      {type:"build_translate", tr:"Ailem Japonya'dan.", target:"My family is from Japan.", extra:["live","are"], hint:true},
       {type:"listen_sentence_gap", sentence:"Where ___ you from?", correct:"are", options:["are","am","is","from"], tr:"Nerelisin?"},
       {type:"say_sentence", target:"Where are you from?", tr:"Nerelisin?"}
     ],
 
     /* ---------- PART 3 · Cümle ve diyalog · 11 ekran ----------
-       İki diyalog, ikisi de merdiven: ANLA → KUR → ANLAMDAN KUR →
-       SÖYLE. Diyalog A'da kurma basamağı yalnız "I am from Turkey.",
-       tepe basamağı ise kuyruğuyla birlikte "I am from Turkey. And
-       you?" — iskele her basamakta bir parça çekiliyor. Diyalog B'nin
-       tepesi node'un en uzun kurması: iki cümle, yalnızca anlamdan.
-       Klavye ekranı yok. */
+       Önce değiş tokuşun ŞEKLİ öğretiliyor (teach_dialog: soru kalıbı
+       → cevap kalıbı, tam diyalog bir kez sesli). Sonra merdiven:
+       TAM REPLİK SEÇ → BANKADAN KUR (İngilizce görünür) → ANLAMDAN KUR
+       (İngilizcesi hiçbir yerde yok, ipucu var) → SÖYLE. Diyalog A'da
+       kurma basamağı yalnız "I am from Turkey.", tepe basamağı
+       kuyruğuyla birlikte. Diyalog B'nin tepesi node'un en uzun
+       kurması: iki cümle, yalnızca anlamdan. Klavye ekranı yok. */
     part3:[
-      {type:"dialog_gap",
-       lines:[{who:"Mia", en:"Hello! ___ are you from?"},{who:"Sen", en:"I am from Turkey. And you?", mine:true}],
-       gapLine:0, correct:"Where", options:["You","Are","From","Where"],
-       tr:"Merhaba! Nerelisin? — Ben Türkiye'denim. Ya sen?"},
+      {type:"teach_dialog",
+       title:"Nerelisin? değiş tokuşu",
+       askCap:"O SORAR", ansCap:"SEN CEVAPLARSIN",
+       ask:{en:"Where are you from?", tr:"Nerelisin?"},
+       answer:{en:"I am from ___.", tr:"Ben ___'denim."},
+       body:"Soru hep aynı kelimelerle gelir. Cevapta değişen tek şey ülkenin adı.",
+       full:[
+         {who:"Mia", en:"Hello! Where are you from?", tr:"Merhaba! Nerelisin?"},
+         {who:"Sen", en:"I am from Turkey. And you?", tr:"Ben Türkiye'denim. Ya sen?", mine:true},
+         {who:"Mia", en:"I am from Italy.", tr:"Ben İtalya'danım."}
+       ]},
+      {type:"dialog_choose_reply",
+       lines:[{who:"Mia", en:"Hello! Where are you from?"},{who:"Sen", en:"", mine:true}],
+       replyIndex:1, correct:"I am from Turkey. And you?",
+       options:["I am from Turkey. And you?","You are from Turkey. And you?","I am Turkey. And you?"],
+       tr:"Merhaba! Nerelisin?"},
       {type:"dialog_build",
        lines:[{who:"Mia", en:"Hello! Where are you from?"},{who:"Sen", en:"", mine:true}],
        replyIndex:1, target:"I am from Turkey.", extra:["live","are"],
        tr:"Ben Türkiye'denim."},
       {type:"dialog_reply_translate",
        context:[{who:"Mia", en:"Hello! Where are you from?", tr:"Merhaba! Nerelisin?"}],
-       meaning_tr:"Ben Türkiye'denim. Ya sen?", target:"I am from Turkey. And you?", extra:["are","is","live"]},
-      {type:"say_sentence", target:"I am from Turkey.", tr:"Ben Türkiye'denim."},
-      {type:"listen_sentence_gap", sentence:"I am from ___.", correct:"Italy", options:["Italy","Japan","Spain","Turkey"], tr:"Mia'nın cevabı: Ben İtalya'danım."},
+       meaning_tr:"Ben Türkiye'denim. Ya sen?", target:"I am from Turkey. And you?", extra:["are","live"]},
+      {type:"dialog_say",
+       lines:[{who:"Mia", en:"Hello! Where are you from?"},{who:"Sen", en:"", mine:true}],
+       replyIndex:1, target:"I am from Turkey. And you?",
+       tr:"Ben Türkiye'denim. Ya sen?"},
+      {type:"listen_sentence_gap", sentence:"I am from ___.", correct:"Italy", options:["Japan","Turkey","Spain","Italy"], tr:"Mia'nın cevabı: Ben İtalya'danım."},
       {type:"dialog_gap",
-       lines:[{who:"Leo", en:"Is your ___ from Turkey?"},{who:"Sen", en:"Yes. My family is from Turkey.", mine:true}],
-       gapLine:0, correct:"family", options:["family","country","sister","brother"],
-       tr:"Ailen Türkiye'den mi? — Evet. Ailem Türkiye'den."},
-      {type:"build_translate", tr:"Ailem Türkiye'den.", target:"My family is from Turkey.", extra:["live","are"]},
+       lines:[{who:"Leo", en:"Is your ___ from Turkey?"},{who:"Sen", en:"Yes. My family is from Turkey. I live in Italy.", mine:true}],
+       gapLine:0, correct:"family", options:["country","family","sister","brother"],
+       tr:"Ailen Türkiye'den mi? — Evet. Ailem Türkiye'den. İtalya'da yaşıyorum."},
+      {type:"dialog_choose_reply",
+       lines:[{who:"Leo", en:"Is your family from Turkey?"},{who:"Sen", en:"", mine:true}],
+       replyIndex:1, correct:"Yes. My family is from Turkey. I live in Italy.",
+       options:["Yes. My family is from Italy. I live in Turkey.",
+                "Yes. My family is from Turkey. I live in Italy.",
+                "Yes. My family from Turkey. I live in Italy."],
+       tr:"Ailen Türkiye'den mi?"},
       {type:"dialog_reply_translate",
        context:[{who:"Leo", en:"Is your family from Turkey?", tr:"Ailen Türkiye'den mi?"}],
-       meaning_tr:"Evet. Ailem Türkiye'den. İtalya'da yaşıyorum.", target:"Yes. My family is from Turkey. I live in Italy.", extra:["are","am","country"]},
+       meaning_tr:"Evet. Ailem Türkiye'den. İtalya'da yaşıyorum.", target:"Yes. My family is from Turkey. I live in Italy.", extra:["are","country"]},
       {type:"dialog_say",
        lines:[{who:"Leo", en:"Is your family from Turkey?"},{who:"Sen", en:"", mine:true}],
        replyIndex:1, target:"Yes. My family is from Turkey. I live in Italy.",
        tr:"Evet. Ailem Türkiye'den. İtalya'da yaşıyorum."},
-      {type:"build_sentence", target:"I live in Italy.", extra:["from","am"], tr:"İtalya'da yaşıyorum."},
       {type:"say_sentence", target:"Where are you from?", tr:"Nerelisin?"}
     ]
   }
@@ -1152,7 +1389,9 @@ const ICON = {
   lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="10.5" rx="2.6"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>',
   sound:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6.5 9H3v6h3.5L11 19z"/><path d="M15.5 8.6a4.6 4.6 0 0 1 0 6.8"/><path d="M18.4 5.4a9 9 0 0 1 0 13.2"/></svg>',
   mic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2.5" width="6" height="11.5" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0"/><path d="M12 18v3.5"/></svg>',
-  del:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 5.5H9.4L3 12l6.4 6.5H20a1.5 1.5 0 0 0 1.5-1.5V7a1.5 1.5 0 0 0-1.5-1.5z"/><path d="m12 9.6 5 4.8M17 9.6l-5 4.8"/></svg>'
+  del:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 5.5H9.4L3 12l6.4 6.5H20a1.5 1.5 0 0 0 1.5-1.5V7a1.5 1.5 0 0 0-1.5-1.5z"/><path d="m12 9.6 5 4.8M17 9.6l-5 4.8"/></svg>',
+  arrowR:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg>',
+  bulb:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 18h5"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5.9 1.2.9 1.9v.2h5.2v-.2c0-.7.3-1.4.9-1.9A6 6 0 0 0 12 3z"/></svg>'
 };
 
 /* CSS/SVG ile çizili illüstrasyonlar — dosya gömülmüyor. */
@@ -1252,6 +1491,69 @@ const ART = {
     '</svg>'
 };
 
+/* ---------------------------------------------------------------
+   Karo görselleri (word_image_pick) — tek bir figür üreticisinden,
+   hepsi kodla. Çocuk figürü ölçek için soluk bir yetişkinle birlikte
+   duruyor: "daughter" ile "sister" karo içinde ayrışabilsin.
+   --------------------------------------------------------------- */
+const FIG = {
+  woman:'<path d="M-18 76q0-30 18-30t18 30z" fill="#7C3AED"/>'+
+        '<rect x="-13" y="8" width="26" height="30" rx="13" fill="#4C1D95"/>'+
+        '<circle cy="24" r="11" fill="#F7DFC9"/>'+
+        '<circle cx="-4" cy="22" r="1.6" fill="#4C1D95"/><circle cx="4" cy="22" r="1.6" fill="#4C1D95"/>'+
+        '<path d="M-4 29q4 3 8 0" stroke="#4C1D95" stroke-width="1.6" fill="none" stroke-linecap="round"/>',
+  man:  '<path d="M-17 76V54a17 17 0 0 1 34 0v22z" fill="#2563EB"/>'+
+        '<rect x="-13" y="9" width="26" height="16" rx="8" fill="#1F2937"/>'+
+        '<circle cy="24" r="11" fill="#F7DFC9"/>'+
+        '<circle cx="-4" cy="22" r="1.6" fill="#1F2937"/><circle cx="4" cy="22" r="1.6" fill="#1F2937"/>'+
+        '<path d="M-4 29q4 3 8 0" stroke="#1F2937" stroke-width="1.6" fill="none" stroke-linecap="round"/>',
+  girl: '<path d="M-14 76q0-24 14-24t14 24z" fill="#8B5CF6"/>'+
+        '<circle cx="-13" cy="38" r="5.5" fill="#6D28D9"/><circle cx="13" cy="38" r="5.5" fill="#6D28D9"/>'+
+        '<rect x="-11" y="22" width="22" height="26" rx="11" fill="#6D28D9"/>'+
+        '<circle cy="36" r="9.5" fill="#F7DFC9"/>'+
+        '<circle cx="-3.5" cy="34" r="1.4" fill="#4C1D95"/><circle cx="3.5" cy="34" r="1.4" fill="#4C1D95"/>'+
+        '<path d="M-3.5 40q3.5 3 7 0" stroke="#4C1D95" stroke-width="1.5" fill="none" stroke-linecap="round"/>',
+  boy:  '<path d="M-13 76V60a13 13 0 0 1 26 0v16z" fill="#0EA5E9"/>'+
+        '<rect x="-10" y="24" width="20" height="12" rx="6" fill="#1F2937"/>'+
+        '<circle cy="36" r="9.5" fill="#F7DFC9"/>'+
+        '<circle cx="-3.5" cy="34" r="1.4" fill="#1F2937"/><circle cx="3.5" cy="34" r="1.4" fill="#1F2937"/>'+
+        '<path d="M-3.5 40q3.5 3 7 0" stroke="#1F2937" stroke-width="1.5" fill="none" stroke-linecap="round"/>'
+};
+function figAt(x, kind, s, dim){
+  s = s || 1;
+  return '<g transform="translate('+x+','+(76*(1-s)).toFixed(1)+') scale('+s+')"'+(dim ? ' opacity=".34"' : '')+'>'+FIG[kind]+'</g>';
+}
+const TILE_ART = {
+  mother:   figAt(50,"woman"),
+  father:   figAt(50,"man"),
+  sister:   figAt(50,"girl"),
+  brother:  figAt(50,"boy"),
+  daughter: figAt(26,"woman",1,true) + figAt(68,"girl"),
+  son:      figAt(26,"woman",1,true) + figAt(68,"boy"),
+  family:   figAt(20,"woman",.72) + figAt(50,"man",.72) + figAt(78,"girl",.72),
+  country:
+    '<circle cx="44" cy="46" r="29" fill="#DDD6FE"/>'+
+    '<ellipse cx="44" cy="46" rx="12.5" ry="29" fill="none" stroke="#7C3AED" stroke-width="2" opacity=".55"/>'+
+    '<path d="M15 46h58M21 33h46M21 59h46" stroke="#7C3AED" stroke-width="2" opacity=".55" stroke-linecap="round"/>'+
+    '<path d="M29 37q9-7 17-1t12 5-9 11-18 1-2-16z" fill="#7C3AED" opacity=".78"/>'+
+    '<circle cx="44" cy="46" r="29" fill="none" stroke="#6D28D9" stroke-width="2.4"/>'+
+    '<path d="M74 26V6" stroke="#4C1D95" stroke-width="2.6" stroke-linecap="round"/>'+
+    '<path d="M74 7h17l-4.5 5.5L91 18H74z" fill="#EF4444"/>',
+  house:
+    '<path d="M16 42 50 16l34 26z" fill="#7C3AED"/>'+
+    '<rect x="25" y="42" width="50" height="32" rx="3" fill="#DDD6FE"/>'+
+    '<rect x="44" y="54" width="13" height="20" rx="2" fill="#6D28D9"/>'+
+    '<rect x="31" y="48" width="10" height="10" rx="2" fill="#FFFFFF"/>',
+  table:
+    '<rect x="14" y="36" width="72" height="8" rx="3" fill="#7C3AED"/>'+
+    '<path d="M22 44v28M78 44v28" stroke="#6D28D9" stroke-width="6" stroke-linecap="round"/>'+
+    '<rect x="40" y="22" width="20" height="14" rx="3" fill="#DDD6FE"/>',
+  book:
+    '<path d="M50 28c-8-6-20-7-30-5v40c10-2 22-1 30 5z" fill="#DDD6FE" stroke="#6D28D9" stroke-width="2.2" stroke-linejoin="round"/>'+
+    '<path d="M50 28c8-6 20-7 30-5v40c-10-2-22-1-30 5z" fill="#F5F3FF" stroke="#6D28D9" stroke-width="2.2" stroke-linejoin="round"/>'+
+    '<path d="M50 28v40" stroke="#6D28D9" stroke-width="2.2"/>'
+};
+
 function esc(s){
   return String(s).replace(/[&<>"']/g, function(c){
     return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
@@ -1293,6 +1595,22 @@ function say(text, btn){
     return true;
   }catch(e){ return false; }
 }
+/* Sıralı seslendirme — teach_dialog'da tam diyalog bir kez baştan sona
+   oynatılıyor. say() her çağrıda cancel() ettiği için kuyruk kuramıyor;
+   burada bir kez temizleyip bütün replikleri arka arkaya sıraya koyuyoruz. */
+function sayQueue(list, btn){
+  if (btn){ btn.classList.add("playing"); setTimeout(function(){ btn.classList.remove("playing"); }, 640); }
+  try{
+    if (!("speechSynthesis" in window)) return false;
+    window.speechSynthesis.cancel();
+    list.forEach(function(t){
+      const u = new SpeechSynthesisUtterance(t);
+      u.lang = "en-US"; u.rate = 0.8;
+      window.speechSynthesis.speak(u);
+    });
+    return true;
+  }catch(e){ return false; }
+}
 function norm(s){
   return String(s).toLowerCase().replace(/[.,!?;:’']/g,"").replace(/\s+/g," ").trim();
 }
@@ -1318,14 +1636,20 @@ function partBlurb(p){
   const teach = partScreens(p.key).filter(function(s){ return s.teach; }).length;
   if (p.no === 1) return teach+" kelime kartı + "+(all-teach)+" alıştırma";
   if (p.no === 2){
-    /* Desen ekranı = grammar_pattern (anlatan) + pattern_mini (sezdiren).
-       pattern_mini puanlı bir alıştırma, o yüzden teach sayılmıyor;
-       alt yazıda ikisi birden "desen ekranı" olarak görünüyor. */
+    /* Üç ayrı iş: teach_grammar ANLATIR (puanlanmaz), grammar_pattern ve
+       pattern_mini deseni gösterir/sezdirir, kalanı alıştırma. */
+    const tg = partScreens(p.key).filter(function(s){ return s.type === "teach_grammar"; }).length;
     const pat = partScreens(p.key).filter(function(s){
       return s.type === "grammar_pattern" || s.type === "pattern_mini";
     }).length;
-    return pat+" desen ekranı + "+(all-pat)+" alıştırma";
+    const bits = [];
+    if (tg) bits.push(tg+" öğretim ekranı");
+    if (pat) bits.push(pat+" desen ekranı");
+    bits.push((all-tg-pat)+" alıştırma");
+    return bits.join(" + ");
   }
+  const td = partScreens(p.key).filter(function(s){ return s.type === "teach_dialog"; }).length;
+  if (td) return td+" öğretim ekranı + "+(all-td)+" diyalog alıştırması";
   return all+" cümle ve diyalog alıştırması";
 }
 function nodeTotal(n){
@@ -1339,13 +1663,16 @@ function partAnswered(key){ return partScreens(key).filter(function(s){ return t
 function partScore(key){ return partScreens(key).filter(function(s){ return S.res[s.id]===true; }).length; }
 function partDone(key){ const a=partScreens(key); return a.length>0 && partAnswered(key)===a.length; }
 
-function record(id, ok){
+/* halve: bu ekranda ipucu kullanıldı — XP yarıya iner, doğruluk aynı kalır. */
+function record(id, ok, halve){
   if (typeof S.res[id] === "boolean") return;
   S.res[id] = !!ok;
   if (ok){
     S.combo++;
     if (S.combo > S.bestCombo) S.bestCombo = S.combo;
-    S.xp += 10 + Math.min(10, (S.combo-1)*2);
+    let gain = 10 + Math.min(10, (S.combo-1)*2);
+    if (halve) gain = Math.round(gain/2);
+    S.xp += gain;
   } else {
     S.combo = 0;
   }
@@ -1916,7 +2243,16 @@ BUILDERS.mc_sentence = function(host, sc){
 /* Cümle sonu noktalaması parçaya yapışmasın: "Where are you from?" bankada
    "from?" diye bir token üretiyordu. */
 function tokensOf(target){ return String(target).replace(/[.?!]+$/,"").split(" ").filter(Boolean); }
-function mountBuilder(host, sc, target, extra, onResult){
+/* İpucu metni: doğru/yanlış geri bildirimine ekleniyor. */
+function hintMsg(base, hinted){
+  if (!hinted) return base;
+  return (base ? base + " · " : "") + "İpucu kullandın — XP yarıya indi.";
+}
+/* opts.hint: "İpucu" düğmesi açılır. Her basışta bir sonraki token
+   doğru yerine oturur (ilk n token kilitlenir, gerisi bankaya döner).
+   İpucu kullanılan ekranda XP yarıya iner. */
+function mountBuilder(host, sc, target, extra, onResult, opts){
+  opts = opts || {};
   const goal = tokensOf(target);
   const bank = shuffle(goal.concat(extra || []), sc.id);
   const line = host.querySelector("[data-line]");
@@ -1924,7 +2260,21 @@ function mountBuilder(host, sc, target, extra, onResult){
   bankEl.innerHTML = bank.map(function(t, i){
     return '<button class="tok" data-t="'+esc(t)+'" data-i="'+i+'">'+esc(t)+'</button>';
   }).join("");
-  let picked = [];
+  let picked = [], hints = 0, checked = false, hintBtn = null, hintNote = null;
+  if (opts.hint){
+    const holder = document.createElement("div");
+    holder.innerHTML =
+      '<div class="hintbar"><button class="hintbtn" data-hint>'+ICON.bulb+'İpucu</button></div>'+
+      '<p class="hintnote" data-hintnote role="status"></p>';
+    let ref = bankEl;
+    while (holder.firstChild){
+      const node = holder.firstChild;
+      bankEl.parentNode.insertBefore(node, ref.nextSibling);
+      ref = node;
+    }
+    hintBtn = host.querySelector("[data-hint]");
+    hintNote = host.querySelector("[data-hintnote]");
+  }
   function repaint(){
     line.innerHTML = picked.map(function(p){
       return '<button class="tok inline" data-p="'+p.i+'">'+esc(p.t)+'</button>';
@@ -1943,21 +2293,46 @@ function mountBuilder(host, sc, target, extra, onResult){
   }
   bankEl.querySelectorAll("[data-t]").forEach(function(b){
     b.addEventListener("click", function(){
-      if (b.classList.contains("used")) return;
+      if (checked || b.classList.contains("used")) return;
       b.classList.add("used");
       picked.push({t:b.getAttribute("data-t"), i:b.getAttribute("data-i")});
       repaint();
     });
   });
+  if (hintBtn){
+    hintBtn.addEventListener("click", function(){
+      if (checked || hints >= goal.length) return;
+      hints++;
+      /* Kilitlenen önek yeniden kuruluyor: yanlış konmuş parçalar bankaya döner. */
+      picked.forEach(function(p){
+        const src = bankEl.querySelector('[data-i="'+p.i+'"]');
+        if (src) src.classList.remove("used");
+      });
+      picked = [];
+      goal.slice(0, hints).forEach(function(w){
+        const cand = Array.prototype.slice.call(bankEl.querySelectorAll("[data-t]")).filter(function(b){
+          return !b.classList.contains("used") && b.getAttribute("data-t") === w;
+        })[0];
+        if (!cand) return;
+        cand.classList.add("used");
+        picked.push({t:w, i:cand.getAttribute("data-i")});
+      });
+      repaint();
+      hintNote.textContent = hints + " parça yerine kondu · bu ekranın XP'si yarıya indi.";
+      if (hints >= goal.length) hintBtn.disabled = true;
+    });
+  }
   setFoot(host, {label:"Kontrol et", disabled:false, onClick:function(){
     const said = picked.map(function(p){ return p.t; }).join(" ");
     const ok = norm(said) === norm(goal.join(" "));
+    checked = true;
+    if (hintBtn) hintBtn.disabled = true;
     line.classList.add(ok ? "right" : "wrong");
     line.querySelectorAll(".tok").forEach(function(t){ t.style.pointerEvents = "none"; });
     bankEl.querySelectorAll(".tok").forEach(function(t){ t.style.pointerEvents = "none"; });
-    record(sc.id, ok);
+    record(sc.id, ok, hints > 0);
     say(target);
-    onResult(ok);
+    onResult(ok, hints > 0);
   }});
   const b0 = host.querySelector("[data-foot] .appbtn");
   if (b0) b0.disabled = true;
@@ -1986,9 +2361,9 @@ BUILDERS.build_translate = function(host, sc){
     '<div class="sentcard"><p class="s" style="font-size:20px;color:var(--slot-subj)">'+esc(it.tr)+'</p></div>'+
     '<div class="answerline" data-line></div>'+
     '<div class="bank" data-bank></div>');
-  mountBuilder(host, sc, it.target, it.extra, function(ok){
-    contFoot(host, ok, ok ? "" : it.target);
-  });
+  mountBuilder(host, sc, it.target, it.extra, function(ok, hinted){
+    contFoot(host, ok, hintMsg(ok ? "" : it.target, hinted));
+  }, {hint: !!it.hint});
 };
 
 /* --- say_word / say_sentence ---------------------------------- */
@@ -2050,6 +2425,161 @@ BUILDERS.grammar_pattern = function(host, sc){
       '<div style="text-align:center;margin-top:16px">'+speakBtn(it.good.en, "Deseni dinle")+'</div>'+
     '</div>');
   wireSay(host);
+  setFoot(host, {label:"Anladım", onClick:function(){ visit(sc.id); advance(); }});
+};
+
+/* ================================================================
+   ÖĞRETİM EKRANLARI — teach_grammar / teach_dialog
+   Slova > Paths > BeatLessonPlayerView'dan alınanlar:
+     · kicker rozeti (18px renkli kare + içine beyaz iç kare,
+       0.7 harf aralıklı 12px etiket)
+     · 29px / -0.6 tracking başlık
+     · başlık → diyagram → gövde okuma sırası; pastel kimlik
+       METİNDE, yüzeyler sessiz
+     · tek footer düğmesi, puanlama yok
+   Fark: Slova'da her beat ayrı ekran; burada üç blok tek
+   kaydırmalı ekranda alt alta (KURAL → ÖRNEK → KARŞITLIK).
+   ================================================================ */
+const KICKER = {rule:"KURAL", example:"ÖRNEK", contrast:"KARŞITLIK"};
+
+function kickerHTML(kind){
+  return '<div class="kicker '+kind+'"><i aria-hidden="true"></i><span>'+esc(KICKER[kind] || "")+'</span></div>';
+}
+
+/* Üç diyagram da kodla çiziliyor — dosya yok. */
+function diagramHTML(d){
+  if (!d) return "";
+  if (d.t === "slot_strip"){
+    return '<div class="tgSlots">'+ d.slots.map(function(s){
+      return '<div class="tgSlot '+s.cls+(s.wide ? " wide" : "")+'">'+
+        '<span class="v">'+esc(s.v)+'</span><span class="r">'+esc(s.r)+'</span></div>';
+    }).join("") +'</div>'+
+    (d.cap ? '<p class="tgCap">'+esc(d.cap)+'</p>' : '');
+  }
+  if (d.t === "morph_rows"){
+    return '<div class="tgMorph">'+ d.rows.map(function(r){
+      return '<div class="tgMrow"><span class="a">'+esc(r.a)+'</span>'+
+        '<span class="ar" aria-hidden="true">&rarr;</span>'+
+        '<span class="b">'+esc(r.b)+'</span>'+
+        (r.n ? '<span class="n">'+esc(r.n)+'</span>' : '')+'</div>';
+    }).join("") +'</div>'+
+    (d.cap ? '<p class="tgCap">'+esc(d.cap)+'</p>' : '');
+  }
+  if (d.t === "swap"){
+    const row = function(o, mark){
+      return '<div class="tgRow" data-row="'+mark+'">'+
+        (o.pre ? '<span>'+esc(o.pre)+'</span>' : '')+
+        '<span class="mv" data-mv>'+esc(o.mv)+'</span>'+
+        (o.post ? '<span>'+esc(o.post)+'</span>' : '')+
+      '</div>';
+    };
+    return '<div class="tgSwap" data-swap>'+
+      '<svg class="tgSwapArc" data-arc aria-hidden="true"></svg>'+
+      row(d.top, "top") + row(d.bottom, "bottom")+
+    '</div>'+
+    (d.cap ? '<p class="tgCap">'+esc(d.cap)+'</p>' : '');
+  }
+  return "";
+}
+
+/* swap okunu ölçerek çiziyoruz: üst satırdaki taşınan parçadan alt
+   satırdaki yerine, iki kutunun ARASINDAKİ boşlukta kavis. */
+function mountSwapArc(host){
+  const box = host.querySelector("[data-swap]");
+  if (!box) return;
+  const arc = box.querySelector("[data-arc]");
+  const rows = box.querySelectorAll(".tgRow");
+  if (!arc || rows.length < 2) return;
+  const a = rows[0].querySelector("[data-mv]"), b = rows[1].querySelector("[data-mv]");
+  if (!a || !b) return;
+  const R = box.getBoundingClientRect();
+  if (!R.width) return;
+  const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
+  const r0 = rows[0].getBoundingClientRect(), r1 = rows[1].getBoundingClientRect();
+  const x1 = ra.left + ra.width/2 - R.left, y1 = r0.bottom - R.top;
+  const x2 = rb.left + rb.width/2 - R.left, y2 = r1.top - R.top;
+  arc.setAttribute("width", R.width);
+  arc.setAttribute("height", R.height);
+  arc.innerHTML =
+    '<path d="M '+x1+' '+y1+' C '+x1+' '+(y1+16)+', '+x2+' '+(y2-16)+', '+x2+' '+y2+'" '+
+      'fill="none" stroke="var(--slot-be)" stroke-width="2.4" stroke-linecap="round"/>'+
+    '<path d="M '+(x2-5)+' '+(y2-6)+' L '+x2+' '+y2+' L '+(x2+5)+' '+(y2-6)+'" '+
+      'fill="none" stroke="var(--slot-be)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>';
+}
+
+BUILDERS.teach_grammar = function(host, sc){
+  const it = sc.item;
+  const blocks = it.blocks.map(function(b){
+    let inner = "";
+    if (b.kind === "example"){
+      inner = '<div class="tEx">'+ (b.examples || []).map(function(e){
+        return '<div class="tExRow"><span>'+
+          '<span class="en">'+esc(e.en)+'</span>'+
+          '<span class="tr">'+esc(e.tr)+'</span></span>'+
+          '<button class="sp" data-say="'+esc(e.en)+'" aria-label="'+esc(e.en)+' — dinle">'+ICON.sound+'</button>'+
+        '</div>';
+      }).join("") +'</div>' + diagramHTML(b.diagram);
+    } else if (b.kind === "contrast"){
+      inner = '<div class="twocard">'+
+        '<div class="tc good"><p class="flag">Böyle</p><p class="tcw">'+esc(b.good.en)+'</p>'+
+          (b.good.note ? '<p class="tcNote">'+esc(b.good.note)+'</p>' : '')+'</div>'+
+        '<div class="tc bad"><p class="flag">Böyle değil</p><p class="tcw">'+esc(b.bad.en)+'</p>'+
+          (b.bad.note ? '<p class="tcNote">'+esc(b.bad.note)+'</p>' : '')+'</div>'+
+      '</div>';
+    } else {
+      inner = diagramHTML(b.diagram);
+    }
+    return '<section class="tBlock">'+ kickerHTML(b.kind) + inner +
+      (b.body ? '<p class="tBody">'+esc(b.body)+'</p>' : '') +
+    '</section>';
+  }).join("");
+  frame(host, sc,
+    '<div class="teach">'+
+      '<p class="teachKind">ÖĞRETİM · PUANLANMAZ</p>'+
+      '<h2 class="teachTitle">'+esc(it.title)+'</h2>'+
+      blocks+
+    '</div>');
+  wireSay(host);
+  mountSwapArc(host);
+  setFoot(host, {label:"Anladım", onClick:function(){ visit(sc.id); advance(); }});
+};
+
+/* teach_dialog — gramer değil DEĞİŞ TOKUŞ şekli: soru kalıbı ve cevap
+   kalıbı yan yana, ok ile bağlı. Altında tam diyalog iki-üç balon
+   hâlinde bir kez sesli oynanıyor. Part 3'ün ilk ekranı, puanlanmaz. */
+function blankify(s){
+  const parts = String(s).split("___");
+  if (parts.length < 2) return esc(s);
+  return esc(parts[0]) + '<span class="tdBlank">&nbsp;</span>' + esc(parts[1] || "");
+}
+BUILDERS.teach_dialog = function(host, sc){
+  const it = sc.item;
+  const bubbles = '<div class="dialog">'+ it.full.map(function(l){
+    return '<div class="bub '+(l.mine ? "r" : "l")+'"><span class="who">'+esc(l.who)+'</span>'+esc(l.en)+'</div>';
+  }).join("") +'</div>'+
+  '<p class="dtr">'+esc(it.full.map(function(l){ return l.tr; }).filter(Boolean).join(" "))+'</p>';
+  frame(host, sc,
+    '<div class="teach">'+
+      '<p class="teachKind">ÖĞRETİM · PUANLANMAZ</p>'+
+      '<h2 class="teachTitle">'+esc(it.title)+'</h2>'+
+      '<section class="tBlock">'+ kickerHTML("rule")+
+        '<div class="tdEx">'+
+          '<div class="tdCard ask"><p class="cap">'+esc(it.askCap || "O DER")+'</p>'+
+            '<p class="en">'+blankify(it.ask.en)+'</p><p class="tr">'+esc(it.ask.tr)+'</p></div>'+
+          '<div class="tdArrow" aria-hidden="true">'+ICON.arrowR+'</div>'+
+          '<div class="tdCard ans"><p class="cap">'+esc(it.ansCap || "SEN DERSİN")+'</p>'+
+            '<p class="en">'+blankify(it.answer.en)+'</p><p class="tr">'+esc(it.answer.tr)+'</p></div>'+
+        '</div>'+
+        (it.body ? '<p class="tBody">'+esc(it.body)+'</p>' : '')+
+      '</section>'+
+      '<section class="tBlock">'+ kickerHTML("example")+ bubbles +
+        '<div class="tdPlay"><button class="speak" data-full>'+ICON.sound+'Diyaloğu dinle</button></div>'+
+      '</section>'+
+    '</div>');
+  const btn = host.querySelector("[data-full]");
+  const lines = it.full.map(function(l){ return l.en; });
+  btn.addEventListener("click", function(){ sayQueue(lines, btn); });
+  setTimeout(function(){ sayQueue(lines, btn); }, 260);
   setFoot(host, {label:"Anladım", onClick:function(){ visit(sc.id); advance(); }});
 };
 
@@ -2226,13 +2756,72 @@ BUILDERS.dialog_reply_translate = function(host, sc){
     '<div class="answerline" data-line></div>'+
     '<div class="bank" data-bank></div>');
   wireSay(host);
-  mountBuilder(host, sc, it.target, it.extra, function(ok){
+  mountBuilder(host, sc, it.target, it.extra, function(ok, hinted){
     const pend = host.querySelector(".bub.pending");
     if (pend){
       pend.className = "bub r";
       pend.innerHTML = '<span class="who">'+esc(mineWho)+'</span>'+esc(it.target);
     }
-    contFoot(host, ok, ok ? "" : it.target);
+    contFoot(host, ok, hintMsg(ok ? "" : it.target, hinted));
+  }, {hint: it.hint !== false});
+};
+
+/* --- dialog_choose_reply (merdivenin ilk basamağı) -------------
+   Partner konuşuyor, sen TAM CÜMLE olarak üç replikten doğrusunu
+   seçiyorsun. Boşluk yok: önce değiş tokuşun şeklini tanıyorsun,
+   üretim sonraki basamaklarda geliyor. */
+BUILDERS.dialog_choose_reply = function(host, sc){
+  const it = sc.item;
+  const cue = it.lines.filter(function(l, i){ return i !== it.replyIndex; }).pop();
+  frame(host, sc,
+    '<p class="prompt">SIRA SENDE — DOĞRU REPLİĞİ SEÇ</p>'+
+    dialogHTML(it.lines, {pendingIndex: it.replyIndex, pendingText:"…"})+
+    '<p class="dtr">'+esc(it.tr || "")+'</p>'+
+    (cue ? '<div style="text-align:center;margin-top:10px">'+speakBtn(cue.en, "Yeniden dinle")+'</div>' : '')+
+    optsHTML(it.options, sc.id));
+  wireSay(host);
+  setFoot(host, {label:"Bir replik seç", disabled:true});
+  if (cue) setTimeout(function(){ say(cue.en); }, 240);
+  wireOpts(host, it.correct, function(ok){
+    const pend = host.querySelector(".bub.pending");
+    if (pend){
+      pend.className = "bub r";
+      pend.innerHTML = '<span class="who">'+esc(it.lines[it.replyIndex].who)+'</span>'+esc(it.correct);
+    }
+    record(sc.id, ok);
+    say(it.correct);
+    contFoot(host, ok, ok ? "" : it.correct);
+  });
+};
+
+/* --- word_image_pick (image_choice'in tersi) -------------------
+   Kelime üstte büyük ve sesli; altta dört görsel karo, anlamını
+   seçiyorsun. Çeldirici karo minimal çiftin öteki üyesi. */
+function tileSVG(art, label){
+  return '<svg viewBox="0 0 100 84" role="img" aria-label="'+esc(label)+'">'+
+    '<ellipse cx="50" cy="78" rx="42" ry="4" fill="#EDE9FE"/>'+ (TILE_ART[art] || "") +'</svg>';
+}
+BUILDERS.word_image_pick = function(host, sc){
+  const it = sc.item;
+  const tiles = shuffle(it.tiles, sc.id);
+  frame(host, sc,
+    '<p class="prompt">ANLAMI HANGİSİ?</p>'+
+    '<div class="wordcard" style="padding:18px 18px 16px">'+
+      '<div class="w">'+esc(it.w)+'</div>'+
+      '<div class="ipa">'+esc(it.ipa || "")+'</div>'+
+      speakBtn(it.w)+
+    '</div>'+
+    '<div class="tiles" data-tiles>'+ tiles.map(function(t){
+      return '<button class="tile" data-opt="'+esc(t.label)+'">'+
+        tileSVG(t.art, t.label)+'<span class="cap">'+esc(t.label)+'</span></button>';
+    }).join("") +'</div>');
+  wireSay(host);
+  setFoot(host, {label:"Bir karo seç", disabled:true});
+  setTimeout(function(){ say(it.w); }, 240);
+  wireOpts(host, it.correct, function(ok){
+    host.querySelector("[data-tiles]").classList.add("shown");
+    record(sc.id, ok);
+    contFoot(host, ok, ok ? "" : it.w + " = " + it.correct);
   });
 };
 
@@ -2248,12 +2837,15 @@ const TYPE_LABEL = {
   dialog_gap:"Diyalog boşluğu", dialog_build:"Diyalog repliği kur", dialog_say:"Repliği söyle",
   grammar_pattern:"Gramer deseni", translate_meaning:"Anlamı seç",
   pattern_mini:"Desen tamamlama", tf_meaning:"Doğru mu yanlış mı",
-  dialog_reply_translate:"Anlamdan replik kur"
+  dialog_reply_translate:"Anlamdan replik kur",
+  teach_grammar:"Gramer öğretimi", teach_dialog:"Diyalog öğretimi",
+  dialog_choose_reply:"Repliği seç", word_image_pick:"Görselden anlam seç"
 };
 function subjectOf(it){
   /* Bu tipte hedefin İngilizcesi hiçbir yerde görünmemeli — gezinme
      rayındaki etiket de dâhil. Ray hedefi değil anlamı gösteriyor. */
   if (it.type === "dialog_reply_translate") return it.meaning_tr || "";
+  if (it.title) return it.title;
   if (it.w) return it.w;
   if (it.word) return it.word;
   if (it.answer) return it.answer;
@@ -2273,7 +2865,9 @@ function makeScreen(part, id, item, isRepeat){
   return {
     id:id, kind:"ex", part:part.key, type:item.type, item:item,
     repeat:!!isRepeat,
-    teach:(item.type === "word_card" || item.type === "grammar_pattern"),
+    /* Öğretim ekranları puanlanmaz ve tekrar kuyruğuna girmez. */
+    teach:(item.type === "word_card" || item.type === "grammar_pattern" ||
+           item.type === "teach_grammar" || item.type === "teach_dialog"),
     label:labelFor(item),
     build:function(host){ BUILDERS[item.type](host, this); }
   };
