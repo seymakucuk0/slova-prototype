@@ -417,7 +417,19 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .lb.bad{border-color:var(--a-red);background:var(--a-no-bg);animation:shake .3s}
 .lb.done{border-color:var(--a-green);background:var(--a-ok-bg)}
 .lb.cursor{border-color:var(--a-pastel);box-shadow:0 0 0 3px rgba(221,214,254,.55)}
+/* Ön dolu kutu: yazılmayacak, ipucu niyetine hazır duran harf. */
+.lb.pre{border-color:var(--a-line);background:var(--a-soft);color:var(--a-ink-3);border-style:dashed}
 .lbspace{width:16px;height:44px}
+/* letter_keys başlığı: İngilizce kelime YOK, yalnızca Türkçe anlam. */
+.lkMean{margin:12px 20px 0;text-align:center;font-size:26px;font-weight:750;
+  letter-spacing:-.6px;color:var(--slot-subj)}
+.lkSay{text-align:center;margin-top:10px}
+.devwarn{
+  margin:18px 20px 0;padding:16px 16px 14px;border-radius:18px;
+  border:1.5px dashed var(--a-red);background:var(--a-no-bg);
+}
+.devwarn b{display:block;font-size:15px;font-weight:750;color:var(--a-red)}
+.devwarn span{display:block;margin-top:7px;font-size:13px;line-height:1.5;color:var(--a-ink-2)}
 .kbTr{margin:11px 20px 0;text-align:center;font-size:14px;font-weight:600;color:var(--a-ink-2)}
 .kbCtx{margin:11px 20px 0;text-align:center;font-size:16px;font-weight:650;color:var(--a-ink)}
 .kbCtx u{text-decoration:none;border-bottom:3px solid var(--a-pastel);padding:0 14px}
@@ -777,7 +789,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
       Bir A0 node’unun tamamı oynanabilir hâlde: <b id="pageCount">33 ders ekranı</b> + 3 part bitiş kartı + 1 node bitiş kartı.
       Can yok, süre yok. Yanlış cevap sadece <b>part sonunda tekrar</b> demek.
       <b id="pageTypes">19</b> egzersiz tipinin hepsi gerçekten çalışıyor — klavye uygulamanın kendi klavyesi,
-      “dinle ve yaz” duyamayana kendini kapatmıyor.
+      harf yazdıran ekran hiçbir zaman 3 harften fazlasını istemiyor.
     </p>
     <div class="chips" id="pageChips"></div>
   </header>
@@ -830,11 +842,15 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
         <dl class="dl">
           <div>
             <dt>Klavye</dt>
-            <dd>Uygulamanın kendi klavyesi. Sistem klavyesi ve <code>&lt;input&gt;</code> yok. <b>Yalnızca o kelimede geçen harfler</b> mor, kabartmalı ve basılabilir; kalanlar soluk ve tıklanamaz. Kademelenme yok — 12. ekranda da, 33. ekranda da aynı kolaylık. Yanlış sıradaki harf kutuya girer, kutu kızarır ve harf geri alınır.</dd>
+            <dd>Uygulamanın kendi klavyesi. Sistem klavyesi ve <code>&lt;input&gt;</code> yok. <b>Yalnızca yazılacak harfler</b> mor, kabartmalı ve basılabilir; kalanlar soluk ve tıklanamaz. Kademelenme yok — 12. ekranda da, 33. ekranda da aynı kolaylık. Yanlış sıradaki harf kutuya girer, kutu kızarır ve harf geri alınır.</dd>
+          </div>
+          <div>
+            <dt>Harf klavyesi ne kadar yazdırır</dt>
+            <dd><b>letter_keys</b> yalnızca 2-6 harfli kelimeye çıkar ve kutuların bir kısmı hazır gelir: 2-3 harf hepsi boş, 4 harf 1 dolu, 5-6 harf <i>uzunluk-3</i> dolu. Yani kullanıcı hiçbir zaman <b>3 harften fazla</b> yazmaz. Dolu kutular ardışık değil, dağınık; 5-6 harflide ilk harf hazır geliyor. Üstte kelimenin görseli ve Türkçe anlamı var, İngilizcesi ekranda yok — hatırlanan şey harf dizisi değil, anlam. 7+ harfli bir kelime verilirse ekran sessizce atlanmıyor (tekrar kuyruğu bozulur): görünür bir veri-hatası kartı basılıyor.</dd>
           </div>
           <div>
             <dt>Duyamıyorum</dt>
-            <dd><b>listen_write</b> ekranlarının altında her zaman duran bağlantı. Basınca egzersiz yerinde <b>translate_meaning</b>’e dönüşüyor: hedef yazıyla geliyor, “Bu ne demek?” diye dört Türkçe şık soruluyor, doğru cevap puan alıyor. Sesi duyamayan kullanıcı çıkmaz sokakta kalmıyor.</dd>
+            <dd><b>listen_write</b> ekranlarının altında her zaman duran bağlantı. Basınca egzersiz yerinde <b>translate_meaning</b>’e dönüşüyor: hedef yazıyla geliyor, “Bu ne demek?” diye dört Türkçe şık soruluyor, doğru cevap puan alıyor. Sesi duyamayan kullanıcı çıkmaz sokakta kalmıyor. Node 6-7’de bu ekran hiç yok: bütün bir cümleyi klavyeden yazdırmak A0’ın en pahalı ekranıydı, yerine görselli cümle seçimi (<b>mc_sentence</b> + <code>art</code>) geldi.</dd>
           </div>
           <div>
             <dt>Konuşma</dt>
@@ -901,11 +917,24 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
      - answer boşluk içerebilir (cümle). Boşluklar otomatik atlanır.
      - options: "Duyamıyorum" yolunda sorulan translate_meaning şıkları.
    listen_sentence_gap  { sentence(en, "___" içerir), correct(en), options[en x3-4], tr }
-   letter_keys          { answer(en), tr, context?(en "___" içerir), contextTr? }
+   letter_keys          { answer(en 2-6 HARF), tr, art?, context?(en "___" içerir), contextTr? }
+     - Uygunluk: answer 2-6 harf olmalı. 7+ harfte ekran SESSİZCE ATLANMAZ
+       (tekrar kuyruğu bozulur); görünür bir veri-hatası kartı basılır.
+     - Ön doldurma otomatik: 2-3 harf 0 dolu · 4 harf 1 dolu ·
+       5-6 harf (n-3) dolu. Kullanıcı en fazla 3 harf yazar.
+       Dolu kutular ardışık değil (0,2,4…); 5-6 harflide ilk harf dolu.
+     - Klavyede yalnızca BOŞ kutuların harfleri canlı.
+     - art -> ART kayıt anahtarı. Verilmezse ART[answer] denenir.
+       Sunum: büyük görsel + Türkçe anlam. İngilizce kelime ekranda YOK.
+     - context verilirse görsel yerine cümle bağlamı gelir (node 5 part 2).
    fill_blank           { sentence(en, "___"), correct(en), options[en x3-4], tr }
    build_sentence       { target(en), extra?[en tokenlar], tr }
    build_translate      { tr, target(en), extra?[en tokenlar] }
-   mc_sentence          { sentence(en, "___"), correct(en), options[en x3-4], tr }
+   mc_sentence          { sentence(en, "___"), correct(en), options[en x3-4], tr, prompt? }
+     - GÖRSELLİ biçim: sentence yerine art verilir. Üstte ART görseli,
+       şıklar TAM CÜMLE, correct de tam cümle. listen_write'ın yerine
+       geçen yazdırmayan yol. tr cevaptan ÖNCE gösterilmez (cevabı ele
+       verirdi); geri bildirim satırında geliyor.
    say_word             { target(en), ipa, tr }
    say_sentence         { target(en), tr }
    translate_meaning    { target(en), correct(tr), options[tr x4] }
@@ -1096,9 +1125,12 @@ const NODE_DATA = {
     /* ---------- PART 1 · Kelimeler · 12 ekran ----------
        Dört kelime iki minimal çift: sister↔brother, son↔daughter.
        Her kelime kartından hemen sonra o çiftin ayrımını yoklayan bir
-       ekran geliyor (görsel karo, ses, doğru-yanlış). match4 artık
-       ortada değil, PART SONUNA yakın: dört kelime de tanıtılıp tek tek
-       çalışıldıktan sonra topluca eşleşiyor. */
+       ekran geliyor (görsel karo, ses, doğru-yanlış).
+       match4 artık PART 1'İN SON EKRANI: dört kelime tek tek çalışılıp
+       üretime (letter_keys → say_word → build_translate) çıktıktan
+       sonra hepsi bir arada bir kez daha eşleşiyor — kapanış yoklaması.
+       letter_keys kelimesi "daughter" değil "son": daughter 8 harf,
+       harf klavyesi 2-6 harfle sınırlı. daughter'ı tf_meaning yokluyor. */
     part1:[
       {type:"word_card", w:"sister", ipa:"/ˈsɪstər/", tr:"kız kardeş", ex:"My sister is Mia.", exTr:"Kız kardeşim Mia."},
       {type:"word_image_pick", w:"sister", ipa:"/ˈsɪstər/", correct:"kız kardeş",
@@ -1111,11 +1143,11 @@ const NODE_DATA = {
       {type:"word_image_pick", w:"daughter", ipa:"/ˈdɔːtər/", correct:"kız evlat",
        tiles:[{art:"son", label:"oğul"},{art:"daughter", label:"kız evlat"},
               {art:"mother", label:"anne"},{art:"father", label:"baba"}]},
-      {type:"tf_meaning", word:"son", claim_tr:"kız evlat", correct:false, real_tr:"oğul"},
-      {type:"letter_keys", answer:"daughter", tr:"kız evlat"},
-      {type:"match4", pairs:[["sister","kız kardeş"],["brother","erkek kardeş"],["son","oğul"],["daughter","kız evlat"]]},
+      {type:"tf_meaning", word:"daughter", claim_tr:"oğul", correct:false, real_tr:"kız evlat"},
+      {type:"letter_keys", answer:"son", tr:"oğul", art:"son"},
       {type:"say_word", target:"brother", ipa:"/ˈbrʌðər/", tr:"erkek kardeş"},
-      {type:"build_translate", tr:"Benim erkek kardeşim Sam.", target:"My brother is Sam.", extra:["sister","am"], hint:true}
+      {type:"build_translate", tr:"Benim erkek kardeşim Sam.", target:"My brother is Sam.", extra:["sister","am"], hint:true},
+      {type:"match4", pairs:[["sister","kız kardeş"],["brother","erkek kardeş"],["son","oğul"],["daughter","kız evlat"]]}
     ],
 
     /* ---------- PART 2 · Gramer · 9 ekran ----------
@@ -1155,8 +1187,12 @@ const NODE_DATA = {
       {type:"build_sentence", target:"This is my daughter.", extra:["son"], tr:"Bu benim kızım."},
       {type:"mc_sentence", sentence:"This is ___ son.", correct:"my", options:["me","I","my"], tr:"Bu benim oğlum."},
       {type:"say_sentence", target:"This is my brother, Sam.", tr:"Bu benim erkek kardeşim, Sam."},
-      {type:"listen_write", audio:"This is my family.", answer:"This is my family", tr:"Bu benim ailem.",
-       options:["Bu benim ailem.","Bu benim annem.","Bu benim oğlum.","Bu benim kızım."]},
+      /* Dinle-yaz kalktı: bütün bir cümleyi klavyeden yazdırmak A0'da
+         en pahalı ekrandı. Yerine görselli cümle seçimi — aynı cümle,
+         yazma yükü yok, anlamı resimden okuyor. */
+      {type:"mc_sentence", art:"family", prompt:"Resmi anlatan cümle hangisi?",
+       correct:"This is my family.", tr:"Bu benim ailem.",
+       options:["This is my family.","This is my brother.","This is my sister."]},
       {type:"say_sentence", target:"This is my daughter, Mia.", tr:"Bu benim kızım, Mia."}
     ],
 
@@ -1237,7 +1273,9 @@ const NODE_DATA = {
        Öğretmeden kullanmak yok: part 1'de "I am from ..." cümlesi
        hiç geçmiyor. Görsel karo yalnızca somut olan "country" için.
        tf_meaning edat tuzağını (-de mi, -den mi) erken patlatıyor.
-       match4 part sonuna yakın: dört kelime de tanıtıldıktan sonra. */
+       match4 PART 1'İN SON EKRANI: dört kelime tanıtılıp üretime
+       (letter_keys → say_word → build_translate) çıktıktan sonra
+       hepsi bir arada eşleşiyor — kapanış yoklaması. */
     part1:[
       {type:"word_card", w:"country", ipa:"/ˈkʌntri/", tr:"ülke", ex:"Turkey is a country.", exTr:"Türkiye bir ülke."},
       {type:"word_image_pick", w:"country", ipa:"/ˈkʌntri/", correct:"ülke",
@@ -1248,10 +1286,10 @@ const NODE_DATA = {
       {type:"word_card", w:"where", ipa:"/weər/", tr:"nerede", ex:"where?", exTr:"nerede?", fragment:true},
       {type:"listen_pick", audio:"where", ipa:"/weər/", correct:"where", options:["where","live","country","from"]},
       {type:"word_card", w:"live", ipa:"/lɪv/", tr:"yaşamak", ex:"I live in Turkey.", exTr:"Türkiye'de yaşıyorum."},
-      {type:"letter_keys", answer:"where", tr:"nerede"},
-      {type:"match4", pairs:[["country","ülke"],["from","-den, -dan"],["where","nerede"],["live","yaşamak"]]},
+      {type:"letter_keys", answer:"where", tr:"nerede", art:"where"},
       {type:"say_word", target:"country", ipa:"/ˈkʌntri/", tr:"ülke"},
-      {type:"build_translate", tr:"Türkiye bir ülke.", target:"Turkey is a country.", extra:["from","live"], hint:true}
+      {type:"build_translate", tr:"Türkiye bir ülke.", target:"Turkey is a country.", extra:["from","live"], hint:true},
+      {type:"match4", pairs:[["country","ülke"],["from","-den, -dan"],["where","nerede"],["live","yaşamak"]]}
     ],
 
     /* ---------- PART 2 · Gramer · 11 ekran ----------
@@ -1488,6 +1526,20 @@ const ART = {
       '<circle cx="100" cy="78" r="50" fill="none" stroke="#6D28D9" stroke-width="3"/>'+
       '<path d="M138 44V12" stroke="#4C1D95" stroke-width="3.4" stroke-linecap="round"/>'+
       '<path d="M138 14h26l-7 8 7 8h-26z" fill="#EF4444"/>'+
+    '</svg>',
+  /* where soyut: yer soruluyor — haritanın üstünde soru işaretli bir pin. */
+  where:
+    '<svg viewBox="0 0 200 150" role="img" aria-label="Harita üzerinde soru işaretli bir konum işareti">'+
+      '<rect x="16" y="30" width="168" height="104" rx="16" fill="#F5F3FF" stroke="#DDD6FE" stroke-width="2"/>'+
+      '<path d="M16 96q26-16 48-6t44 2 44-18 32-4" stroke="#DDD6FE" stroke-width="3" fill="none" stroke-linecap="round"/>'+
+      '<path d="M16 118q30-12 52-4t46-2 40-12 30-2" stroke="#EDE9FE" stroke-width="3" fill="none" stroke-linecap="round"/>'+
+      '<path d="M52 46h34M52 60h20" stroke="#DDD6FE" stroke-width="3" stroke-linecap="round"/>'+
+      '<ellipse cx="112" cy="124" rx="24" ry="6" fill="#DDD6FE"/>'+
+      '<path d="M112 122c0 0-30-30-30-50a30 30 0 0 1 60 0c0 20-30 50-30 50z" fill="#7C3AED"/>'+
+      '<circle cx="112" cy="72" r="19" fill="#FFFFFF"/>'+
+      '<path d="M105 66q0-8 7.5-8t7.5 7q0 6-7 7.5v3.5" stroke="#6D28D9" stroke-width="3.6" '+
+        'fill="none" stroke-linecap="round" stroke-linejoin="round"/>'+
+      '<circle cx="112.5" cy="82" r="2.4" fill="#6D28D9"/>'+
     '</svg>'
 };
 
@@ -1785,9 +1837,48 @@ function wireOpts(host, correctText, onPick){
    Sadece cevapta geçen harfler canlı. Kademelenme yok — hep böyle.
    ================================================================ */
 const KB_ROWS = ["qwertyuiop","asdfghjkl","zxcvbnm"];
-function keyboardHTML(answer){
+
+/* ---------------------------------------------------------------
+   letter_keys ÖN DOLDURMA
+   Uygunluk: 2-6 harf. 7+ harfli kelimeye bu egzersiz çıkmaz.
+     2-3 harf -> 0 kutu dolu (hepsini kullanıcı yazar)
+     4 harf   -> 1 kutu dolu (3 harf yazılır)
+     5-6 harf -> (n-3) kutu dolu (3 harf yazılır)
+   Yazılan harf sayısı hiçbir zaman 3'ü aşmaz (üst sınır 4).
+   Dolu kutular ARDIŞIK OLMAZ: 0'dan başlayıp ikişer atlanıyor, böylece
+   5-6 harflide ilk harf hep dolu geliyor. 4 harflide tek dolu kutu
+   ikinci sıraya konuyor — baştan kopya vermesin.
+   Dönen değer: { indexler } (answer string'inin kendi indeksleri).
+   --------------------------------------------------------------- */
+const LK_MIN = 2, LK_MAX = 6;
+function letterCount(answer){
+  return String(answer).replace(/[^A-Za-z]/g,"").length;
+}
+function letterKeysFits(answer){
+  const n = letterCount(answer);
+  return n >= LK_MIN && n <= LK_MAX;
+}
+function letterKeysFill(answer){
+  const chars = String(answer).split("");
+  const idx = [];
+  chars.forEach(function(c, i){ if (/[A-Za-z]/.test(c)) idx.push(i); });
+  const n = idx.length;
+  const fill = {};
+  if (n <= 3) return fill;
+  if (n === 4){ fill[idx[1]] = true; return fill; }
+  const k = n - 3;
+  for (let j = 0, p = 0; j < k && p < n; j++, p += 2) fill[idx[p]] = true;
+  return fill;
+}
+
+/* fill verilirse: klavyede YALNIZCA boş kutuların harfleri canlı olur. */
+function keyboardHTML(answer, fill){
   const need = {};
-  answer.toLowerCase().replace(/[^a-z]/g,"").split("").forEach(function(c){ need[c]=1; });
+  String(answer).split("").forEach(function(c, i){
+    if (fill && fill[i]) return;
+    const lc = c.toLowerCase();
+    if (lc >= "a" && lc <= "z") need[lc] = 1;
+  });
   const rows = KB_ROWS.map(function(row, ri){
     let keys = row.split("").map(function(c){
       const live = need[c] ? "live" : "dead";
@@ -1798,18 +1889,21 @@ function keyboardHTML(answer){
   }).join("");
   return '<div class="kb" role="group" aria-label="Uygulama klavyesi, yalnızca gereken harfler etkin">'+rows+'</div>';
 }
-function boxesHTML(answer){
-  return '<div class="slotbox" data-boxes>' + answer.split("").map(function(ch, i){
+function boxesHTML(answer, fill){
+  return '<div class="slotbox" data-boxes>' + String(answer).split("").map(function(ch, i){
     if (ch === " ") return '<i class="lbspace"></i>';
+    if (fill && fill[i]) return '<div class="lb pre" data-b="'+i+'" data-pre>'+esc(ch)+'</div>';
     return '<div class="lb" data-b="'+i+'"></div>';
   }).join("") + '</div>';
 }
-/* Klavyeyi ve kutuları bağlar. onDone(): cevap tamamlandığında çağrılır. */
-function mountKeyboard(host, answer, onDone){
-  const chars = answer.split("");
+/* Klavyeyi ve kutuları bağlar. onDone(): cevap tamamlandığında çağrılır.
+   fill verilirse o kutular hazır dolu sayılır, imleç üstlerinden atlar. */
+function mountKeyboard(host, answer, onDone, fill){
+  const chars = String(answer).split("");
   const boxOf = function(i){ return host.querySelector('[data-b="'+i+'"]'); };
+  const pre = fill || {};
   let pos = 0, locked = false;
-  function skip(){ while (pos < chars.length && chars[pos] === " ") pos++; }
+  function skip(){ while (pos < chars.length && (chars[pos] === " " || pre[pos])) pos++; }
   function paintCursor(){
     host.querySelectorAll(".lb").forEach(function(b){ b.classList.remove("cursor"); });
     const b = boxOf(pos);
@@ -1848,7 +1942,7 @@ function mountKeyboard(host, answer, onDone){
   if (del) del.addEventListener("click", function(){
     if (locked) return;
     let p = pos - 1;
-    while (p >= 0 && chars[p] === " ") p--;
+    while (p >= 0 && (chars[p] === " " || pre[p])) p--;
     if (p < 0) return;
     const b = boxOf(p);
     b.textContent = ""; b.classList.remove("done","bad");
@@ -2121,27 +2215,58 @@ BUILDERS.translate_meaning = function(host, sc){
   renderTranslateMeaning(host, sc, it.target, it.correct, it.options);
 };
 
-/* --- letter_keys ---------------------------------------------- */
+/* --- letter_keys ----------------------------------------------
+   Duolingo "bu neydi?" ekranı: üstte BÜYÜK görsel + Türkçe anlam,
+   altta kısmen dolu kutular. İngilizce kelime ekranda hiç yazmıyor;
+   yalnızca ses düğmesinin içinde. Yazılan harf sayısı en fazla 3.
+   context verilirse (node 5 part 2) görsel yerine cümle bağlamı gelir. */
 BUILDERS.letter_keys = function(host, sc){
   const it = sc.item;
+  /* Geliştirici koruması: 7+ harfli kelime sessizce atlanmıyor — atlamak
+     tekrar kuyruğunu bozuyor — görünür bir hata kartı basılıyor. */
+  if (!letterKeysFits(it.answer)){
+    const n = letterCount(it.answer);
+    if (window.console) console.warn(
+      "letter_keys: \""+it.answer+"\" "+n+" harf. Bu egzersiz yalnızca "+
+      LK_MIN+"-"+LK_MAX+" harfli kelimeler için. Ekran veri hatası olarak basıldı.");
+    frame(host, sc,
+      '<p class="prompt">Bu ekran kurulamadı</p>'+
+      '<div class="devwarn">'+
+        '<b>Veri hatası: bu kelime letter_keys için uygun değil</b>'+
+        '<span>“'+esc(it.answer)+'” '+n+' harf. Harf klavyesi yalnızca '+
+        LK_MIN+'-'+LK_MAX+' harfli kelimelerde kullanılır; daha uzun kelimede '+
+        'kullanıcı 4’ten fazla harf yazmak zorunda kalır. Ekran atlanmadı, '+
+        'çünkü sessiz atlama tekrar kuyruğunu bozar.</span>'+
+      '</div>');
+    setFoot(host, {label:"Devam", onClick:function(){ record(sc.id, true); advance(); }});
+    return;
+  }
+  const fill = letterKeysFill(it.answer);
+  const written = letterCount(it.answer) - Object.keys(fill).length;
+  const art = ART[it.art] || ART[it.answer] || "";
   const head = it.context
     ? '<p class="kbCtx">'+esc(String(it.context).split("___")[0])+'<u>&nbsp;&nbsp;&nbsp;</u>'+esc(String(it.context).split("___")[1] || "")+'</p>'+
       '<p class="kbTr">'+esc(it.contextTr || "")+'</p>'
-    : '<div class="wordcard" style="padding:18px"><div class="w" style="font-size:30px;color:var(--slot-subj)">'+esc(it.tr)+'</div>'+
-      speakBtn(it.answer)+'</div>';
+    : (art ? '<div class="artbox">'+art+'</div>' : '')+
+      '<p class="lkMean">'+esc(it.tr)+'</p>'+
+      '<div class="lkSay">'+speakBtn(it.answer)+'</div>';
   frame(host, sc,
-    '<p class="prompt">Harflerle yaz</p>'+
+    '<p class="prompt">'+(Object.keys(fill).length ? "Eksik harfleri yaz" : "Harflerle yaz")+'</p>'+
     head +
-    boxesHTML(it.answer)+
-    '<p class="microNote">Klavyede yalnızca bu kelimenin harfleri açık. Harfleri hatırlamak zorunda değilsin, sırayı sen kuruyorsun.</p>',
-    {kb: keyboardHTML(it.answer)});
+    boxesHTML(it.answer, fill)+
+    '<p class="microNote">'+
+      (Object.keys(fill).length
+        ? 'Bir kısım harf hazır; '+written+' harf yazacaksın. Klavyede yalnızca o harfler açık.'
+        : 'Klavyede yalnızca bu kelimenin harfleri açık — hatırlaman gereken tek şey sıra.')+
+    '</p>',
+    {kb: keyboardHTML(it.answer, fill)});
   wireSay(host);
   setFoot(host, {label:"Harfleri sırayla bas", disabled:true});
   mountKeyboard(host, it.answer, function(){
     record(sc.id, true);
     say(it.answer);
     contFoot(host, true, it.answer + " = " + it.tr);
-  });
+  }, fill);
 };
 
 /* --- listen_write (adaptif) ------------------------------------ */
@@ -2217,21 +2342,36 @@ BUILDERS.fill_blank = function(host, sc){
   });
 };
 
-/* --- mc_sentence ---------------------------------------------- */
+/* --- mc_sentence ----------------------------------------------
+   İki biçim:
+   (a) boşluklu cümle + form şıkları  → sentence "___" içerir
+   (b) GÖRSELLİ cümle seçimi          → art verilir, sentence yok;
+       şıklar tam cümledir. listen_write yerine geçen yol: yazdırmak
+       yerine anlamı görselden okutuyor. */
 BUILDERS.mc_sentence = function(host, sc){
   const it = sc.item;
+  const visual = !it.sentence && it.art;
   frame(host, sc,
-    '<p class="prompt">Doğru formu seç</p>'+
-    '<div class="sentcard">'+
-      '<p class="s">'+gapSentence(it.sentence)+'</p>'+
-      '<p class="tr">'+esc(it.tr)+'</p>'+
-    '</div>'+
-    optsHTML(it.options, sc.id, true));
+    '<p class="prompt">'+esc(it.prompt || (visual ? "Resmi anlatan cümle hangisi?" : "Doğru formu seç"))+'</p>'+
+    (visual
+      /* Türkçesi ekranda YOK: "Bu benim ailem." yazsaydı doğru şıkkı
+         resme bakmadan ele verirdi. Anlam cevaptan sonra geliyor. */
+      ? '<div class="artbox">'+(ART[it.art] || "")+'</div>'
+      : '<div class="sentcard">'+
+          '<p class="s">'+gapSentence(it.sentence)+'</p>'+
+          '<p class="tr">'+esc(it.tr)+'</p>'+
+        '</div>')+
+    optsHTML(it.options, sc.id, !visual));
   setFoot(host, {label:"Bir şık seç", disabled:true});
   const gap = host.querySelector("[data-gap]");
   wireOpts(host, it.correct, function(ok, v){
-    gap.textContent = v; gap.classList.add("filled");
     record(sc.id, ok);
+    if (visual){
+      say(it.correct);
+      contFoot(host, ok, ok ? (it.tr || "") : it.correct + (it.tr ? " = " + it.tr : ""));
+      return;
+    }
+    gap.textContent = v; gap.classList.add("filled");
     const full = String(it.sentence).replace("___", it.correct);
     if (!ok) setTimeout(function(){ gap.textContent = it.correct; }, 420);
     say(full);
