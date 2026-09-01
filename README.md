@@ -1,35 +1,41 @@
-# Slova — A0 ders prototipi
+# Slova — prototipler
 
-Slova'nın A0 seviyesi için ders motoru prototipi. Tek dosya, bağımlılık yok.
+İki sayfa, ikisi de tek dosya, kurulum gerektirmiyor.
 
-**Aç:** https://seymakucuk0.github.io/slova-prototype/
+| Sayfa | Ne |
+|---|---|
+| **[A0 ders prototipi](https://seymakucuk0.github.io/slova-prototype/)** | A0'ın 24 node'u, 692 ekran, gezilebilir |
+| **[Ekran envanteri](https://seymakucuk0.github.io/slova-prototype/katalog.html)** | Uygulamadaki 6 ders motoru, 112 ekran tipi, hepsi koddan çizildi |
 
-## İçinde ne var
+## A0 ders prototipi
 
-Üç node tamamen oynanabilir. Node uzunlukları sabit değil — içeriğin ne gerektirdiğine göre belirlendi.
+24 node × 3 part (Kelimeler · Gramer · Cümle ve diyalog). Haritadan node seçilir,
+sağdaki listeden herhangi bir ekrana atlanır.
 
-| Node | Ekran | Part 1 / 2 / 3 | Neden bu uzunluk |
-|---|---|---|---|
-| 5 · This is my mother | 33 | 14 / 9 / 10 | Temel uzunluk. Somut isimler, tek ve basit gramer. |
-| 6 · Brother and sister | 36 | 18 / 6 / 12 | Kelimeler iki minimal çift (sister↔brother, son↔daughter) — ayırt etme egzersizi Part 1'i uzattı. Gramer node 5'in devamı olduğu için Part 2 kısaldı. |
-| 7 · Where are you from | 39 | 12 / 15 / 12 | Kelimelerin üçü soyut, Part 1 kısaldı. Gramer iki yapı taşıyor (düz cümle + devrik soru), Part 2 ikiye katlandı. |
+İçerik `seymakucuk0/curriculum` deposundaki A0 dersinden türetildi. Egzersizler
+şu kurallara göre üretiliyor:
 
-Her node'da en az 4 konuşma, 4 dinleme, 2 harf klavyesi, 3 diyalog egzersizi var. Part 3'te tek kelime egzersizi yok — tamamı cümle ve diyalog.
+- **Çeldirici boşluğa uymaz** — yanlış şık geçerli bir cümle üretmez. Tekliği ya
+  görsel (kırmızı araba resmi varsa `blue` gerçeğe aykırıdır) ya da dilbilgisi
+  sağlar (`I ___ Leo.` → yalnız `am`).
+- **Kümülatif** — öğrencinin henüz görmediği kelime şıkta çıkamaz.
+- **Ardışık aynı cümle yok**; aynı hedef kelime kümelenmez.
+- **Desen ekranı ancak gerçek bir desen varsa** çıkar; cevap gösterilen satırlarda
+  görünüyorsa desen yerine doğru/yanlış egzersizi gelir.
+- **Klavye egzersizi** yalnız 2-6 harfli kelimede; bazı kutular dolu gelir,
+  kullanıcı en fazla 3 harf yazar.
 
-## 19 egzersiz tipi
+## Ekran envanteri
 
-`word_card` · `mc_meaning` · `mc_reverse` · `match4` · `image_choice` · `listen_pick` · `listen_write` · `listen_sentence_gap` · `letter_keys` · `fill_blank` · `build_sentence` · `build_translate` · `mc_sentence` · `say_word` · `say_sentence` · `dialog_gap` · `dialog_build` · `dialog_say` · `translate_meaning`
+Uygulamada gelmiş geçmiş her egzersiz, öğretim ve bağlam ekranı. Her kart ilgili
+SwiftUI view'ının kodundan — yazı boyu, köşe yarıçapı, kart yüksekliği gerçek
+değerleriyle — yeniden çizildi. Kart altındaki rozet o ekranın bugün kullanılıp
+kullanılmadığını söylüyor.
 
-Bunların 14'ünün Slova'da çalışan bir SwiftUI karşılığı var. İkisi yeni:
+6 sistem: Slides/MicroLesson · Lexicon testleri · Custom Path ders · Beat lesson
+(Paths customized) · Quiz & Flashcard · Slide (eski curriculum).
 
-- **`letter_keys`** — uygulamanın kendi klavyesi. Sadece o kelimede geçen harfler renkli ve basılabilir; harfleri hatırlamak zorunda değilsin, sırayı sen kuruyorsun.
-- **`listen_write`** — ses çalar, klavyeyle yazarsın. "Duyamıyorum" bağlantısı egzersizi anlam sorusuna çevirir, böylece sessiz ortamda ders kaybolmaz.
+## Not
 
-Konuşma egzersizleri tarayıcıda `webkitSpeechRecognition` varsa gerçekten dinler; yoksa simülasyona düşer ve bunu ekranda belirtir. Uygulamada `SpeechRecognitionService` (SFSpeechRecognizer) kullanılıyor.
-
-## Kaynak
-
-Müfredat verisi ayrı ve özel bir repoda tutuluyor: **seymakucuk0/curriculum** — 174 ders, 1392 kelime, 174 gramer noktası, 1276 CEFR can-do kazanımı.
-
-Kazanımlar Avrupa Konseyi'nin CEFR Companion Volume (2018) betimleyicilerinden alınmıştır.
-Bu repo yalnızca prototip arayüzünü barındırır; müfredat içeriği burada değildir.
+Bunlar prototip; uygulamanın kendisi ayrı bir depoda. Kelime görsellerinin bir
+kısmı henüz üretilmedi, o ekranlarda kesik çizgili "görsel yok" yer tutucusu var.
